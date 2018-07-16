@@ -350,20 +350,14 @@ public class IdentificationActivity extends AppCompatActivity {
                     Uri imageUri = data.getData();
 
 
-                    //추가
-                   // Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    //media.setData(imageUri);
-                    //this.sendBroadcast(media);
-
-                    /////
-
                     mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                             imageUri, getContentResolver());
 
-                    ////추가
-
+                    //갤러리에 촬영 사진추가
                     MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
-                    //////////
+
+
+
                     if (mBitmap != null) {
                         // Show the image on screen.
                         ImageView imageView = (ImageView) findViewById(R.id.image);
