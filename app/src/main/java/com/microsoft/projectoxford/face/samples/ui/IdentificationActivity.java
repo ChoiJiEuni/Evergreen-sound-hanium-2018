@@ -42,6 +42,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -347,8 +348,22 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     // If image is selected successfully, set the image URI and bitmap.
                     Uri imageUri = data.getData();
+
+
+                    //추가
+                   // Intent media = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    //media.setData(imageUri);
+                    //this.sendBroadcast(media);
+
+                    /////
+
                     mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                             imageUri, getContentResolver());
+
+                    ////추가
+
+                    MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+                    //////////
                     if (mBitmap != null) {
                         // Show the image on screen.
                         ImageView imageView = (ImageView) findViewById(R.id.image);
