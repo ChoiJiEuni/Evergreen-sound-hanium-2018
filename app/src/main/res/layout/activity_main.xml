@@ -23,6 +23,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="인물등록"/>
+            android:text="인물등록"
+            android:onClick="onButtonAddPerson"/>
     </LinearLayout>
 </LinearLayout>
