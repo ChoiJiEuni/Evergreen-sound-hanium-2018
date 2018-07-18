@@ -42,9 +42,7 @@ public class ImagePopup extends Activity implements OnClickListener{
         Button btn = (Button)findViewById(R.id.btn_back);
         btn.setOnClickListener(this);
     }
-    /* (non-Javadoc)
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
+
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_back:
