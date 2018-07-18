@@ -79,7 +79,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.Gallery" />
-        <activity android:name=".ui.ImagePopup"></activity>
+        <activity android:name=".ui.ImagePopup" />
+        <activity
+            android:name=".ui.inputDBActivity_PHP"
+            android:label="@string/title_activity_input_db_php"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.inputDB_PHPActivity"></activity>
     </application>
 
 </manifest>

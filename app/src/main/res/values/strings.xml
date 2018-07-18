@@ -106,5 +106,6 @@
     <string name="user_provided_description_data">User data</string>
     <string name="user_provided_person_group_name">Person group name</string>
     <string name="user_provided_person_group_description_data">User data</string>
+    <string name="title_activity_input_db_php">inputDBActivity_PHP</string>
 
 </resources>
