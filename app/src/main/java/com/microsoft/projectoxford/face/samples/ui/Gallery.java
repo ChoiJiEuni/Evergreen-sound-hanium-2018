@@ -83,17 +83,17 @@ public class Gallery extends Activity {
             ImageView imageView;
             if (convertView == null){
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
-                imageView.setAdjustViewBounds(false);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(2, 2, 2, 2);
+               // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
+               // imageView.setAdjustViewBounds(false);
+               // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+               // imageView.setPadding(2, 2, 2, 2);
             }else{
                 imageView = (ImageView) convertView;
             }
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
-            Bitmap resized = Bitmap.createScaledBitmap(bmp, 95, 95, true);
+            Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
             imageView.setImageBitmap(resized);
 
             return imageView;

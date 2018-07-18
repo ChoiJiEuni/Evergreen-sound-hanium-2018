@@ -35,8 +35,8 @@ public class ImagePopup extends Activity implements OnClickListener{
         bfo.inSampleSize = 2;
         ImageView iv = (ImageView)findViewById(R.id.imageView);
         Bitmap bm = BitmapFactory.decodeFile(imgPath, bfo);
-        Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
-        iv.setImageBitmap(resized);
+        //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
+        iv.setImageBitmap(bm);
 
         /** 리스트로 가기 버튼 */
         Button btn = (Button)findViewById(R.id.btn_back);
