@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="com.microsoft.projectoxford.face.samples.ui.ImagePopup">
+
+    <ImageView
+        android:layout_height="370px"
+        android:layout_width="fill_parent"
+        android:padding="3px"
+        android:background="#FED345"
+        android:id="@+id/imageView"/>
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:background="#ffccccff"
+        android:id="@+id/lin_bottom"
+        android:layout_gravity="bottom">
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="0dip"
+        android:id="@+id/btn_back"
+        android:text="리스트로 돌아가기"
+        android:layout_weight="1"/>
+    </LinearLayout>
+</FrameLayout>

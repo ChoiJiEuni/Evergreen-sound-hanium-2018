@@ -16,9 +16,7 @@
             android:name=".ui.IdentificationActivity"
             android:label="@string/identification"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SelectImageActivity"
             android:label="@string/select_an_image"
@@ -72,7 +70,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.IdentificationActivity" />
-
         </activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
@@ -81,6 +78,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.Gallery" />
+        <activity android:name=".ui.ImagePopup"></activity>
     </application>
 
 </manifest>
