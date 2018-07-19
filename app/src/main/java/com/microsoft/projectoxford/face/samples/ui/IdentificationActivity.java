@@ -42,6 +42,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -71,6 +72,8 @@ import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGrou
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -187,6 +190,25 @@ public class IdentificationActivity extends AppCompatActivity {
 
         //갤러리에 촬영 사진추가
         MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+       /* String saveFolderName = "cameraTest";
+        try{
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            Date currentTime_1 = new Date();
+            String dateString = formatter.format(currentTime_1);
+            File sdCardPath = Environment.getExternalStorageDirectory();
+            // フォルダ作成
+            File dirs = new File(Environment.getExternalStorageDirectory(),"saveFolderName");
+            if(dirs.mkdirs()){
+                Log.d("CAMERA_TEST", "Directory Created");
+            }
+            FileOutputStream out = null;
+            String savePicName = sdCardPath.getPath() + "/" + saveFolderName + "/pic"+ dateString +".jpg";
+            out = new FileOutputStream(savePicName);
+            out.write(data);
+            out.close();
+        }catch(IOException e){
+            Log.e("CAMERA_TEST",""+ e.toString());
+        }
 
         if (mBitmap != null) {
             // Show the image on screen.
@@ -203,7 +225,7 @@ public class IdentificationActivity extends AppCompatActivity {
         setInfo("");
 
         // Start detecting in image.
-        detect(mBitmap);
+        detect(mBitmap);*/
     }
 
     @Override

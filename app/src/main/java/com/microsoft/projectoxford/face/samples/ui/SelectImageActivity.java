@@ -110,9 +110,9 @@ public class SelectImageActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            String storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
             try {
-                File file = File.createTempFile("IMG_", ".jpg", storageDir);
+                File file = File.createTempFile("evergreen_", ".jpg", new File(storageDir));
                 mUriPhotoTaken = Uri.fromFile(file);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
