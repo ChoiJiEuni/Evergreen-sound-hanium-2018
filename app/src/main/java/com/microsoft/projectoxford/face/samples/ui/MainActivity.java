@@ -70,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(String.format("Person group to use: %s", personGroupName));
         }
     }
-
+    //분석할 사진 촬영 또는 갤러리에서 선택
+    public void OnButtonClickedImage(View view) {
+        Intent intent = new Intent(this, SelectImageActivity.class);
+        startActivity(intent);
+    }
 
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
     private class PersonGroupListAdapter extends BaseAdapter {

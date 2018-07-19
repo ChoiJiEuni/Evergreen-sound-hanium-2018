@@ -175,6 +175,35 @@ public class IdentificationActivity extends AppCompatActivity {
             Intent intent = new Intent(this, PersonGroupListActivity.class);
             startActivity(intent);
         }
+        Intent intent_test = getIntent();
+        detected = false;
+
+        // If image is selected successfully, set the image URI and bitmap.
+        Uri imageUri = intent_test.getData();
+
+
+        mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                imageUri, getContentResolver());
+
+        //갤러리에 촬영 사진추가
+        MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+
+        if (mBitmap != null) {
+            // Show the image on screen.
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            imageView.setImageBitmap(mBitmap);
+        }
+
+        // Clear the identification result.
+        FaceListAdapter faceListAdapter = new FaceListAdapter(null);
+        ListView listView = (ListView) findViewById(R.id.list_identified_faces);
+        listView.setAdapter(faceListAdapter);
+
+        // Clear the information panel.
+        setInfo("");
+
+        // Start detecting in image.
+        detect(mBitmap);
     }
 
     @Override
@@ -335,7 +364,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
-
+/*
     // Called when image selection is done.
     // 이미지 선택이 완료되면 호출됩니다.
     @Override
@@ -380,7 +409,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 break;
         }
     }
-
+*/
     // Start detecting in image.
     // 이미지에서 감지를 시작합니다.
     private void detect(Bitmap bitmap) {
