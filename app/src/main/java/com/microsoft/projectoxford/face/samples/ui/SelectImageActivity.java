@@ -94,10 +94,9 @@ public class SelectImageActivity extends AppCompatActivity {
                     } else {
                         imageUri = data.getData();
                     }
-                    Intent intent = new Intent();
+                    Intent intent = new Intent(this, IdentificationActivity.class);
                     intent.setData(imageUri);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    startActivityForResult(intent, RESULT_OK);
                 }
                 break;
             default:
