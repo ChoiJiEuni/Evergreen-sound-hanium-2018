@@ -80,11 +80,9 @@
         </activity>
         <activity android:name=".ui.Gallery" />
         <activity android:name=".ui.ImagePopup" />
-        <activity
-            android:name=".ui.inputDBActivity_PHP"
-            android:label="@string/title_activity_input_db_php"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.inputDB_PHPActivity"></activity>
+
+        <activity android:name=".ui.inputDB_PHPActivity" />
+        <activity android:name=".ui.Gallery2"></activity>
     </application>
 
 </manifest>

@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -56,10 +58,12 @@ public class Gallery extends Activity {
             getThumbInfo(thumbsIDList, thumbsDataList);
         }
 
+        //클릭한 사진 불러오는 함수
         public final void callImageViewer(int selectedIndex){
             Intent i = new Intent(mContext, ImagePopup.class);
             String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
             i.putExtra("filename", imgPath);
+            Log.d("chae",imgPath);
             startActivityForResult(i, 1);
         }
 
@@ -94,7 +98,8 @@ public class Gallery extends Activity {
             bo.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
             Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-            imageView.setImageBitmap(resized);
+            if(thumbsDataList.get(position).contains("Pictures"))
+                imageView.setImageBitmap(resized);
 
             return imageView;
         }
@@ -150,6 +155,7 @@ public class Gallery extends Activity {
                 if (imageCursor.getCount() > 0){
                     int imgData = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
                     imageDataPath = imageCursor.getString(imgData);
+                    Log.d("chae",imageDataPath);
                 }
             }
             imageCursor.close();
