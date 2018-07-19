@@ -83,7 +83,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-
 public class IdentificationActivity extends AppCompatActivity {
     // Background task of face identification.
     // 얼굴 식별의 백그라운드 작업
@@ -183,32 +182,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
         // If image is selected successfully, set the image URI and bitmap.
         Uri imageUri = intent_test.getData();
-
+        Log.d("chae",imageUri.getPath());
 
         mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                 imageUri, getContentResolver());
 
         //갤러리에 촬영 사진추가
         MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
-       /* String saveFolderName = "cameraTest";
-        try{
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-            Date currentTime_1 = new Date();
-            String dateString = formatter.format(currentTime_1);
-            File sdCardPath = Environment.getExternalStorageDirectory();
-            // フォルダ作成
-            File dirs = new File(Environment.getExternalStorageDirectory(),"saveFolderName");
-            if(dirs.mkdirs()){
-                Log.d("CAMERA_TEST", "Directory Created");
-            }
-            FileOutputStream out = null;
-            String savePicName = sdCardPath.getPath() + "/" + saveFolderName + "/pic"+ dateString +".jpg";
-            out = new FileOutputStream(savePicName);
-            out.write(data);
-            out.close();
-        }catch(IOException e){
-            Log.e("CAMERA_TEST",""+ e.toString());
-        }
 
         if (mBitmap != null) {
             // Show the image on screen.
@@ -225,7 +205,7 @@ public class IdentificationActivity extends AppCompatActivity {
         setInfo("");
 
         // Start detecting in image.
-        detect(mBitmap);*/
+        detect(mBitmap);
     }
 
     @Override
@@ -303,8 +283,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 for (IdentifyResult identifyResult: result) {
                     logString += "Face " + identifyResult.faceId.toString() + " is identified as "
                             + (identifyResult.candidates.size() > 0
-                                    ? identifyResult.candidates.get(0).personId.toString()
-                                    : "Unknown Person")
+                            ? identifyResult.candidates.get(0).personId.toString()
+                            : "Unknown Person")
                             + ". ";
                 }
                 addLog(logString);
@@ -386,52 +366,52 @@ public class IdentificationActivity extends AppCompatActivity {
 
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
-/*
-    // Called when image selection is done.
-    // 이미지 선택이 완료되면 호출됩니다.
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
-            case REQUEST_SELECT_IMAGE:
-                if(resultCode == RESULT_OK) {
-                    detected = false;
+    /*
+        // Called when image selection is done.
+        // 이미지 선택이 완료되면 호출됩니다.
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            switch (requestCode)
+            {
+                case REQUEST_SELECT_IMAGE:
+                    if(resultCode == RESULT_OK) {
+                        detected = false;
 
-                    // If image is selected successfully, set the image URI and bitmap.
-                    Uri imageUri = data.getData();
-
-
-                    mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
-                            imageUri, getContentResolver());
-
-                    //갤러리에 촬영 사진추가
-                    MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+                        // If image is selected successfully, set the image URI and bitmap.
+                        Uri imageUri = data.getData();
 
 
+                        mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                                imageUri, getContentResolver());
 
-                    if (mBitmap != null) {
-                        // Show the image on screen.
-                        ImageView imageView = (ImageView) findViewById(R.id.image);
-                        imageView.setImageBitmap(mBitmap);
+                        //갤러리에 촬영 사진추가
+                        MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+
+
+
+                        if (mBitmap != null) {
+                            // Show the image on screen.
+                            ImageView imageView = (ImageView) findViewById(R.id.image);
+                            imageView.setImageBitmap(mBitmap);
+                        }
+
+                        // Clear the identification result.
+                        FaceListAdapter faceListAdapter = new FaceListAdapter(null);
+                        ListView listView = (ListView) findViewById(R.id.list_identified_faces);
+                        listView.setAdapter(faceListAdapter);
+
+                        // Clear the information panel.
+                        setInfo("");
+
+                        // Start detecting in image.
+                        detect(mBitmap);
                     }
-
-                    // Clear the identification result.
-                    FaceListAdapter faceListAdapter = new FaceListAdapter(null);
-                    ListView listView = (ListView) findViewById(R.id.list_identified_faces);
-                    listView.setAdapter(faceListAdapter);
-
-                    // Clear the information panel.
-                    setInfo("");
-
-                    // Start detecting in image.
-                    detect(mBitmap);
-                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-*/
+    */
     // Start detecting in image.
     // 이미지에서 감지를 시작합니다.
     private void detect(Bitmap bitmap) {
@@ -472,12 +452,12 @@ public class IdentificationActivity extends AppCompatActivity {
             setInfo("Please select an image and create a person group first.");
         }
     }
-//*/
+    //*/
     public void managePersonGroups(View view) {
 
-            Intent intent = new Intent(this, PersonGroupListActivity.class);
-            startActivity(intent);
-            refreshIdentifyButtonEnabledStatus();
+        Intent intent = new Intent(this, PersonGroupListActivity.class);
+        startActivity(intent);
+        refreshIdentifyButtonEnabledStatus();
     }
 
     public void viewLog(View view) {

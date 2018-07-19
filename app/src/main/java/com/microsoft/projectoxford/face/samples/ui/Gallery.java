@@ -98,7 +98,7 @@ public class Gallery extends Activity {
             bo.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
             Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-            if(thumbsDataList.get(position).contains("evergreen"))
+           // if(thumbsDataList.get(position).contains("evergreen"))
                 imageView.setImageBitmap(resized);
 
             return imageView;
