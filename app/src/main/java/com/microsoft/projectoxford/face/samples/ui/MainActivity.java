@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.DBphpActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     }
     /// 한이음 서버 데베에는 접근이 안되서 일단은 로컬서버 데베에 저장하는 거로 함.
     public void onButtonAddPHP(View view) {
-        Intent intent = new Intent(this,inputDB_PHPActivity.class);
+        Intent intent = new Intent(this,DBphpActivity.class);
         startActivity(intent);
     }
 
