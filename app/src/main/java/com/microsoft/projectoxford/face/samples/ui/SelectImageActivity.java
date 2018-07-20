@@ -32,6 +32,7 @@
 //
 package com.microsoft.projectoxford.face.samples.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,11 +57,17 @@ public class SelectImageActivity extends AppCompatActivity {
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
 
+    // 소히
+    public static Activity AActivity;
+
     // When the activity is created, set all the member variables to initial state.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_image);
+
+        //소히
+        AActivity = SelectImageActivity.this;
     }
 
     // Save the activity state when it's going to stop.
@@ -96,7 +103,12 @@ public class SelectImageActivity extends AppCompatActivity {
                     }
                     Intent intent = new Intent(this, IdentificationActivity.class);
                     intent.setData(imageUri);
+
+
+                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                   // intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivityForResult(intent, RESULT_OK);
+                   // finish();
                 }
                 break;
             default:

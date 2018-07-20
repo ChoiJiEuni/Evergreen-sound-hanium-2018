@@ -73,7 +73,13 @@ public class MainActivity extends AppCompatActivity {
     //분석할 사진 촬영 또는 갤러리에서 선택
     public void OnButtonClickedImage(View view) {
         Intent intent = new Intent(this, SelectImageActivity.class);
+        // 추강
+
+       // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+       // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
+
     }
 
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.

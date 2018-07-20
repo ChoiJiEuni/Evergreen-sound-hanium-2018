@@ -83,6 +83,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+
+
 public class IdentificationActivity extends AppCompatActivity {
     // Background task of face identification.
     // 얼굴 식별의 백그라운드 작업
@@ -150,6 +152,11 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
+    // 소히
+    // public static Activity AActivity;
+
+    SelectImageActivity aActivity = (SelectImageActivity)SelectImageActivity.AActivity;
+
     String mPersonGroupId;
 
     boolean detected;
@@ -163,6 +170,8 @@ public class IdentificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
 
+        // 소히
+        // AActivity = IdentificationActivity.this;
         detected = false;
 
         progressDialog = new ProgressDialog(this);
@@ -426,11 +435,20 @@ public class IdentificationActivity extends AppCompatActivity {
         new DetectionTask().execute(inputStream);
     }
 
+
     // Called when the "Select Image" button is clicked.
-    public void selectImage(View view) {
+    public void selectImage(View view) { // 이거 누르면 스택 자꾸 쌓임
+        // 뒤로 가기 버튼 누르면 메인화면으로 넘어가게끔 해야 함
+        // 교재 혹은 pdf 뒤져서 스택 쌓이는 거 예제 확인해 보기 
         Intent intent = new Intent(this, SelectImageActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
+        aActivity.finish();
+
     }
+
+
 
     // Called when the "Detect" button is clicked.
     public void identify(View view) {
