@@ -32,7 +32,6 @@
 //
 package com.microsoft.projectoxford.face.samples.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,19 +39,19 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 
 import com.microsoft.projectoxford.face.samples.R;
 
 import java.io.File;
 import java.io.IOException;
 
-import static android.app.Activity.RESULT_OK;
-
+/////////////////// 소히
+// 촬영 부분이랑 인물 등록 부분이랑 화면 겹쳐서 안 겹치게 하려고 새로 생성한 액티비티! select an image랑 똑같은 역할
 // The activity for the user to select a image and to detect faces in the image.
-public class SelectImageActivity extends AppCompatActivity {
+public class PersonSelectImage extends AppCompatActivity {
     // Flag to indicate the request of the next task to be performed
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
@@ -60,17 +59,11 @@ public class SelectImageActivity extends AppCompatActivity {
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
 
-    // 소히
-    public static Activity AActivity;
-
     // When the activity is created, set all the member variables to initial state.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_image);
-
-        //소히
-        AActivity = SelectImageActivity.this;
+        setContentView(R.layout.activity_person_select_image);
     }
 
     // Save the activity state when it's going to stop.
@@ -104,14 +97,10 @@ public class SelectImageActivity extends AppCompatActivity {
                     } else {
                         imageUri = data.getData();
                     }
-                    Intent intent = new Intent(this, IdentificationActivity.class);
+                    Intent intent = new Intent();
                     intent.setData(imageUri);
-
-
-                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                   // intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivityForResult(intent, RESULT_OK);
-                   // finish();
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
                 break;
             default:
@@ -127,18 +116,8 @@ public class SelectImageActivity extends AppCompatActivity {
             // Save the photo taken to a temporary file.
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             try {
-                /////////////////////새 저장 폴더 만들기//////////////////////
-                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
-               // File dir = new File(storageDir.getPath(), "evergreen");
-                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
-                Log.d("chae",dir+"");
-                if(!dir.exists())
-
-                    dir.mkdirs();
-                ///////////////////////////////////////////////////////////////
-                File file = File.createTempFile("evergreen_", ".jpg", dir);
+                File file = File.createTempFile("IMG_", ".jpg", storageDir);
                 mUriPhotoTaken = Uri.fromFile(file);
-                Log.d("chae",mUriPhotoTaken+"넘긴거");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             } catch (IOException e) {
