@@ -49,8 +49,7 @@ import java.io.File;
 import java.io.IOException;
 
 /////////////////// 소히
-// 촬영 부분이랑 인물 등록 부분이랑 화면 겹쳐서 안 겹치게 하려고 새로 생성한 액티비티! select an image랑 똑같은데
-// intent만 바꿈
+// 촬영 부분이랑 인물 등록 부분이랑 화면 겹쳐서 안 겹치게 하려고 새로 생성한 액티비티! select an image랑 똑같은 역할
 // The activity for the user to select a image and to detect faces in the image.
 public class PersonSelectImage extends AppCompatActivity {
     // Flag to indicate the request of the next task to be performed
