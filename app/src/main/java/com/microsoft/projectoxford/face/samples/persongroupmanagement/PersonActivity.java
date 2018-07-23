@@ -62,6 +62,7 @@ import com.microsoft.projectoxford.face.contract.CreatePersonResult;
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
+import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
 import com.microsoft.projectoxford.face.samples.ui.SelectImageActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
@@ -349,7 +350,9 @@ public class PersonActivity extends AppCompatActivity {
 
     private void addFace() {
         setInfo("");
-        Intent intent = new Intent(this, SelectImageActivity.class);
+        // 소히
+        //Intent intent = new Intent(this, SelectImageActivity.class);
+        Intent intent = new Intent(this, PersonSelectImage.class);
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
