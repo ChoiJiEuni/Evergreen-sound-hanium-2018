@@ -40,6 +40,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -126,14 +127,16 @@ public class SelectImageActivity extends AppCompatActivity {
             try {
                 /////////////////////새 저장 폴더 만들기//////////////////////
                 //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
-                File dir = new File(storageDir.getPath(), "evergreen");
-
+               // File dir = new File(storageDir.getPath(), "evergreen");
+                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                Log.d("chae",dir+"");
                 if(!dir.exists())
 
                     dir.mkdirs();
                 ///////////////////////////////////////////////////////////////
                 File file = File.createTempFile("evergreen_", ".jpg", dir);
                 mUriPhotoTaken = Uri.fromFile(file);
+                Log.d("chae",mUriPhotoTaken+"넘긴거");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             } catch (IOException e) {

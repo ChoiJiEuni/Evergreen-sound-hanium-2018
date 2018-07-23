@@ -192,9 +192,9 @@ public class IdentificationActivity extends AppCompatActivity {
 
         // If image is selected successfully, set the image URI and bitmap.
         Uri imageUri = intent_test.getData();
-        Log.d("chae",imageUri.getPath());
+        Log.d("chae",imageUri.getPath()+"받은거");
 //////////////////////////////////////
-        if (imageUri != null) {
+       /* if (imageUri != null) {
 
             try {
                 mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
@@ -209,14 +209,15 @@ public class IdentificationActivity extends AppCompatActivity {
             }
            // mImageView.setImageBitmap(bm);
 
-        }
+        }*/
         ///////////////////////////////
        ///원래코드
-      //  mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
-       //         imageUri, getContentResolver());
+        mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                imageUri, getContentResolver());
 
         //갤러리에 촬영 사진추가
-        //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+        MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
 
         if (mBitmap != null) {
             // Show the image on screen.
