@@ -216,8 +216,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 imageUri, getContentResolver());
 
         //갤러리에 촬영 사진추가
-        MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
+        //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+       // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
 
         if (mBitmap != null) {
             // Show the image on screen.
