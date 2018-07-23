@@ -73,6 +73,7 @@ import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGrou
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -192,12 +193,30 @@ public class IdentificationActivity extends AppCompatActivity {
         // If image is selected successfully, set the image URI and bitmap.
         Uri imageUri = intent_test.getData();
         Log.d("chae",imageUri.getPath());
+//////////////////////////////////////
+        if (imageUri != null) {
 
-        mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
-                imageUri, getContentResolver());
+            try {
+                mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+           // mImageView.setImageBitmap(bm);
+
+        }
+        ///////////////////////////////
+       ///원래코드
+      //  mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+       //         imageUri, getContentResolver());
 
         //갤러리에 촬영 사진추가
-        MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+        //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
 
         if (mBitmap != null) {
             // Show the image on screen.

@@ -124,12 +124,14 @@ public class SelectImageActivity extends AppCompatActivity {
             // Save the photo taken to a temporary file.
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             try {
+                /////////////////////새 저장 폴더 만들기//////////////////////
+                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
                 File dir = new File(storageDir.getPath(), "evergreen");
 
                 if(!dir.exists())
 
                     dir.mkdirs();
-
+                ///////////////////////////////////////////////////////////////
                 File file = File.createTempFile("evergreen_", ".jpg", dir);
                 mUriPhotoTaken = Uri.fromFile(file);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
