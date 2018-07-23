@@ -9,24 +9,27 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
             android:gravity="center"
             android:layout_weight="1"
+            android:textStyle="bold"
             android:text="id"/>
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
             android:layout_weight="1"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="name"/>
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
             android:gravity="center"
             android:layout_weight="1"
+            android:textStyle="bold"
             android:text="country"/>
     </LinearLayout>
     <View

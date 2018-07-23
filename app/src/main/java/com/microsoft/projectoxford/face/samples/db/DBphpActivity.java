@@ -23,26 +23,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DBphpActivity extends AppCompatActivity {
-    private static String IP_ADDRESS = "14.63.195.105";
-    private static String TAG = "phptest";
+    private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
+    private static String TAG = "php";
     private EditText mEditTextName;
     private EditText mEditTextCountry;
     private EditText mEditTextId;
     private TextView mTextViewResult;
-    //private RecyclerView mRecyclerView;
-    private EditText mEditTextSearchKeyword;
-    private String mJsonString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dbphp);
+
         mEditTextName = (EditText) findViewById(R.id.editText_main_name);
         mEditTextCountry = (EditText) findViewById(R.id.editText_main_country);
         mEditTextId = (EditText) findViewById(R.id.editText_del_id);
         mTextViewResult = (TextView) findViewById(R.id.textView_main_result);
 
-        mTextViewResult.setMovementMethod(new ScrollingMovementMethod());
-
+        mTextViewResult.setMovementMethod(new ScrollingMovementMethod()); //setMovementMethod: 항상 아래로 스크롤되는
 
         Button buttonInsert = (Button) findViewById(R.id.button_main_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
@@ -52,15 +50,14 @@ public class DBphpActivity extends AppCompatActivity {
                 String name = mEditTextName.getText().toString();
                 String country = mEditTextCountry.getText().toString();
                 InsertData task = new InsertData();
-                //task.execute(IP_ADDRESS, name,country);
-                task.execute("http://" + IP_ADDRESS + "/process.php", name, country);
-
+                task.execute("http://" + IP_ADDRESS + "/insert.php", name, country);
 
                 mEditTextName.setText("");
                 mEditTextCountry.setText("");
 
             }
         });
+
         Button buttonDelete = (Button) findViewById(R.id.button_delete);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +65,7 @@ public class DBphpActivity extends AppCompatActivity {
 
                 String id = mEditTextId.getText().toString();
                 DeleteData task = new DeleteData();
-                task.execute("http://" + IP_ADDRESS + "/delete_php.php", id);
-
+                task.execute("http://" + IP_ADDRESS + "/delete.php", id);
 
                 mEditTextName.setText("");
                 mEditTextCountry.setText("");
@@ -77,23 +73,14 @@ public class DBphpActivity extends AppCompatActivity {
 
             }
         });
+
         Button buttonShow = (Button) findViewById(R.id.button_show);
         buttonShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               /*
-                String id = mEditTextId.getText().toString();
-                DeleteData task = new DeleteData();
-                task.execute("http://" + IP_ADDRESS + "/delete_php.php", id);
-
-
-                mEditTextName.setText("");
-                mEditTextCountry.setText("");
-                mEditTextId.setText("");*/
                 Intent intent = new Intent(DBphpActivity.this, ShowDBActivity.class);
                 startActivity(intent);
-
 
             }
         });
@@ -116,7 +103,6 @@ public class DBphpActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
             mTextViewResult.setText(result);
-            Log.d(TAG, "POST response  - " + result);
             Toast.makeText(getApplicationContext(),"값이 삽입 되었습니다.",Toast.LENGTH_LONG).show();
         }
 
@@ -124,15 +110,14 @@ public class DBphpActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+
             String name = (String)params[1];
             String country = (String)params[2];
-
             String serverURL = (String)params[0];
-            String postParameters = "&name=" + name + "&country=" + country;
-
+            String postParameters = "&name=" + name + "&country=" + country; // php에서 가져올 값.
 
             try {
-
+                // php 가져오기.
                 URL url = new URL(serverURL+"");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
@@ -150,7 +135,6 @@ public class DBphpActivity extends AppCompatActivity {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -182,7 +166,6 @@ public class DBphpActivity extends AppCompatActivity {
             } catch (Exception e) {
 
                 Log.d(TAG, "InsertData: Error ", e);
-
                 return new String("Error: " + e.getMessage());
             }
 
@@ -206,7 +189,6 @@ public class DBphpActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
             mTextViewResult.setText(result);
-            Log.d(TAG, "POST response  - " + result);
             Toast.makeText(getApplicationContext(),"값이 삭제 되었습니다.",Toast.LENGTH_LONG).show();
         }
 
@@ -216,11 +198,11 @@ public class DBphpActivity extends AppCompatActivity {
 
             String id = (String)params[1];
             String serverURL = (String)params[0];
-            String postParameters = "&id=" + id ;
+            String postParameters = "&id=" + id ; // php에서 가져올 값
 
 
             try {
-
+                // php 가져오기.
                 URL url = new URL(serverURL+"");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
@@ -238,7 +220,6 @@ public class DBphpActivity extends AppCompatActivity {
 
 
                 int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "POST response code - " + responseStatusCode);
 
                 InputStream inputStream;
                 if(responseStatusCode == HttpURLConnection.HTTP_OK) {
@@ -269,8 +250,7 @@ public class DBphpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
 
-                Log.d(TAG, "InsertData: Error ", e);
-
+                Log.d(TAG, "DeleteData: Error ", e);
                 return new String("Error: " + e.getMessage());
             }
 

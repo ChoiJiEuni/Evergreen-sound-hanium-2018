@@ -24,6 +24,8 @@ public class ShowDBActivity extends AppCompatActivity {
     String myJSON;
 
     private static final String TAG_RESULTS="result";
+
+    // 가져올 값들
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_ADD ="country";
