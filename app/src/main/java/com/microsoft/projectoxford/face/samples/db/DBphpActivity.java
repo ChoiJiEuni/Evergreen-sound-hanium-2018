@@ -1,6 +1,7 @@
 package com.microsoft.projectoxford.face.samples.db;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +25,6 @@ import java.net.URL;
 public class DBphpActivity extends AppCompatActivity {
     private static String IP_ADDRESS = "14.63.195.105";
     private static String TAG = "phptest";
-
     private EditText mEditTextName;
     private EditText mEditTextCountry;
     private EditText mEditTextId;
@@ -74,6 +74,26 @@ public class DBphpActivity extends AppCompatActivity {
                 mEditTextName.setText("");
                 mEditTextCountry.setText("");
                 mEditTextId.setText("");
+
+            }
+        });
+        Button buttonShow = (Button) findViewById(R.id.button_show);
+        buttonShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               /*
+                String id = mEditTextId.getText().toString();
+                DeleteData task = new DeleteData();
+                task.execute("http://" + IP_ADDRESS + "/delete_php.php", id);
+
+
+                mEditTextName.setText("");
+                mEditTextCountry.setText("");
+                mEditTextId.setText("");*/
+                Intent intent = new Intent(DBphpActivity.this, ShowDBActivity.class);
+                startActivity(intent);
+
 
             }
         });

@@ -82,7 +82,8 @@
         <activity android:name=".ui.ImagePopup" />
         <activity android:name=".ui.inputDB_PHPActivity" />
         <activity android:name=".ui.Gallery2" />
-        <activity android:name=".db.DBphpActivity"></activity>
+        <activity android:name=".db.DBphpActivity" />
+        <activity android:name=".db.ShowDBActivity"></activity>
     </application>
 
 </manifest>
