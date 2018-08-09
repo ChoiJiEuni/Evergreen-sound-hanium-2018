@@ -33,7 +33,7 @@ public class ExifActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Uri selectUri  = data.getData();   //사진 uri 저장
+        Uri selectUri  = data.getData();   //사진 uri저장
 
         try {
 
