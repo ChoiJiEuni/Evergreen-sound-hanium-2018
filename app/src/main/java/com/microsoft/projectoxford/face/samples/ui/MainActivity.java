@@ -3,6 +3,7 @@ package com.microsoft.projectoxford.face.samples.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.DBphpActivity;
+import com.microsoft.projectoxford.face.samples.db.ExifActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
@@ -81,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
 
+    }
+
+    public void onButtonExif(View view) {
+        Intent intent = new Intent(this, ExifActivity.class);
+        startActivity(intent);
     }
 
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.

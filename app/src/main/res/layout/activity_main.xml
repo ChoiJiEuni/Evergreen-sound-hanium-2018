@@ -33,4 +33,14 @@
             android:text="php_DB등록"
             android:onClick="onButtonAddPHP"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 exif정보"
+            android:onClick="onButtonExif"/>
+    </LinearLayout>
 </LinearLayout>

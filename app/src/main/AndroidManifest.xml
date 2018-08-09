@@ -84,9 +84,10 @@
         <activity android:name=".ui.Gallery2" />
         <activity android:name=".db.DBphpActivity" />
         <activity android:name=".db.ShowDBActivity" />
-        <activity android:name=".ui.PersonSelectImage"
-            android:label="Select an Image">
-        </activity>
+        <activity
+            android:name=".ui.PersonSelectImage"
+            android:label="Select an Image"></activity>
+        <activity android:name=".db.ExifActivity"></activity>
     </application>
 
 </manifest>
