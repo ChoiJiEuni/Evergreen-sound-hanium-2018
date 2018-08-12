@@ -4,34 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.microsoft.projectoxford.face.samples.db.RecordActivity"
     android:orientation="vertical"
-    tools:context="com.microsoft.projectoxford.face.samples.ui.MainActivity">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    android:gravity="center">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="OnButtonClickedImage"
-            android:text="촬영"/>
+            android:text="녹음하기"
+            android:id="@+id/recordBtn"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="OnButtonClickedGallery"
-            android:text="갤러리"/>
+            android:text="녹음중지"
+            android:id="@+id/recordStopBtn"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="인물등록"
-            android:onClick="onButtonAddPerson"/>
+            android:text="재생"
+            android:id="@+id/playBtn"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DB 관련"
-            android:onClick="onButtonAddPHP"/>
-    </LinearLayout>
-
+            android:text="재생중지"
+            android:id="@+id/playStopBtn"/>
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
 import com.microsoft.projectoxford.face.samples.db.DBphpActivity;
 import com.microsoft.projectoxford.face.samples.db.ExifActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
@@ -83,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
 
-    }
-
-    public void onButtonExif(View view) {
-        Intent intent = new Intent(this, ExifActivity.class);
-        startActivity(intent);
     }
 
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
@@ -169,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     }
     /// 한이음 서버 데베에는 접근이 안되서 일단은 로컬서버 데베에 저장하는 거로 함.
     public void onButtonAddPHP(View view) {
-        Intent intent = new Intent(this,DBphpActivity.class);
+        Intent intent = new Intent(this,DBMainActivity.class);
         startActivity(intent);
     }
 

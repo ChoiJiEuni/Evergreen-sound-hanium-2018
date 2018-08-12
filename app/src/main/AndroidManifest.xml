@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- 녹음 권한 -->
     <application
         android:name=".helper.SampleApp"
         android:allowBackup="true"
@@ -86,8 +88,10 @@
         <activity android:name=".db.ShowDBActivity" />
         <activity
             android:name=".ui.PersonSelectImage"
-            android:label="Select an Image"></activity>
-        <activity android:name=".db.ExifActivity"></activity>
+            android:label="Select an Image" />
+        <activity android:name=".db.ExifActivity" />
+        <activity android:name=".db.RecordActivity" />
+        <activity android:name=".db.DBMainActivity"></activity>
     </application>
 
 </manifest>
