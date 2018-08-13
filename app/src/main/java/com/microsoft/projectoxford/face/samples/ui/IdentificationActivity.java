@@ -179,14 +179,7 @@ public class IdentificationActivity extends AppCompatActivity {
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
 
         LogHelper.clearIdentificationLog();
-        // 어플 최초 실행때만 그룹 생성 가능하도록 수정
-        SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
-        final boolean first = pref.getBoolean("isFirst", false);
 
-        if(first==false){
-            Intent intent = new Intent(this, PersonGroupListActivity.class);
-            startActivity(intent);
-        }
         Intent intent_test = getIntent();
         detected = false;
 

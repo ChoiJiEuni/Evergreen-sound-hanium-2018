@@ -235,9 +235,10 @@ public class MainActivity extends AppCompatActivity {
     }
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
     public void onButtonAddPerson(View view) {
+
         Intent intent = new Intent(this, PersonGroupListActivity.class);
         startActivity(intent);
-        //  refreshIdentifyButtonEnabledStatus(); 필요없어서 지워도 되는데 혹시 몰라서 주석 처리함
+
     }
     /// 한이음 서버 데베에는 접근이 안되서 일단은 로컬서버 데베에 저장하는 거로 함.
     public void onButtonAddPHP(View view) {

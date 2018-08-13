@@ -65,6 +65,7 @@ import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -136,26 +137,25 @@ public class PersonGroupListActivity extends AppCompatActivity {
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
 
         initializeListView();
-        SharedPreferences pref = getSharedPreferences("isFirst", Activity.MODE_PRIVATE);
-        final boolean first = pref.getBoolean("isFirst", false);
-        if(first==false){
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean("isFirst",true);
-            editor.commit();
-        }
-        else{
-            //*/ 최초실행때 실행되면 오류나는 코드라서
+
+        try{
             Set<String> personGroupIds = StorageHelper.getAllPersonGroupIds(PersonGroupListActivity.this);
-            String str = personGroupIds.iterator().next();
-            String personGroupId = str;
-            String personGroupName = StorageHelper.getPersonGroupName(
-                    personGroupId, PersonGroupListActivity.this);
-            Intent intent = new Intent(PersonGroupListActivity.this, PersonGroupActivity.class);
-            intent.putExtra("AddNewPersonGroup", false);
-            intent.putExtra("PersonGroupName", personGroupName);
-            intent.putExtra("PersonGroupId", personGroupId);
-            startActivity(intent);
+            Iterator iterator = personGroupIds.iterator();
+            if(iterator.hasNext()){
+                String personGroupId = personGroupIds.iterator().next();
+                String personGroupName = StorageHelper.getPersonGroupName(
+                        personGroupId, PersonGroupListActivity.this);
+                Intent intent = new Intent(PersonGroupListActivity.this, PersonGroupActivity.class);
+                intent.putExtra("AddNewPersonGroup", false);
+                intent.putExtra("PersonGroupName", personGroupName);
+                intent.putExtra("PersonGroupId", personGroupId);
+                startActivity(intent);
+            }
+
+        }catch (Exception e){
+
         }
+
 
     }
 
