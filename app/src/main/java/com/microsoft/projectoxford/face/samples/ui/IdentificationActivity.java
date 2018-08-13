@@ -156,7 +156,7 @@ public class IdentificationActivity extends AppCompatActivity {
     // 소히
     // public static Activity AActivity;
 
-    SelectImageActivity aActivity = (SelectImageActivity)SelectImageActivity.AActivity;
+   // SelectImageActivity aActivity = (SelectImageActivity)SelectImageActivity.AActivity;
 
     String mPersonGroupId;
 
@@ -462,17 +462,7 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
 
-    // Called when the "Select Image" button is clicked.
-    public void selectImage(View view) { // 이거 누르면 스택 자꾸 쌓임
-        // 뒤로 가기 버튼 누르면 메인화면으로 넘어가게끔 해야 함
-        // 교재 혹은 pdf 뒤져서 스택 쌓이는 거 예제 확인해 보기 
-        Intent intent = new Intent(this, SelectImageActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivityForResult(intent, REQUEST_SELECT_IMAGE);
-        aActivity.finish();
 
-    }
 
 
 
@@ -519,8 +509,8 @@ public class IdentificationActivity extends AppCompatActivity {
         Button selectImageButton = (Button) findViewById(R.id.manage_person_groups);
         selectImageButton.setEnabled(isEnabled);
 
-        Button groupButton = (Button) findViewById(R.id.select_image);
-        groupButton.setEnabled(isEnabled);
+        //Button groupButton = (Button) findViewById(R.id.select_image);
+        //groupButton.setEnabled(isEnabled);
 
         Button identifyButton = (Button) findViewById(R.id.identify);
         identifyButton.setEnabled(isEnabled);

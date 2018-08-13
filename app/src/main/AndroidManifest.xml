@@ -20,10 +20,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SelectImageActivity"
-            android:label="@string/select_an_image"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".persongroupmanagement.PersonGroupListActivity"
             android:label="@string/person_group_list"
             android:launchMode="singleTop"

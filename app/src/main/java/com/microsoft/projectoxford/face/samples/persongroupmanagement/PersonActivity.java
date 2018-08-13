@@ -63,7 +63,6 @@ import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
-import com.microsoft.projectoxford.face.samples.ui.SelectImageActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
 import java.util.ArrayList;

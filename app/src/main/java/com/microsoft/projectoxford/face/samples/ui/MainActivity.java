@@ -4,8 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +27,14 @@ import com.microsoft.projectoxford.face.samples.db.ExifActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+
+import static android.speech.tts.TextToSpeech.ERROR;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,12 +43,31 @@ public class MainActivity extends AppCompatActivity {
 
     PersonGroupListAdapter mPersonGroupListAdapter;
 
+    /////////////추가용
+    private static final int REQUEST_TAKE_PHOTO = 0;
+    private TextToSpeech tts;
+
+
+    // The URI of photo taken with camera
+    private Uri mUriPhotoTaken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         detected = false;
+
+        /////추가용
+        // TTS를 생성하고 OnInitListener로 초기화 한다.
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
     }
 
     private void setIdentifyButtonEnabledStatus(boolean isEnabled) {
@@ -74,18 +104,64 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(String.format("Person group to use: %s", personGroupName));
         }
     }
+    /////추가 메소드
+    // Save the activity state when it's going to stop.
+    //작업이 중지될 때 작업 상태를 저장합니다.
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("ImageUri", mUriPhotoTaken);
+    }
+
+    // Recover the saved state when the activity is recreated.
+    // 작업을 재생성할 때 저장된 상태를 복구합니다.
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mUriPhotoTaken = savedInstanceState.getParcelable("ImageUri");
+    }
+
     //분석할 사진 촬영 또는 갤러리에서 선택
     public void OnButtonClickedImage(View view) {
-        Intent intent = new Intent(this, SelectImageActivity.class);
+       //// Intent intent = new Intent(this, SelectImageActivity.class);
         // 추강
 
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+      /////  startActivity(intent);
+        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            // Save the photo taken to a temporary file.
+            // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                /////////////////////새 저장 폴더 만들기//////////////////////
+                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
+                // File dir = new File(storageDir.getPath(), "evergreen");
+                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                Log.d("chae",dir+"");
 
+                if(!dir.exists())
+
+                    dir.mkdirs();
+                ///////////////////////////////////////////////////////////////
+                File file = File.createTempFile("evergreen_", ".jpg", dir);
+                mUriPhotoTaken = Uri.fromFile(file);
+                Log.d("chae",mUriPhotoTaken+"넘긴거");
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+            } catch (IOException e) {
+                setInfo(e.getMessage());
+            }
+        }
 
     }
-
+    private void setInfo(String info) {
+        TextView textView = (TextView) findViewById(R.id.info);
+        textView.setText(info);
+    }
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
     private class PersonGroupListAdapter extends BaseAdapter {
         List<String> personGroupIdList;
@@ -168,5 +244,29 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,DBMainActivity.class);
         startActivity(intent);
     }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Uri imageUri;
+                    if (data == null || data.getData() == null) {
+                        imageUri = mUriPhotoTaken;
+                    } else {
+                        imageUri = data.getData();
+                    }
+                    Intent intent = new Intent(this, IdentificationActivity.class);
+                    intent.setData(imageUri);
 
+
+                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    // intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivityForResult(intent, RESULT_OK);
+                    // finish();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
