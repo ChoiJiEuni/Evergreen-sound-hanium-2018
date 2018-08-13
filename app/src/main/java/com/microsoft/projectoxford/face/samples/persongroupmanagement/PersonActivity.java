@@ -32,6 +32,7 @@
 //
 package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -201,6 +202,8 @@ public class PersonActivity extends AppCompatActivity {
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -317,13 +320,13 @@ public class PersonActivity extends AppCompatActivity {
         oldPersonName = savedInstanceState.getString("OldPersonName");
     }
 
-    public void doneAndSave(View view) {
+    /*public void doneAndSave(View view) {
         if (personId == null) {
             new AddPersonTask(false).execute(personGroupId);
         } else {
             doneAndSave();
         }
-    }
+    }*/
 
     public void addFace(View view) {
         if (personId == null) {
@@ -472,6 +475,16 @@ public class PersonActivity extends AppCompatActivity {
             }
 
             return convertView;
+        }
+    }
+    //지은: 전 Activity가 finish() 되었을때
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (personId == null) {
+            new AddPersonTask(false).execute(personGroupId);
+        } else {
+            doneAndSave();
         }
     }
 }

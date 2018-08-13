@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
     }
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
     public void onButtonAddPerson(View view) {
-
         Intent intent = new Intent(this, PersonGroupListActivity.class);
         startActivity(intent);
 

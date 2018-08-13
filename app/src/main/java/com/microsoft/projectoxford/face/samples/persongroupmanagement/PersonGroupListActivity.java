@@ -256,9 +256,9 @@ public class PersonGroupListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void doneAndSave(View view) {
+    /*public void doneAndSave(View view) {
         finish();
-    }
+    }*/
 
     // Add a log item.
     private void addLog(String log) {
@@ -361,5 +361,11 @@ public class PersonGroupListActivity extends AppCompatActivity {
         personGroupsListAdapter.personGroupIdList = newPersonGroupIdList;
         personGroupsListAdapter.personGroupChecked = newPersonGroupChecked;
         personGroupsListAdapter.notifyDataSetChanged();
+    }
+    //지은: 전 Activity가 finish() 되었을때
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
     }
 }

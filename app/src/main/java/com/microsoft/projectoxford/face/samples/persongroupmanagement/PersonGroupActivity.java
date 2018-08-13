@@ -263,6 +263,7 @@ public class PersonGroupActivity extends AppCompatActivity {
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -377,6 +378,18 @@ public class PersonGroupActivity extends AppCompatActivity {
         }
     }
 
+    //지은: 전 Activity가 finish() 되었을때
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (!personGroupExists) {
+            new AddPersonGroupTask(false).execute(personGroupId);
+        } else {
+            doneAndSave(true);
+        }
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -397,13 +410,13 @@ public class PersonGroupActivity extends AppCompatActivity {
         personGroupExists = savedInstanceState.getBoolean("PersonGroupExists");
     }
 
-    public void doneAndSave(View view) {
+    /*public void doneAndSave(View view) {
         if (!personGroupExists) {
             new AddPersonGroupTask(false).execute(personGroupId);
         } else {
             doneAndSave(true);
         }
-    }
+    }*/
 
     private void doneAndSave(boolean trainPersonGroup) {
         EditText editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
@@ -531,4 +544,5 @@ public class PersonGroupActivity extends AppCompatActivity {
             return convertView;
         }
     }
+
 }

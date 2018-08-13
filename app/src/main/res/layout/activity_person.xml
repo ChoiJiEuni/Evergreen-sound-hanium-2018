@@ -86,14 +86,6 @@
             android:onClick="addFace"
             style="@style/ButtonStyle" />
 
-        <Button
-            android:id="@id/done_and_save"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/done_and_save"
-            android:onClick="doneAndSave"
-            style="@style/ButtonStyle" />
 
     </LinearLayout>
 
