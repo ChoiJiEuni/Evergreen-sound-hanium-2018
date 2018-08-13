@@ -14,7 +14,8 @@ import android.widget.ImageView;
 
 import com.microsoft.projectoxford.face.samples.R;
 
-public class ImagePopup extends Activity implements OnClickListener{
+public class
+ImagePopup extends Activity implements OnClickListener{
     private Context mContext = null;
     private final int imgWidth = 320;
     private final int imgHeight = 372;

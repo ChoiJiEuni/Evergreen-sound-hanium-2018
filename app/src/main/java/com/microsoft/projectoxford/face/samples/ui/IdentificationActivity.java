@@ -57,6 +57,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
+import com.microsoft.projectoxford.face.contract.Emotion;
 import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
@@ -88,6 +89,8 @@ import java.util.UUID;
 
 
 public class IdentificationActivity extends AppCompatActivity {
+    private View convertView;
+
     // Background task of face identification.
     // 얼굴 식별의 백그라운드 작업
     private class IdentificationTask extends AsyncTask<UUID, String, IdentifyResult[]> {
@@ -157,7 +160,7 @@ public class IdentificationActivity extends AppCompatActivity {
     // 소히
     // public static Activity AActivity;
 
-   // SelectImageActivity aActivity = (SelectImageActivity)SelectImageActivity.AActivity;
+    //SelectImageActivity aActivity = (SelectImageActivity)SelectImageActivity.AActivity;
 
     String mPersonGroupId;
 
@@ -342,7 +345,9 @@ public class IdentificationActivity extends AppCompatActivity {
                         false,       /* Whether to return face landmarks */
                         /* Which face attributes to analyze, currently we support:
                            age,gender,headPose,smile,facialHair */
-                        null);
+                        new FaceServiceClient.FaceAttributeType[] {
+                                FaceServiceClient.FaceAttributeType.Emotion
+                        });
             }  catch (Exception e) {
                 publishProgress(e.getMessage());
                 return null;
@@ -503,7 +508,7 @@ public class IdentificationActivity extends AppCompatActivity {
         Button selectImageButton = (Button) findViewById(R.id.manage_person_groups);
         selectImageButton.setEnabled(isEnabled);
 
-        //Button groupButton = (Button) findViewById(R.id.select_image);
+       // Button groupButton = (Button) findViewById(R.id.select_image);
         //groupButton.setEnabled(isEnabled);
 
         Button identifyButton = (Button) findViewById(R.id.identify);
@@ -619,9 +624,10 @@ public class IdentificationActivity extends AppCompatActivity {
                             mIdentifyResults.get(position).candidates.get(0).personId.toString();
                     String personName = StorageHelper.getPersonName(
                             personId, mPersonGroupId, IdentificationActivity.this);
+                    String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
                             + "Confidence: " + formatter.format(
-                            mIdentifyResults.get(position).candidates.get(0).confidence);
+                            mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
                 } else {
@@ -629,6 +635,7 @@ public class IdentificationActivity extends AppCompatActivity {
                             R.string.face_cannot_be_identified);
                 }
             }
+
             //*/ 리스트 항목 선택/터치/클릭 했을때
             final View finalConvertView = convertView; //*/ 이렇게 안하면 이 값 못씀.
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -647,6 +654,15 @@ public class IdentificationActivity extends AppCompatActivity {
                 }
             });
             return convertView;
+        }
+        //감정정보 – 다양한 감정 중 제일 높은 것을 추출
+        private String getEmotion(Emotion emotion)
+        {
+            String emotionType = "";
+            double emotionValue = 0.0;
+                emotionValue = emotion.happiness;
+                emotionType = "Happiness";
+            return String.format("%f", emotionValue);
         }
     }
 
