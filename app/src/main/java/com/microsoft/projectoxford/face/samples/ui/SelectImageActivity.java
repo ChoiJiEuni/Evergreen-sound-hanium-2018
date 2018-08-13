@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,15 +49,16 @@ import com.microsoft.projectoxford.face.samples.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-
+import static android.speech.tts.TextToSpeech.ERROR;
 // The activity for the user to select a image and to detect faces in the image.
 public class SelectImageActivity extends AppCompatActivity {
     // Flag to indicate the request of the next task to be performed
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
-
+    private TextToSpeech tts;
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
 
@@ -71,6 +73,18 @@ public class SelectImageActivity extends AppCompatActivity {
 
         //소히
         AActivity = SelectImageActivity.this;
+
+        // TTS를 생성하고 OnInitListener로 초기화 한다.
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
+
     }
 
     // Save the activity state when it's going to stop.
@@ -122,6 +136,7 @@ public class SelectImageActivity extends AppCompatActivity {
     // When the button of "Take a Photo with Camera" is pressed.
     // 카메라로 사진 찍기 버튼을 누르면 됩니다.
     public void takePhoto(View view) {
+        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
