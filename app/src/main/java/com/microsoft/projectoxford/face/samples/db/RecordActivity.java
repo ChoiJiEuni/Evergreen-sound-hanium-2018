@@ -26,9 +26,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RecordActivity extends AppCompatActivity {
-    private static String RECORDED_FILE;
+    private static String RECORDED_FILE; //요게 녹음파일 경로명
 
     MediaPlayer player;
     MediaRecorder recorder;
@@ -45,7 +47,16 @@ public class RecordActivity extends AppCompatActivity {
 
             dir.mkdirs();
 
-        file = new File(dir, "recorded.mp3");
+        //file = new File(dir, "timge.mp3");
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+
+
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String getTime = mFormat.format(date);
+
+        file = new File(dir, getTime+".mp3");
+        Log.d("chae",file.getPath().toString());
         RECORDED_FILE = file.getAbsolutePath();
 
         Button recordBtn = (Button) findViewById(R.id.recordBtn);
@@ -87,6 +98,7 @@ public class RecordActivity extends AppCompatActivity {
 
                 recorder.stop();
                 recorder.release();
+
                 recorder = null;
 
                 Toast.makeText(getApplicationContext(), "녹음이 중지되었습니다.", Toast.LENGTH_LONG).show();
@@ -142,5 +154,9 @@ public class RecordActivity extends AppCompatActivity {
         }
 
         super.onPause();
+    }
+
+    public void recordFinish(View view) {
+        finish();
     }
 }

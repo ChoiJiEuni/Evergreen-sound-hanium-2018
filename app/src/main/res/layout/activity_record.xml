@@ -28,4 +28,10 @@
             android:layout_height="wrap_content"
             android:text="재생중지"
             android:id="@+id/playStopBtn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저장"
+            android:onClick="recordFinish"/>
 </LinearLayout>

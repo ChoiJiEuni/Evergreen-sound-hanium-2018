@@ -61,6 +61,7 @@ import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.RecordActivity;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
@@ -487,8 +488,8 @@ public class IdentificationActivity extends AppCompatActivity {
         refreshIdentifyButtonEnabledStatus();
     }
 
-    public void viewLog(View view) {
-        Intent intent = new Intent(this, IdentificationLogActivity.class);
+    public void record(View view) {
+        Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
     }
 
