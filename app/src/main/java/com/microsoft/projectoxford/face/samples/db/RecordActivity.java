@@ -47,12 +47,12 @@ public class RecordActivity extends AppCompatActivity {
 
             dir.mkdirs();
 
-        //file = new File(dir, "timge.mp3");
+       // file = new File(dir, "record.mp3");
         long now = System.currentTimeMillis();
         Date date = new Date(now);
 
 
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyyMMdd_hhmmss");
         String getTime = mFormat.format(date);
 
         file = new File(dir, getTime+".mp3");
