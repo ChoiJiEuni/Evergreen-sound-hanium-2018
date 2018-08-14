@@ -93,10 +93,9 @@ import java.util.UUID;
 
 public class IdentificationActivity extends AppCompatActivity {
 
-    private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
     private static int PersonCount=0; // 전체 인원 수
-
     HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
+    private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
     private View convertView;
 
@@ -330,7 +329,7 @@ public class IdentificationActivity extends AppCompatActivity {
                             ? identifyResult.candidates.get(0).personId.toString()
                             : "Unknown Person")
                             + ". ";
-                }
+                    }
                 addLog(logString);
 
                 // Show the detailed list of detected faces.
