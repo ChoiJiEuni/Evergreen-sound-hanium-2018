@@ -40,6 +40,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
@@ -73,6 +75,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class AddFaceToPersonActivity extends AppCompatActivity {
+    //등록된 인물 사진 저장경로 - 211번째줄에서 처리
+    Uri personImageUri;
     // Background task of adding a face to person.
     class AddFaceTask extends AsyncTask<Void, String, Boolean> {
         List<Integer> mFaceIndices;
@@ -204,6 +208,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     fileOutputStream.flush();
 
                     Uri uri = Uri.fromFile(file);
+                    personImageUri = Uri.fromFile(file);//등록된 인물 사진 저장경로 받아오기
                     StorageHelper.setFaceUri(
                             faceId, uri.toString(), mPersonId, AddFaceToPersonActivity.this);
                 } catch (IOException e) {

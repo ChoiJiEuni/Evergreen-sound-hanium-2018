@@ -57,6 +57,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.CreatePersonResult;
@@ -73,6 +74,8 @@ import java.util.UUID;
 
 
 public class PersonActivity extends AppCompatActivity {
+    //등록된 인물 이름 - 220번째줄에서 처리
+    String personName;
     // Background task of adding a person to person group.
     class AddPersonTask extends AsyncTask<String, String, String> {
         // Indicate the next step is to add face in this person, or finish editing this person.
@@ -214,6 +217,7 @@ public class PersonActivity extends AppCompatActivity {
             addNewPerson = bundle.getBoolean("AddNewPerson");
             personGroupId = bundle.getString("PersonGroupId");
             oldPersonName = bundle.getString("PersonName");
+            personName = bundle.getString("PersonName");//등록된 인물 이름 받아오기
             if (!addNewPerson) {
                 personId = bundle.getString("PersonId");
             }
