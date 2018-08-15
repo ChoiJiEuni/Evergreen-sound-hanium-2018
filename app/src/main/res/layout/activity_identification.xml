@@ -137,6 +137,17 @@
             android:onClick="record"
             style="@style/ButtonStyle" />
 
+
+        <Button
+            android:id="@+id/DB"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="DB"
+            android:layout_marginLeft="@dimen/view_margin"
+            android:layout_marginEnd="@dimen/view_margin"
+            android:onClick="DB"
+            style="@style/ButtonStyle"/>
     </LinearLayout>
 
 </RelativeLayout>

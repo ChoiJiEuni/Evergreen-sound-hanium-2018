@@ -39,6 +39,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,6 +58,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.Emotion;
@@ -62,6 +66,7 @@ import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
 import com.microsoft.projectoxford.face.samples.db.RecordActivity;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
@@ -72,6 +77,7 @@ import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonActi
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupActivity;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,7 +85,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Member;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,6 +108,50 @@ public class IdentificationActivity extends AppCompatActivity {
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
     private View convertView;
+
+    //*/ DB
+    Uri imageUri = null;
+    private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
+    private static String TAG = "php";
+    String userName="B_tester";
+    String userPass="1111";
+    String DatabaseName ="B_db";
+    String EmotionValue = "";
+    Float Latitude = Float.valueOf(0); // 위도
+    Float Longitude =  Float.valueOf(0); //경도
+    String strLocation = "";//*/ 지은: location
+    String createDate = ""; //*/ 지은 찍은날짜.
+
+    public void DB(View view) {
+        //*/ 지은: ExifInterface 생성
+        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
+        ExifInterface exif = null;
+        StringBuffer dateBuffer= new StringBuffer();
+        try {
+            in = getContentResolver().openInputStream(imageUri);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                exif = new ExifInterface(in); // 사진 상세정보 객체
+            }
+            in.close();
+
+            Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
+            Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
+            strLocation = location(Latitude, Longitude);//*/ 지은: location
+
+            createDate = exif.getAttribute(ExifInterface.TAG_DATETIME); //*/ 지은 찍은날짜.
+            dateBuffer.append(createDate.substring(0,4));
+            dateBuffer.append(createDate.substring(5,7));
+            dateBuffer.append(createDate.substring(8));
+
+        }catch (Exception e){
+
+        }
+        //photoExifInfo(imageUri);
+        InsertPicInfoValues(imageUri.getPath(),strLocation,dateBuffer.toString(),EmotionValue, String.valueOf(PersonCount)); //*/ 지은: 중요
+        Toast.makeText(getApplicationContext(),strLocation+"!!",Toast.LENGTH_LONG).show();
+
+    }
+
 
     // Background task of face identification.
     // 얼굴 식별의 백그라운드 작업
@@ -199,7 +253,11 @@ public class IdentificationActivity extends AppCompatActivity {
         detected = false;
 
         // If image is selected successfully, set the image URI and bitmap.
-        Uri imageUri = intent_test.getData();
+        //Uri imageUri = intent_test.getData(); //*/지은: 찍은 사진 사진 uri
+        imageUri = intent_test.getData(); //*/지은: 찍은 사진 사진 uri
+
+
+
         Log.d("chae",imageUri.getPath()+"받은거");
 //////////////////////////////////////
        /* if (imageUri != null) {
@@ -249,6 +307,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
         // Start detecting in image.
         detect(mBitmap);
+
+
     }
 
     @Override
@@ -671,12 +731,18 @@ public class IdentificationActivity extends AppCompatActivity {
                     // Log.d("soheeeeeeeeeeee:", (String) map.get(""));
                     Log.d("Soheeeeee:",PersonName);
 
-                    String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
+                    //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
+                    EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
+                    String Emotion = String.format("Happiness: "+EmotionValue);
+                    //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
                             + "Confidence: " + formatter.format(
                             mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
+
+
+
                 } else {
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             R.string.face_cannot_be_identified);
@@ -786,4 +852,298 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
+    //*/ 지은
+    public void photoExifInfo(Uri selectUri){
+
+        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
+        ExifInterface exifInterface = null;
+        try {
+            in = getContentResolver().openInputStream(selectUri);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                exifInterface = new ExifInterface(in); // 사진 상세정보 객체
+            }
+            in.close();
+
+             Latitude = convertToDegree(exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE)); // 위도
+             Longitude = convertToDegree(exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)); //경도
+             strLocation = location(Latitude,Longitude);//*/ 지은: location
+             createDate = exifInterface.getAttribute(ExifInterface.TAG_DATETIME); //*/ 지은 찍은날짜.
+
+
+
+
+        } catch (FileNotFoundException e) {
+           Log.d("GOM","FileNot");
+        } catch (IOException e) {
+            Log.d("GOM","FileNot");
+        }
+
+    }// photoExifInfo() end.
+
+    //*/ 지은
+    private Float convertToDegree(String stringDMS){
+        Float result = null;
+        try{
+            String[] DMS = stringDMS.split(",", 3);
+
+            String[] stringD = DMS[0].split("/", 2);
+            Double D0 = new Double(stringD[0]);
+            Double D1 = new Double(stringD[1]);
+            Double FloatD = D0/D1;
+
+            String[] stringM = DMS[1].split("/", 2);
+            Double M0 = new Double(stringM[0]);
+            Double M1 = new Double(stringM[1]);
+            Double FloatM = M0/M1;
+
+            String[] stringS = DMS[2].split("/", 2);
+            Double S0 = new Double(stringS[0]);
+            Double S1 = new Double(stringS[1]);
+            Double FloatS = S0/S1;
+
+            result = new Float(FloatD + (FloatM/60) + (FloatS/3600));
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),"오류 2",Toast.LENGTH_LONG).show();
+        }
+
+        return result;
+
+
+    } // convertToDegree() end
+
+    //*/ 지은
+    public String location(Float Latitude,Float Longitude ){
+        final Geocoder geocoder = new Geocoder(this);
+        List<Address> list = null;
+        try {
+            double d1 = Double.parseDouble(String.valueOf(Latitude));
+            double d2 = Double.parseDouble(String.valueOf(Longitude));
+
+            list = geocoder.getFromLocation(
+                    d1, // 위도
+                    d2, // 경도
+                    10); // 얻어올 값의 개수
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+        }
+        if (list != null) {
+            if (list.size()==0) {
+                return "해당되는 주소 정보는 없습니다";
+            } else {
+                // 구는 null값이 나오는 곳이 있고 안나오는 곳이있다.
+                // 시까지는 정확한 결과인것 같다.
+                // 핸드폰 자체에서도 매번 정확한 gps를 정보를 가져올 수는 없는 것같다. 핸드폰 기본 갤러리에서도 내가 실제 찍은 장소랑 살짝 오차가 있음.
+                // 번지까지 정보를 가져오기에는 너무 오차가능성이 높아질 듯.
+
+                StringBuffer stringBuffer= new StringBuffer();
+                stringBuffer.append(list.get(0).getCountryName()+" ");//국가명
+                stringBuffer.append(list.get(0).getLocality()+" ");//구 메인(시)
+                if(!(list.get(0).getSubLocality().equals(null))){
+                    stringBuffer.append(list.get(0).getSubLocality()+" ");//구 서브데이터
+                }
+                if(!(list.get(0).getThoroughfare().equals(null))){
+                    stringBuffer.append(list.get(0).getThoroughfare()+" ");//동
+                }
+
+
+                return stringBuffer.toString();
+                // list.get(0).getAddressLine(0).toString(); // 전체주소(국가, 시, 구, 동, 번지)
+            }
+        }
+        return "";
+    } // location() end.
+    class createDatabaseAndTable extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String postParameters = "&userName=" + userName+"&userPass=" + userPass+"&databaseName=" + databaseName; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // createDatabaseAndTable() end.
+
+    class insert_picture_infoTask extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String img_path = (String)params[4];
+            String location = (String)params[5];
+            String create_date = (String)params[6];
+            String happiness = (String)params[7];
+            String num_of_people = (String)params[8];
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&img_path=" + img_path
+                    +"&location=" + location
+                    +"&create_date=" + create_date
+                    +"&happiness=" + happiness
+                    +"&num_of_people=" + num_of_people; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // insert_picture_info() end.
+
+    public void InsertPicInfoValues(String img_path, String location,String create_date,String happiness,String num_of_people){
+        createDatabaseAndTable DBTask = new createDatabaseAndTable();
+        DBTask.execute("http://" + IP_ADDRESS + "/DB.php",userName,userPass,DatabaseName);
+
+        createDatabaseAndTable TableTask = new createDatabaseAndTable();
+        TableTask.execute("http://" + IP_ADDRESS + "/tableCreate.php",userName,userPass,DatabaseName);
+
+        insert_picture_infoTask task = new insert_picture_infoTask();
+        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",userName,userPass,DatabaseName,img_path,location,create_date,happiness,num_of_people);
+    } // InsertPicInfoValues() end.
 }

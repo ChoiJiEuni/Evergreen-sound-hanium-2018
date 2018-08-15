@@ -65,7 +65,8 @@ public class ExifActivity extends AppCompatActivity {
                 photoExifInfo(selectUri);
         } }catch (Exception e){
                 Toast.makeText(getApplicationContext(),"오류",Toast.LENGTH_LONG).show();
-        }}
+        }
+    } //onActivityResult() end.
 
     public void onClickgallery(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -154,7 +155,7 @@ public class ExifActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-    }
+    }// photoExifInfo() end.
 
     private Float convertToDegree(String stringDMS){
         Float result = null;
