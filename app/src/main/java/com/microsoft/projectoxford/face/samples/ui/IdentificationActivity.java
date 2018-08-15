@@ -79,16 +79,24 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Member;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 
 
 public class IdentificationActivity extends AppCompatActivity {
+
+    private static int PersonCount=0; // 전체 인원 수
+    HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
+    private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
+
     private View convertView;
 
     // Background task of face identification.
@@ -170,10 +178,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
     PersonGroupListAdapter mPersonGroupListAdapter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
+
 
         // 소히
         // AActivity = IdentificationActivity.this;
@@ -318,7 +329,7 @@ public class IdentificationActivity extends AppCompatActivity {
                             ? identifyResult.candidates.get(0).personId.toString()
                             : "Unknown Person")
                             + ". ";
-                }
+                    }
                 addLog(logString);
 
                 // Show the detailed list of detected faces.
@@ -371,6 +382,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
             setAllButtonsEnabledStatus(true);
 
+            //PersonCount = result.length
+            // Log.d("sohee",PersonCount);
+
+            /////////////희
+            PersonCount=result.length; // 인원 수 반환
+            Log.d("sohee", String.valueOf(PersonCount));
+
             if (result != null) {
                 // Set the adapter of the ListView which contains the details of detected faces.
                 mFaceListAdapter = new FaceListAdapter(result);
@@ -391,6 +409,13 @@ public class IdentificationActivity extends AppCompatActivity {
             refreshIdentifyButtonEnabledStatus();
         }
     }
+
+    /*희 굳이 메소드까지는 필요없을지도..
+    public void getPersonCount(Face[] result){ //인원수 세는 메소드
+        PersonCount=result.length; // 이 변수 안에다가 인원 수 집어넣음
+        Log.d("hee", String.valueOf(PersonCount));
+    }
+    */
 
     // Flag to indicate which task is to be performed.
     private static final int REQUEST_SELECT_IMAGE = 0;
@@ -624,6 +649,28 @@ public class IdentificationActivity extends AppCompatActivity {
                             mIdentifyResults.get(position).candidates.get(0).personId.toString();
                     String personName = StorageHelper.getPersonName(
                             personId, mPersonGroupId, IdentificationActivity.this);
+
+                    //////희 : 해시맵에다가 이름들 넣기
+
+                    //해시맵
+                    /*String PersonnnName= personName;
+                    map.put("name",PersonnnName);
+
+                    /*
+                    PersonName=String.valueOf(map.get("name"));
+                    Log.d("웨않되~:", PersonName);
+
+                    Log.d("soheeeeee",PersonnnName);*/
+
+
+                    String per=personName;
+                    //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
+                    map.put("",per); // 전역변수 PersonName 해시맵에다가 넣기
+                    PersonName=String.valueOf(map);
+                    // Log.d("soheeeeeeeeeeee:", PersonName);
+                    // Log.d("soheeeeeeeeeeee:", (String) map.get(""));
+                    Log.d("Soheeeeee:",PersonName);
+
                     String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
                             + "Confidence: " + formatter.format(
@@ -646,6 +693,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(),textView.getText().toString()+"!",Toast.LENGTH_SHORT).show();
                     String name =  textView.getText().toString() ;
 
+
+
+                   //  String personName = StorageHelper.getPersonName(
+                         //   personId, mPersonGroupId, IdentificationActivity.this);
                     if(name.equals("Unknown person")){
 
                         Intent intent = new Intent(IdentificationActivity.this, PersonGroupListActivity.class);
