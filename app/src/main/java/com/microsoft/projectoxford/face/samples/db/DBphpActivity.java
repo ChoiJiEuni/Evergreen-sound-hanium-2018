@@ -170,7 +170,7 @@ public class DBphpActivity extends AppCompatActivity {
             }
 
         }
-    }
+    } // InsertData() end.
     class DeleteData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
 

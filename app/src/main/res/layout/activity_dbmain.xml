@@ -5,21 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.microsoft.projectoxford.face.samples.db.DBMainActivity"
-    android:orientation="horizontal">
-    <Button
-        android:layout_width="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DB값 입력"
-        android:onClick="onClickInsertDB"/>
-    <Button
-        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DB 생성"
+            android:onClick="onClickCreateDB"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Table 생성"
+            android:onClick="onClickCreateTable"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="picInfoValues 삽입"
+            android:onClick="onClickInsertPicInfoValues"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Exif 정보"
-        android:onClick="onClickExifInfo"/>
-    <Button
-        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="registeredPersonValues 삽입"
+            android:onClick="onClickInsertRegisteredPersonValues"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="recognitionValues 삽입"
+            android:onClick="onClickInsertRecognitionValues"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="녹음하기"
-        android:onClick="onClickRecord"/>
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DB값 입력"
+            android:onClick="onClickInsertDB"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exif 정보"
+            android:onClick="onClickExifInfo"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="녹음하기"
+            android:onClick="onClickRecord"/>
+    </LinearLayout>
+
 
 </LinearLayout>
