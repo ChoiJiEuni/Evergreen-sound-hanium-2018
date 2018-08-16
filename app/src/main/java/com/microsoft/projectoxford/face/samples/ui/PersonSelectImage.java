@@ -125,7 +125,7 @@ public class PersonSelectImage extends AppCompatActivity {
             }
         }
     }
-
+/*
     // When the button of "Select a Photo in Album" is pressed.
     // 앨범에서 사진 선택 버튼을 누르면 됩니다.
     public void selectImageInAlbum(View view) {
@@ -135,7 +135,7 @@ public class PersonSelectImage extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM);
         }
     }
-
+*/
     // Set the information panel on screen.
     // 정보 패널을 화면에 설정합니다.
     private void setInfo(String info) {

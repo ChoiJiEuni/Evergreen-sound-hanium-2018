@@ -100,7 +100,7 @@ public class Gallery extends Activity {
 
             if(bmp!=null) {
                 Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-                if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
+               // if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
                     imageView.setImageBitmap(resized); //갤러리에 보임
             }
             return imageView;
