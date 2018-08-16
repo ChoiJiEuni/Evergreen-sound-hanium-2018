@@ -97,11 +97,14 @@ public class Gallery extends Activity {
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
-            Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-            if(thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
-                imageView.setImageBitmap(resized); //갤러리에 보임
 
+            if(bmp!=null) {
+                Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
+                if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
+                    imageView.setImageBitmap(resized); //갤러리에 보임
+            }
             return imageView;
+
         }
 
         private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas){
