@@ -62,6 +62,7 @@ import android.widget.Toast;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.CreatePersonResult;
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.DBService;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
@@ -76,6 +77,7 @@ import java.util.UUID;
 public class PersonActivity extends AppCompatActivity {
     //등록된 인물 이름 - 220번째줄에서 처리
     String personName;
+
     // Background task of adding a person to person group.
     class AddPersonTask extends AsyncTask<String, String, String> {
         // Indicate the next step is to add face in this person, or finish editing this person.
@@ -358,6 +360,14 @@ public class PersonActivity extends AppCompatActivity {
         setInfo("");
         // 소히
         //Intent intent = new Intent(this, SelectImageActivity.class);
+        //*/지은: DB
+        EditText editTextPersonName=(EditText)findViewById(R.id.edit_person_name);
+        Intent serviceIntent = new Intent(this,DBService.class);
+        serviceIntent.putExtra("COMMAND","Registered_TB_Pref");
+        serviceIntent.putExtra("DATA","NAME");
+        serviceIntent.putExtra("NAME",editTextPersonName.getText().toString()+"");
+        startService(serviceIntent);
+
         Intent intent = new Intent(this, PersonSelectImage.class);
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }

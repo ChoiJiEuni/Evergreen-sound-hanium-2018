@@ -7,8 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <!-- 녹음 권한 -->
     <application
         android:name=".helper.SampleApp"
@@ -89,7 +90,12 @@
             android:label="Select an Image" />
         <activity android:name=".db.ExifActivity" />
         <activity android:name=".db.RecordActivity" />
-        <activity android:name=".db.DBMainActivity"></activity>
+        <activity android:name=".db.DBMainActivity" />
+
+        <service
+            android:name=".db.DBService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
