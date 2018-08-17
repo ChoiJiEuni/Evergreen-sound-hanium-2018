@@ -82,6 +82,24 @@ public class PersonSelectImage extends AppCompatActivity {
         });
     }
 
+    @Override
+
+    public void finish() { appEnd(); super.finish(); }
+
+    @Override
+
+    protected void onDestroy() { appEnd(); super.onDestroy(); }
+
+
+    void appEnd() {
+
+        if (tts.isSpeaking()) tts.stop();
+
+        if (tts != null) tts.shutdown();
+
+
+
+    }
     // Save the activity state when it's going to stop.
     //작업이 중지될 때 작업 상태를 저장합니다.
     @Override
@@ -129,6 +147,7 @@ public class PersonSelectImage extends AppCompatActivity {
     public void takePhoto(View view) {
 
         tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
