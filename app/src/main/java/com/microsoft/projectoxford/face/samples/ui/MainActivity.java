@@ -1,10 +1,13 @@
 package com.microsoft.projectoxford.face.samples.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
@@ -27,8 +30,14 @@ import com.microsoft.projectoxford.face.samples.db.ExifActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_TAKE_PHOTO = 0;
     private TextToSpeech tts;
 
+    //*/ DB
+    private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
+    private static String TAG = "php";
+    String userName="B_tester";
+    String userPass="1111";
+    String DatabaseName ="B_db";
 
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
@@ -269,4 +284,118 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+    //*/DB에 Registered_person_tb(인물등록)에 들어가는 시점.
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        SharedPreferences pref = getSharedPreferences("Registered_TB_Pref",MODE_PRIVATE);
+
+        String name = pref.getString("name", "null");
+        String img_path = pref.getString("person_img_path", "null");
+        Boolean registration = pref.getBoolean("registration",false);
+
+        //*/ 애뮬에서는 인물을 인식못해서 addFaveToPersonActivity에서 boolean값이 바뀌지 않아서 이 문장들 실행안됨. 다운받아야 됨.
+        //*/ 사용자가 등록하다가 중도 취소할 경우 데베에 삽입하는것을 막기 위한 부분.
+        if(pref.getBoolean("registration",false) == true){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("registration",false);
+            editor.commit();
+            //*/ db에 값 넣는 부분.
+            insert_registered_person_tb task = new insert_registered_person_tb();
+            task.execute("http://" + IP_ADDRESS + "/insert_registered_person_tb.php",userName,userPass,DatabaseName,name,img_path);
+        }
+    }
+
+    class insert_registered_person_tb extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(MainActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String name = (String)params[4];
+            String person_img_path = (String)params[5];
+
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&name=" + name
+                    +"&person_img_path=" + person_img_path; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } //insert_registered_person_tb() end
 }

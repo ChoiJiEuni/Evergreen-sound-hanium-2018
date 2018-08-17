@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.microsoft.projectoxford.face.samples">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,13 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-
     <!-- 녹음 권한 -->
     <application
         android:name=".helper.SampleApp"
@@ -82,8 +74,7 @@
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.Main" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -93,6 +84,9 @@
         <activity android:name=".ui.Gallery2" />
         <activity android:name=".db.DBphpActivity" />
         <activity android:name=".db.ShowDBActivity" />
+        <activity
+            android:name=".ui.PersonSelectImage"
+            android:label="Select an Image" />
         <activity android:name=".db.ExifActivity" />
         <activity android:name=".db.RecordActivity" />
         <activity android:name=".db.DBMainActivity"></activity>

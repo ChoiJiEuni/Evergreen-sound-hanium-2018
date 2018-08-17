@@ -32,18 +32,15 @@
 //
 package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,43 +57,29 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.CreatePersonResult;
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
+import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
-import com.microsoft.projectoxford.face.samples.ui.IdentificationActivity;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.speech.tts.TextToSpeech.ERROR;
 
 
 public class PersonActivity extends AppCompatActivity {
     //등록된 인물 이름 - 220번째줄에서 처리
     String personName;
-
-
-    private static final int REQUEST_TAKE_PHOTO = 0;
-    private TextToSpeech tts;
-
-    // The URI of photo taken with camera
-    private Uri mUriPhotoTaken;
-
     // Background task of adding a person to person group.
     class AddPersonTask extends AsyncTask<String, String, String> {
         // Indicate the next step is to add face in this person, or finish editing this person.
         boolean mAddFace;
-
-
 
         AddPersonTask (boolean addFace) {
             mAddFace = addFace;
@@ -247,19 +230,6 @@ public class PersonActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
-
-        /////추가용
-        // TTS를 생성하고 OnInitListener로 초기화 한다.
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != ERROR) {
-                    // 언어를 선택한다.
-                    tts.setLanguage(Locale.KOREAN);
-                }
-            }
-        });
-
     }
 
     private void initializeGridView() {
@@ -286,7 +256,7 @@ public class PersonActivity extends AppCompatActivity {
                 GridView gridView = (GridView) findViewById(R.id.gridView_faces);
                 gridView.setAdapter(faceGridViewAdapter);
 
-                TextView addNewItem = (TextView) findViewById(R.id.add_face);
+                Button addNewItem = (Button) findViewById(R.id.add_face);
                 addNewItem.setEnabled(false);
 
                 return true;
@@ -319,7 +289,7 @@ public class PersonActivity extends AppCompatActivity {
                 GridView gridView = (GridView) findViewById(R.id.gridView_faces);
                 gridView.setAdapter(faceGridViewAdapter);
 
-                TextView addNewItem = (TextView) findViewById(R.id.add_face);
+                Button addNewItem = (Button) findViewById(R.id.add_face);
                 addNewItem.setEnabled(true);
             }
         });
@@ -337,6 +307,7 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putBoolean("AddNewPerson", addNewPerson);
         outState.putString("PersonId", personId);
         outState.putString("PersonGroupId", personGroupId);
@@ -346,6 +317,7 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
         addNewPerson = savedInstanceState.getBoolean("AddNewPerson");
         personId = savedInstanceState.getString("PersonId");
         personGroupId = savedInstanceState.getString("PersonGroupId");
@@ -386,65 +358,15 @@ public class PersonActivity extends AppCompatActivity {
         setInfo("");
         // 소히
         //Intent intent = new Intent(this, SelectImageActivity.class);
-        /* Intent intent = new Intent(this, PersonSelectImage.class);
-         startActivityForResult(intent, REQUEST_SELECT_IMAGE);*/
-
-        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null) {
-            // Save the photo taken to a temporary file.
-            // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            try {
-                /////////////////////새 저장 폴더 만들기//////////////////////
-                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
-                // File dir = new File(storageDir.getPath(), "evergreen");
-                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
-                Log.d("chae",dir+"");
-
-                if(!dir.exists())
-
-                    dir.mkdirs();
-                ///////////////////////////////////////////////////////////////
-                File file = File.createTempFile("evergreen_", ".jpg", dir);
-                mUriPhotoTaken = Uri.fromFile(file);
-                Log.d("chae",mUriPhotoTaken+"넘긴거");
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
-                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-            } catch (IOException e) {
-                setInfo(e.getMessage());
-            }
-        }
+        Intent intent = new Intent(this, PersonSelectImage.class);
+        startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode)
         {
-
-            case REQUEST_TAKE_PHOTO:
-                if(resultCode == RESULT_OK) {
-                    Uri uriImagePicked = data.getData();
-                    if (data == null || data.getData() == null) {
-                        uriImagePicked = mUriPhotoTaken;
-                    } else {
-                        uriImagePicked = data.getData();
-                    }
-                    Intent intent = new Intent(this, AddFaceToPersonActivity.class);
-                    intent.putExtra("PersonId",personId);
-                    intent.putExtra("PersonGroupId",personGroupId);
-                    intent.putExtra("ImageUriStr",uriImagePicked.toString());
-                    intent.setData(uriImagePicked);
-                   /*Intent intent = new Intent(this,AddFaceToPersonActivity.class);
-                   intent.putExtra("PersonId",personId);
-                   intent.putExtra("PersonGroupId",personGroupId);
-                   intent.putExtra("ImageUriStr",uriImagePicked.toString());
-                   startActivity(intent);
-                   */
-
-                }
-               /* case REQUEST_SELECT_IMAGE:
+            case REQUEST_SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {
                     Uri uriImagePicked = data.getData();
                     Intent intent = new Intent(this, AddFaceToPersonActivity.class);
@@ -452,7 +374,7 @@ public class PersonActivity extends AppCompatActivity {
                     intent.putExtra("PersonGroupId", personGroupId);
                     intent.putExtra("ImageUriStr", uriImagePicked.toString());
                     startActivity(intent);
-                }*/
+                }
                 break;
             default:
                 break;

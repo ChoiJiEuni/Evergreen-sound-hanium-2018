@@ -34,6 +34,7 @@ package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,6 +59,7 @@ import com.microsoft.projectoxford.face.contract.AddPersistedFaceResult;
 import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.FaceRectangle;
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.db.DBService;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
@@ -76,7 +78,7 @@ import java.util.UUID;
 
 public class AddFaceToPersonActivity extends AppCompatActivity {
     //등록된 인물 사진 저장경로 - 211번째줄에서 처리
-    Uri personImageUri;
+    private Uri personImageUri;
     // Background task of adding a face to person.
     class AddFaceTask extends AsyncTask<Void, String, Boolean> {
         List<Integer> mFaceIndices;
@@ -211,6 +213,15 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     personImageUri = Uri.fromFile(file);//등록된 인물 사진 저장경로 받아오기
                     StorageHelper.setFaceUri(
                             faceId, uri.toString(), mPersonId, AddFaceToPersonActivity.this);
+
+                    //*/지은: DB
+                    Intent serviceIntent = new Intent(this,DBService.class);
+                    serviceIntent.putExtra("COMMAND","Registered_TB_Pref");
+                    serviceIntent.putExtra("DATA","PERSON_IMG_PATH");
+                    serviceIntent.putExtra("PERSON_IMG_PATH",personImageUri+"");
+                    serviceIntent.putExtra("REGISTRATION",true);
+                    startService(serviceIntent);
+
                 } catch (IOException e) {
                     setInfo(e.getMessage());
                 } finally {
