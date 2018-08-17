@@ -108,6 +108,8 @@ public class IdentificationActivity extends AppCompatActivity {
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
     private View convertView;
+    private float average=0; // 행복도 평균값
+    float sum = 0;
 
     //*/ DB
     Uri imageUri = null;
@@ -733,6 +735,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
+
+
+                    sum += Float.parseFloat(EmotionValue);
+
+
                     String Emotion = String.format("Happiness: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
@@ -747,7 +754,11 @@ public class IdentificationActivity extends AppCompatActivity {
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             R.string.face_cannot_be_identified);
                 }
+
             }
+            average = sum/map.size();
+            Log.d("chae",String.valueOf(average));
+            Log.d("chae",String.valueOf(map.size()));
 
             //*/ 리스트 항목 선택/터치/클릭 했을때
             final View finalConvertView = convertView; //*/ 이렇게 안하면 이 값 못씀.
