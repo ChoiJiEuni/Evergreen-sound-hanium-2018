@@ -108,7 +108,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
     private View convertView;
-    private float average=0; // 행복도 평균값
+    private float average=0; // 행복도 평균값 => 383번째줄 identify(분석)버튼 누르면 행복도 평균값 계산
     float sum = 0;
 
     //*/ DB
@@ -380,6 +380,7 @@ public class IdentificationActivity extends AppCompatActivity {
         if (succeed) {
             // Set the information about the detection result.
             setInfo("Identification is done");
+            average = sum/map.size(); //분석버튼 누르면 행복도 평균값 계산
 
             if (result != null) {
                 mFaceListAdapter.setIdentificationResult(result);
@@ -727,7 +728,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     String per=personName;
                     //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
-                    map.put("",per); // 전역변수 PersonName 해시맵에다가 넣기
+                    map.put(position,per); // 전역변수 PersonName 해시맵에다가 넣기
                     PersonName=String.valueOf(map);
                     // Log.d("soheeeeeeeeeeee:", PersonName);
                     // Log.d("soheeeeeeeeeeee:", (String) map.get(""));
@@ -756,10 +757,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 }
 
             }
-            average = sum/map.size();
-            Log.d("chae",String.valueOf(average));
-            Log.d("chae",String.valueOf(map.size()));
-
             //*/ 리스트 항목 선택/터치/클릭 했을때
             final View finalConvertView = convertView; //*/ 이렇게 안하면 이 값 못씀.
             convertView.setOnClickListener(new View.OnClickListener() {

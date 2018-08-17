@@ -75,7 +75,7 @@ import java.util.UUID;
 
 public class PersonActivity extends AppCompatActivity {
     //등록된 인물 이름 - 220번째줄에서 처리
-    String personName;
+    private String personName;
     // Background task of adding a person to person group.
     class AddPersonTask extends AsyncTask<String, String, String> {
         // Indicate the next step is to add face in this person, or finish editing this person.

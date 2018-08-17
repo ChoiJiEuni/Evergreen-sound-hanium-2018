@@ -76,7 +76,7 @@ import java.util.UUID;
 
 public class AddFaceToPersonActivity extends AppCompatActivity {
     //등록된 인물 사진 저장경로 - 211번째줄에서 처리
-    Uri personImageUri;
+    private Uri personImageUri;
     // Background task of adding a face to person.
     class AddFaceTask extends AsyncTask<Void, String, Boolean> {
         List<Integer> mFaceIndices;
