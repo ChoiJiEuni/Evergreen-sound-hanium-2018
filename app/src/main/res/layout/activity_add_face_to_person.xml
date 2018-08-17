@@ -20,13 +20,15 @@
         android:textSize="@dimen/abc_text_size_large_material"
         android:text="@string/select_face_tip" />
 
-    <Button
+    <TextView
         android:id="@+id/done_and_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/done_and_save"
+        android:textSize="30dp"
+        android:gravity="center"
         android:onClick="doneAndSave"
         style="@style/ButtonStyle" />
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
@@ -59,10 +60,10 @@ public class RecordActivity extends AppCompatActivity {
         Log.d("chae",file.getPath().toString());
         RECORDED_FILE = file.getAbsolutePath();
 
-        Button recordBtn = (Button) findViewById(R.id.recordBtn);
-        Button recordStopBtn = (Button) findViewById(R.id.recordStopBtn);
-        Button playBtn = (Button) findViewById(R.id.playBtn);
-        Button playStopBtn = (Button) findViewById(R.id.playStopBtn);
+        TextView recordBtn = (TextView) findViewById(R.id.recordBtn);
+        TextView recordStopBtn = (TextView) findViewById(R.id.recordStopBtn);
+        TextView playBtn = (TextView) findViewById(R.id.playBtn);
+        TextView playStopBtn = (TextView) findViewById(R.id.playStopBtn);
 
         recordBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

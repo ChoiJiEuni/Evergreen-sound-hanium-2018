@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setIdentifyButtonEnabledStatus(boolean isEnabled) {
-        Button button = (Button) findViewById(R.id.identify);
+        TextView button = (TextView) findViewById(R.id.identify);
 //  button.setEnabled(isEnabled); 필요 없는 거라서 지워도 되는데 혹시 몰라서 주석 처리함
     }
     private void refreshIdentifyButtonEnabledStatus() {

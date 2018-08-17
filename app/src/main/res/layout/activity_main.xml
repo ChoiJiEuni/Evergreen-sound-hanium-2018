@@ -12,26 +12,42 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="OnButtonClickedImage"
-            android:text="촬영"/>
-        <Button
+            android:text="촬영"
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="OnButtonClickedGallery"
-            android:text="갤러리"/>
-        <Button
+            android:text="갤러리"
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="인물등록"
-            android:onClick="onButtonAddPerson"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:onClick="onButtonAddPerson"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DB 관련"
-            android:onClick="onButtonAddPHP"/>
+            android:textSize="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:onClick="onButtonAddPHP"
+            style="@style/ButtonStyle"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -28,11 +28,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText_main_country" />
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Insert"
-        android:id="@+id/button_main_insert" />
+        android:textSize="30dp"
+        android:gravity="center"
+        android:id="@+id/button_main_insert"
+        style="@style/ButtonStyle"/>
 
     <TextView
         android:layout_width="match_parent"

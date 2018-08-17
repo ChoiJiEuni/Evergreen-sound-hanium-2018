@@ -310,7 +310,7 @@ public class PersonGroupActivity extends AppCompatActivity {
                 GridView gridView = (GridView) findViewById(R.id.gridView_persons);
                 gridView.setAdapter(personGridViewAdapter);
 
-                Button addNewItem = (Button)findViewById(R.id.add_person);
+                TextView addNewItem = (TextView) findViewById(R.id.add_person);
                 addNewItem.setEnabled(false);
 
                 return true;
@@ -343,7 +343,7 @@ public class PersonGroupActivity extends AppCompatActivity {
                 GridView gridView = (GridView) findViewById(R.id.gridView_persons);
                 gridView.setAdapter(personGridViewAdapter);
 
-                Button addNewItem = (Button)findViewById(R.id.add_person);
+                TextView addNewItem = (TextView) findViewById(R.id.add_person);
                 addNewItem.setEnabled(true);
             }
         });

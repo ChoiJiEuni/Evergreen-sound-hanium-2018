@@ -37,21 +37,33 @@
         android:inputType="number"/>
 
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Insert"
-        android:id="@+id/button_main_insert" />
-    <Button
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/button_main_insert"
+        style="@style/ButtonStyle"/>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="delete"
-        android:id="@+id/button_delete" />
-    <Button
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/button_delete"
+        style="@style/ButtonStyle"/>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="show"
-        android:id="@+id/button_show" />
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/button_show"
+        style="@style/ButtonStyle"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="250dp"

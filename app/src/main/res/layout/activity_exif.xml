@@ -12,11 +12,13 @@
        android:layout_height="wrap_content"
        android:orientation="horizontal"
       >
-       <Button
+       <TextView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="갤러리"
-           android:onClick="onClickgallery"/>
+           android:textSize="20dp"
+           android:onClick="onClickgallery"
+           style="@style/ButtonStyle"/>
    </LinearLayout>
     <TextView
         android:layout_width="match_parent"

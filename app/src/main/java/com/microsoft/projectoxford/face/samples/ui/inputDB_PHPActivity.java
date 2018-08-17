@@ -43,7 +43,7 @@ public class inputDB_PHPActivity extends AppCompatActivity {
         mTextViewResult.setMovementMethod(new ScrollingMovementMethod());
 
 
-        Button buttonInsert = (Button)findViewById(R.id.button_main_insert);
+        TextView buttonInsert = (TextView) findViewById(R.id.button_main_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

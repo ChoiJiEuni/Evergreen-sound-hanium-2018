@@ -16,11 +16,13 @@
         android:layout_height="match_parent"
         android:layout_weight="2">
 
-        <Button
+        <TextView
             android:id="@+id/button_take_a_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/take_photo"
+            android:textSize="30dp"
+            android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:onClick="takePhoto"

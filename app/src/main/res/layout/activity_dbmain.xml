@@ -10,37 +10,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DB 생성"
-            android:onClick="onClickCreateDB"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClickCreateDB"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table 생성"
-            android:onClick="onClickCreateTable"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClickCreateTable"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="picInfoValues 삽입"
-            android:onClick="onClickInsertPicInfoValues"/>
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClickInsertPicInfoValues"
+            style="@style/ButtonStyle"/>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="registeredPersonValues 삽입"
-            android:onClick="onClickInsertRegisteredPersonValues"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClickInsertRegisteredPersonValues"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="recognitionValues 삽입"
-            android:onClick="onClickInsertRecognitionValues"/>
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClickInsertRecognitionValues"
+            style="@style/ButtonStyle"/>
 
 
     </LinearLayout>
@@ -48,21 +65,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DB값 입력"
-            android:onClick="onClickInsertDB"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClickInsertDB"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exif 정보"
-            android:onClick="onClickExifInfo"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClickExifInfo"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="녹음하기"
-            android:onClick="onClickRecord"/>
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClickRecord"
+            style="@style/ButtonStyle"/>
     </LinearLayout>
 
 

@@ -2,27 +2,35 @@ package com.microsoft.projectoxford.face.samples.ui;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.net.URI;
+import java.util.ArrayList;
+
 
 public class
 ImagePopup extends Activity implements OnClickListener{
@@ -33,6 +41,7 @@ ImagePopup extends Activity implements OnClickListener{
     private Bitmap bm;
     MediaPlayer player;
     private static String RECORDED_FILE;//재생될 녹음 파일명
+   // private URI mImageCaptureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +63,13 @@ ImagePopup extends Activity implements OnClickListener{
         iv.setImageBitmap(bm);
 
         /** 리스트로 가기 버튼 */
-        Button btn1 = (Button)findViewById(R.id.btn_back);
+        TextView btn1 = (TextView) findViewById(R.id.btn_back);
         btn1.setOnClickListener(this);
-        Button btn2 = (Button)findViewById(R.id.btn_startPlay);
+        TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
         btn2.setOnClickListener(this);
-        Button btn3 = (Button)findViewById(R.id.btn_stopPlay);
+        TextView btn3 = (TextView) findViewById(R.id.btn_stopPlay);
         btn3.setOnClickListener(this);
-        Button btn4 = (Button)findViewById(R.id.btn_share);
+        TextView btn4 = (TextView) findViewById(R.id.btn_share);
         btn4.setOnClickListener(this);
 
     }
@@ -104,26 +113,43 @@ ImagePopup extends Activity implements OnClickListener{
                 break;
         }
     }
-    private void sendMMS(){
-        try{
+
+
+    private void sendMMS() {
+        try {
             ContentResolver contentR = this.getContentResolver();
 
-            Uri uri = Uri.parse(imgPath);
+            Uri uri = Uri.parse("" + imgPath);
             OutputStream outstream;
-            try{
+            try {
                 outstream = contentR.openOutputStream(uri);
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, outstream);
+                bm.compress(Bitmap.CompressFormat.JPEG, 1000, outstream);
                 outstream.close();
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.err.println(e.toString());
             }
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_STREAM,uri);
-            intent.setType("image/jpg");
-            this.startActivity(intent);
-        }catch(Exception e){
-            Toast.makeText(this,"failed",Toast.LENGTH_LONG).show();
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Image Choose"), 1);
+           // this.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "failed", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+    }
+
+
+/*
+    private void getImage(){
+        Uri u= Uri.parse("mmsto: 01012345678"); //sms 문자와 관련된 Data는 'smsto:'로 시작. 이후는 문자를 받는 사람의 전화번호
+        Intent i= new Intent(Intent.ACTION_SENDTO,u); //시스템 액티비티인 SMS문자보내기 Activity의 action값
+        i.putExtra("mms_body", );  //보낼 문자내용을 추가로 전송, key값은 반드시 'sms_body'
+        startActivity(i);//액티비티 실행
+        } */
+
+    // 소희 : 문자로 공유하기
+    public void onButtonMsg() {
+       // getImage();
     }
 }

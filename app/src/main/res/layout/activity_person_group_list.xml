@@ -44,7 +44,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
-        <Button
+        <TextView
             android:id="@+id/add_person_group"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -52,6 +52,8 @@
             android:layout_marginRight="@dimen/view_margin"
             android:layout_marginEnd="@dimen/view_margin"
             android:text="@string/add_person_group"
+            android:textSize="30dp"
+            android:gravity="center"
             android:onClick="addPersonGroup"
             style="@style/ButtonStyle" />
 

@@ -42,7 +42,7 @@ public class DBphpActivity extends AppCompatActivity {
 
         mTextViewResult.setMovementMethod(new ScrollingMovementMethod()); //setMovementMethod: 항상 아래로 스크롤되는
 
-        Button buttonInsert = (Button) findViewById(R.id.button_main_insert);
+        TextView buttonInsert = (TextView) findViewById(R.id.button_main_insert);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +58,7 @@ public class DBphpActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonDelete = (Button) findViewById(R.id.button_delete);
+        TextView buttonDelete = (TextView) findViewById(R.id.button_delete);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +74,7 @@ public class DBphpActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonShow = (Button) findViewById(R.id.button_show);
+        TextView buttonShow = (TextView) findViewById(R.id.button_show);
         buttonShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

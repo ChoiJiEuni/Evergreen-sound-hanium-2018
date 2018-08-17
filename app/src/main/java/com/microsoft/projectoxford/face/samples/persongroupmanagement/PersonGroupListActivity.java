@@ -181,7 +181,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.list_person_groups);
                 listView.setAdapter(personGroupsListAdapter);
 
-                Button addNewItem = (Button)findViewById(R.id.add_person_group);
+                TextView addNewItem = (TextView)findViewById(R.id.add_person_group);
                 addNewItem.setEnabled(false);
 
                 return true;
@@ -214,7 +214,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.list_person_groups);
                 listView.setAdapter(personGroupsListAdapter);
 
-                Button addNewItem = (Button)findViewById(R.id.add_person_group);
+                TextView addNewItem = (TextView) findViewById(R.id.add_person_group);
                 addNewItem.setEnabled(true);
             }
         });

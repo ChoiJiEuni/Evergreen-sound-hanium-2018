@@ -598,16 +598,16 @@ public class IdentificationActivity extends AppCompatActivity {
        // Button groupButton = (Button) findViewById(R.id.select_image);
         //groupButton.setEnabled(isEnabled);
 
-        Button identifyButton = (Button) findViewById(R.id.identify);
+        TextView identifyButton = (TextView) findViewById(R.id.identify);
         identifyButton.setEnabled(isEnabled);
 
-        Button viewLogButton = (Button) findViewById(R.id.view_log);
+        TextView viewLogButton = (TextView) findViewById(R.id.view_log);
         viewLogButton.setEnabled(isEnabled);
     }
 
     // Set the group button is enabled or not.
     private void setIdentifyButtonEnabledStatus(boolean isEnabled) {
-        Button button = (Button) findViewById(R.id.identify);
+        TextView button = (TextView) findViewById(R.id.identify);
         button.setEnabled(isEnabled);
     }
 
@@ -711,23 +711,9 @@ public class IdentificationActivity extends AppCompatActivity {
                             mIdentifyResults.get(position).candidates.get(0).personId.toString();
                     String personName = StorageHelper.getPersonName(
                             personId, mPersonGroupId, IdentificationActivity.this);
-
-                    //////희 : 해시맵에다가 이름들 넣기
-
-                    //해시맵
-                    /*String PersonnnName= personName;
-                    map.put("name",PersonnnName);
-
-                    /*
-                    PersonName=String.valueOf(map.get("name"));
-                    Log.d("웨않되~:", PersonName);
-
-                    Log.d("soheeeeee",PersonnnName);*/
-
-
                     String per=personName;
                     //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
-                    map.put("",per); // 전역변수 PersonName 해시맵에다가 넣기
+                    map.put(position,per); // 전역변수 PersonName 해시맵에다가 넣기
                     PersonName=String.valueOf(map);
                     // Log.d("soheeeeeeeeeeee:", PersonName);
                     // Log.d("soheeeeeeeeeeee:", (String) map.get(""));
@@ -735,11 +721,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
-
-
                     sum += Float.parseFloat(EmotionValue);
-
-
                     String Emotion = String.format("Happiness: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
@@ -747,8 +729,6 @@ public class IdentificationActivity extends AppCompatActivity {
                             mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
-
-
 
                 } else {
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(

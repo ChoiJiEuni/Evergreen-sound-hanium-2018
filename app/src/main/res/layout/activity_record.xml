@@ -8,30 +8,44 @@
     android:orientation="vertical"
     android:gravity="center">
 
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="녹음하기"
-            android:id="@+id/recordBtn"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/recordBtn"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="녹음중지"
-            android:id="@+id/recordStopBtn"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/recordStopBtn"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="재생"
-            android:id="@+id/playBtn"/>
-        <Button
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/playBtn"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="재생중지"
-            android:id="@+id/playStopBtn"/>
-
-        <Button
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/playStopBtn"
+            style="@style/ButtonStyle"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="저장"
-            android:onClick="recordFinish"/>
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:onClick="recordFinish"
+            style="@style/ButtonStyle"/>
 </LinearLayout>
