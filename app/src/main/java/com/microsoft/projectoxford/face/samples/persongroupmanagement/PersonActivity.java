@@ -36,6 +36,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -356,6 +357,14 @@ public class PersonActivity extends AppCompatActivity {
 
     private void addFace() {
         setInfo("");
+
+        // DB
+        EditText editTextPersonName = (EditText)findViewById(R.id.edit_person_name);
+        SharedPreferences insert = getSharedPreferences("RegisteredTB_Pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putString("name", editTextPersonName.getText().toString()); //First라는 key값으로 infoFirst 데이터를 저장한다.
+        editor.commit(); //완료한다.
+
         // 소히
         //Intent intent = new Intent(this, SelectImageActivity.class);
         Intent intent = new Intent(this, PersonSelectImage.class);

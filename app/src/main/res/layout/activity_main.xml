@@ -49,5 +49,4 @@
             android:onClick="onButtonAddPHP"
             style="@style/ButtonStyle"/>
     </LinearLayout>
-
 </LinearLayout>

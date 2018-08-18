@@ -90,7 +90,6 @@ ImagePopup extends Activity implements OnClickListener{
                 Toast.makeText(getApplicationContext(), "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
                 try {
                     player = new MediaPlayer();
-
                     player.setDataSource(RECORDED_FILE);
                     player.prepare();
                     player.start();

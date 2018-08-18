@@ -35,6 +35,7 @@ package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -59,18 +60,23 @@ import com.microsoft.projectoxford.face.contract.AddPersistedFaceResult;
 import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.FaceRectangle;
 import com.microsoft.projectoxford.face.samples.R;
-import com.microsoft.projectoxford.face.samples.db.DBService;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
+import com.microsoft.projectoxford.face.samples.ui.MainActivity;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +85,14 @@ import java.util.UUID;
 public class AddFaceToPersonActivity extends AppCompatActivity {
     //등록된 인물 사진 저장경로 - 211번째줄에서 처리
     private Uri personImageUri;
+
+    //*/ DB
+    private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
+    private static String TAG = "php";
+    String userName="B_tester";
+    String userPass="1111";
+    String DatabaseName ="B_db";
+
     // Background task of adding a face to person.
     class AddFaceTask extends AsyncTask<Void, String, Boolean> {
         List<Integer> mFaceIndices;
@@ -215,12 +229,12 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                             faceId, uri.toString(), mPersonId, AddFaceToPersonActivity.this);
 
                     //*/지은: DB
-                    Intent serviceIntent = new Intent(this,DBService.class);
-                    serviceIntent.putExtra("COMMAND","Registered_TB_Pref");
-                    serviceIntent.putExtra("DATA","PERSON_IMG_PATH");
-                    serviceIntent.putExtra("PERSON_IMG_PATH",personImageUri+"");
-                    serviceIntent.putExtra("REGISTRATION",true);
-                    startService(serviceIntent);
+                    SharedPreferences insert = getSharedPreferences("RegisteredTB_Pref", MODE_PRIVATE);
+                    String name = insert.getString("name","null");
+
+                    insert_registered_person_tb task = new insert_registered_person_tb();
+                    task.execute("http://" + IP_ADDRESS + "/insert_registered_person_tb.php",userName,userPass,DatabaseName,name,personImageUri+"");
+
 
                 } catch (IOException e) {
                     setInfo(e.getMessage());
@@ -284,6 +298,8 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle(getString(R.string.progress_dialog_title));
+
+
     }
 
     @Override
@@ -423,4 +439,96 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             return convertView;
         }
     }
+
+    class insert_registered_person_tb extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(AddFaceToPersonActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String name = (String)params[4];
+            String person_img_path = (String)params[5];
+
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&name=" + name
+                    +"&person_img_path=" + person_img_path; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } //insert_registered_person_tb() end
 }
