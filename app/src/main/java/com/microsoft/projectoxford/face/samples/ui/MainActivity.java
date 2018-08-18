@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // DB, Table 생성
+        initDB();
+
         detected = false;
 
         /////추가용
@@ -287,5 +290,100 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // DB, Table 생성.
+    private void initDB(){
+        createDatabaseAndTable DBTask = new createDatabaseAndTable();
+        DBTask.execute("http://" + IP_ADDRESS + "/DB.php",userName,userPass,DatabaseName);
+
+        createDatabaseAndTable TableTask = new createDatabaseAndTable();
+        TableTask.execute("http://" + IP_ADDRESS + "/tableCreate.php",userName,userPass,DatabaseName);
+
+    }
+
+    // DB,Table 생성
+    class createDatabaseAndTable extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(MainActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String postParameters = "&userName=" + userName+"&userPass=" + userPass+"&databaseName=" + databaseName; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // createDatabaseAndTable() end.
 
 }

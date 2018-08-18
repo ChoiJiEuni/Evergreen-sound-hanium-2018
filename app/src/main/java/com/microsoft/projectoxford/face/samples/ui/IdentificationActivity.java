@@ -66,15 +66,12 @@ import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
-import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
 import com.microsoft.projectoxford.face.samples.db.RecordActivity;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
-import com.microsoft.projectoxford.face.samples.log.IdentificationLogActivity;
-import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonActivity;
-import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupActivity;
+
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
 import java.io.BufferedReader;
@@ -91,17 +88,15 @@ import java.lang.reflect.Member;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-
-
-/// 소희 : 코맷해봤지롱 
 
 public class IdentificationActivity extends AppCompatActivity {
 
@@ -123,14 +118,14 @@ public class IdentificationActivity extends AppCompatActivity {
     String EmotionValue = "";
     Float Latitude = Float.valueOf(0); // 위도
     Float Longitude =  Float.valueOf(0); //경도
-    String strLocation = "";//*/ 지은: location
-    String createDate = ""; //*/ 지은 찍은날짜.
+    String strLocation = "";
+    int inedx=0;
 
+    // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     public void DB(View view) {
         //*/ 지은: ExifInterface 생성
         InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
         ExifInterface exif = null;
-        StringBuffer dateBuffer= new StringBuffer();
         try {
             in = getContentResolver().openInputStream(imageUri);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -142,17 +137,81 @@ public class IdentificationActivity extends AppCompatActivity {
             Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
             strLocation = location(Latitude, Longitude);//*/ 지은: location
 
-            createDate = exif.getAttribute(ExifInterface.TAG_DATETIME); //*/ 지은 찍은날짜.
-            dateBuffer.append(createDate.substring(0,4));
-            dateBuffer.append(createDate.substring(5,7));
-            dateBuffer.append(createDate.substring(8));
-
         }catch (Exception e){
 
         }
-        //photoExifInfo(imageUri);
-        InsertPicInfoValues(imageUri.getPath(),strLocation,dateBuffer.toString(),EmotionValue, String.valueOf(PersonCount)); //*/ 지은: 중요
-        Toast.makeText(getApplicationContext(),strLocation+"!!",Toast.LENGTH_LONG).show();
+        // DB 삽입.
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+        String record_path = insert.getString("record_path","null");
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyyMMdd");
+        String getTime = mFormat.format(date);
+
+        registered_count();
+
+        insert_picture_infoTask task = new insert_picture_infoTask();
+        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",
+                userName,userPass,DatabaseName,
+                imageUri.getPath(),
+                strLocation,
+                getTime,
+                String.valueOf(average),
+                String.valueOf(PersonCount),
+                record_path);
+        Toast.makeText(getApplicationContext(),"위치: "+strLocation,Toast.LENGTH_LONG).show();
+
+        SharedPreferences.Editor editor = insert.edit();
+        editor.clear();
+        editor.commit();
+
+        for(int i=0;i<inedx;i++){
+            if(!(map.get(i).equals(""))){
+                String img_path = imageUri.getPath();
+                String name=map.get(i).toString();
+
+
+                try {
+                    Thread.sleep(300);
+                    insert_recognition_tb task2 = new insert_recognition_tb();
+                    task2.execute("http://" + IP_ADDRESS + "/insert_recognition_tb.php",userName,userPass,DatabaseName,img_path,name);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    //*/ DB 리스트뷰에서 등록된 사람들 이름만 뽑고, 평균까지 구함.
+    public void registered_count() {
+        inedx=0;
+        int count = mFaceListAdapter.getCount();
+        List<IdentifyResult> mIdentifyResults = mFaceListAdapter.mIdentifyResults;
+        List<Face> faces = mFaceListAdapter.faces;
+
+        if (mIdentifyResults.size() == faces.size()) {
+            DecimalFormat formatter = new DecimalFormat("#0.00");
+
+            for(int position = 0 ; position<count;position++){
+                if (mIdentifyResults.get(position).candidates.size() > 0) {
+                    String personId =
+                            mIdentifyResults.get(position).candidates.get(0).personId.toString();
+                    String personName = StorageHelper.getPersonName(
+                            personId, mPersonGroupId, IdentificationActivity.this);
+                    String per = personName;
+                    //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
+                    map.put(inedx, per); // 전역변수 PersonName 해시맵에다가 넣기
+                    inedx++;
+                    //  PersonName = String.valueOf(map);
+                    EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
+                    sum += Float.parseFloat(EmotionValue);
+
+                }
+            }
+        }
+        average = sum/map.size();
 
     }
 
@@ -724,7 +783,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
-                    sum += Float.parseFloat(EmotionValue);
+                    //*/sum += Float.parseFloat(EmotionValue);
                     String Emotion = String.format("Happiness: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "Person: " + personName + "\n"
@@ -762,17 +821,18 @@ public class IdentificationActivity extends AppCompatActivity {
             });
             return convertView;
         }
-        //감정정보 – 다양한 감정 중 제일 높은 것을 추출
-        private String getEmotion(Emotion emotion)
-        {
-            String emotionType = "";
-            double emotionValue = 0.0;
-                emotionValue = emotion.happiness;
-                emotionType = "Happiness";
-            return String.format("%f", emotionValue);
-        }
-    }
 
+    }
+    //감정정보 – 다양한 감정 중 제일 높은 것을 추출
+    //*/ private > public수정 // adapter에서 뺌.:  이 블록 밖에서 계산해야해서 (registered_count)
+    public String getEmotion(Emotion emotion)
+    {
+        String emotionType = "";
+        double emotionValue = 0.0;
+        emotionValue = emotion.happiness;
+        emotionType = "Happiness";
+        return String.format("%f", emotionValue);
+    }
 
     // The adapter of the ListView which contains the person groups.
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
@@ -843,34 +903,6 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     //*/ 지은
-    public void photoExifInfo(Uri selectUri){
-
-        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
-        ExifInterface exifInterface = null;
-        try {
-            in = getContentResolver().openInputStream(selectUri);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                exifInterface = new ExifInterface(in); // 사진 상세정보 객체
-            }
-            in.close();
-
-             Latitude = convertToDegree(exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE)); // 위도
-             Longitude = convertToDegree(exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)); //경도
-             strLocation = location(Latitude,Longitude);//*/ 지은: location
-             createDate = exifInterface.getAttribute(ExifInterface.TAG_DATETIME); //*/ 지은 찍은날짜.
-
-
-
-
-        } catch (FileNotFoundException e) {
-           Log.d("GOM","FileNot");
-        } catch (IOException e) {
-            Log.d("GOM","FileNot");
-        }
-
-    }// photoExifInfo() end.
-
-    //*/ 지은
     private Float convertToDegree(String stringDMS){
         Float result = null;
         try{
@@ -893,7 +925,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
             result = new Float(FloatD + (FloatM/60) + (FloatS/3600));
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(),"오류 2",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"위치변환오류",Toast.LENGTH_LONG).show();
         }
 
         return result;
@@ -915,17 +947,12 @@ public class IdentificationActivity extends AppCompatActivity {
                     10); // 얻어올 값의 개수
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+            Log.e("log", "입출력 오류 - 서버에서 주소변환시 에러발생");
         }
         if (list != null) {
             if (list.size()==0) {
                 return "해당되는 주소 정보는 없습니다";
             } else {
-                // 구는 null값이 나오는 곳이 있고 안나오는 곳이있다.
-                // 시까지는 정확한 결과인것 같다.
-                // 핸드폰 자체에서도 매번 정확한 gps를 정보를 가져올 수는 없는 것같다. 핸드폰 기본 갤러리에서도 내가 실제 찍은 장소랑 살짝 오차가 있음.
-                // 번지까지 정보를 가져오기에는 너무 오차가능성이 높아질 듯.
-
                 StringBuffer stringBuffer= new StringBuffer();
                 stringBuffer.append(list.get(0).getCountryName()+" ");//국가명
                 stringBuffer.append(list.get(0).getLocality()+" ");//구 메인(시)
@@ -935,98 +962,11 @@ public class IdentificationActivity extends AppCompatActivity {
                 if(!(list.get(0).getThoroughfare().equals(null))){
                     stringBuffer.append(list.get(0).getThoroughfare()+" ");//동
                 }
-
-
                 return stringBuffer.toString();
-                // list.get(0).getAddressLine(0).toString(); // 전체주소(국가, 시, 구, 동, 번지)
             }
         }
         return "";
     } // location() end.
-    class createDatabaseAndTable extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(IdentificationActivity.this,
-                    "Please Wait", null, true, true);
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            progressDialog.dismiss();
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String serverURL = (String)params[0];
-            String userName = (String)params[1];
-            String userPass = (String)params[2];
-            String databaseName = (String)params[3];
-            String postParameters = "&userName=" + userName+"&userPass=" + userPass+"&databaseName=" + databaseName; // php에 보낼값.
-
-            try {
-                // php 가져오기.
-                URL url = new URL(serverURL+"");
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-
-                bufferedReader.close();
-
-
-
-                return sb.toString();
-
-
-            } catch (Exception e) {
-
-                Log.d(TAG, "createDB: Error ", e);
-                return new String("Error: " + e.getMessage());
-            }
-
-        }
-    } // createDatabaseAndTable() end.
 
     class insert_picture_infoTask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
@@ -1043,7 +983,6 @@ public class IdentificationActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
         }
 
@@ -1060,6 +999,7 @@ public class IdentificationActivity extends AppCompatActivity {
             String create_date = (String)params[6];
             String happiness = (String)params[7];
             String num_of_people = (String)params[8];
+            String record_path = (String)params[9];
 
             String postParameters = "&userName=" + userName
                     +"&userPass=" + userPass
@@ -1068,7 +1008,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     +"&location=" + location
                     +"&create_date=" + create_date
                     +"&happiness=" + happiness
-                    +"&num_of_people=" + num_of_people; // php에 보낼값.
+                    +"&num_of_people=" + num_of_people
+                    +"&record_path=" + record_path; // php에 보낼값.
 
             try {
                 // php 가져오기.
@@ -1126,14 +1067,96 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     } // insert_picture_info() end.
 
-    public void InsertPicInfoValues(String img_path, String location,String create_date,String happiness,String num_of_people){
-        createDatabaseAndTable DBTask = new createDatabaseAndTable();
-        DBTask.execute("http://" + IP_ADDRESS + "/DB.php",userName,userPass,DatabaseName);
+    class insert_recognition_tb extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
 
-        createDatabaseAndTable TableTask = new createDatabaseAndTable();
-        TableTask.execute("http://" + IP_ADDRESS + "/tableCreate.php",userName,userPass,DatabaseName);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-        insert_picture_infoTask task = new insert_picture_infoTask();
-        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",userName,userPass,DatabaseName,img_path,location,create_date,happiness,num_of_people);
-    } // InsertPicInfoValues() end.
+            progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String img_path=(String)params[4];
+            String name=(String)params[5];
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&img_path=" + img_path
+                    +"&name=" + name; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // insert_recognition_tb() end.
+
 }

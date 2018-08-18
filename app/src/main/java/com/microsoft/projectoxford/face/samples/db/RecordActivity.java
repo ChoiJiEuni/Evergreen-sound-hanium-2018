@@ -1,6 +1,7 @@
 package com.microsoft.projectoxford.face.samples.db;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -48,7 +49,6 @@ public class RecordActivity extends AppCompatActivity {
 
             dir.mkdirs();
 
-       // file = new File(dir, "record.mp3");
         long now = System.currentTimeMillis();
         Date date = new Date(now);
 
@@ -59,6 +59,12 @@ public class RecordActivity extends AppCompatActivity {
         file = new File(dir, getTime+".mp3");
         Log.d("chae",file.getPath().toString());
         RECORDED_FILE = file.getAbsolutePath();
+
+        // DB 녹음파일 저장.
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putString("record_path", file.getAbsolutePath()); //First라는 key값으로 infoFirst 데이터를 저장한다.
+        editor.commit(); //완료한다.
 
         TextView recordBtn = (TextView) findViewById(R.id.recordBtn);
         TextView recordStopBtn = (TextView) findViewById(R.id.recordStopBtn);

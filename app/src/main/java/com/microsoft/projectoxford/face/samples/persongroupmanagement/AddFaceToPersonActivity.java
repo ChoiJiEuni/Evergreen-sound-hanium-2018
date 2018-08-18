@@ -228,7 +228,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     StorageHelper.setFaceUri(
                             faceId, uri.toString(), mPersonId, AddFaceToPersonActivity.this);
 
-                    //*/지은: DB
+                    //*/지은: DB registered_person_tb 삽입
                     SharedPreferences insert = getSharedPreferences("RegisteredTB_Pref", MODE_PRIVATE);
                     String name = insert.getString("name","null");
 
