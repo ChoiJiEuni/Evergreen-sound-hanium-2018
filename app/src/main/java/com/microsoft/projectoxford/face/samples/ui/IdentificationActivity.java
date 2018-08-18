@@ -101,6 +101,8 @@ import java.util.UUID;
 
 
 
+/// 소희 : 코맷해봤지롱 
+
 public class IdentificationActivity extends AppCompatActivity {
 
     private static int PersonCount=0; // 전체 인원 수
