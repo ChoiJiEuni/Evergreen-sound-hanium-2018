@@ -62,9 +62,10 @@ public class DBMainActivity extends AppCompatActivity {
         String create_date="20180302";
         String happiness = "44.23";
         String num_of_people = "5";
+        String record_path ="C://";
 
         insert_picture_info task = new insert_picture_info();
-        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",userName,userPass,DatabaseName,img_path,location,create_date,happiness,num_of_people);
+        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",userName,userPass,DatabaseName,img_path,location,create_date,happiness,num_of_people,record_path);
     }
 
     public void onClickInsertRegisteredPersonValues(View view) {
@@ -203,6 +204,7 @@ public class DBMainActivity extends AppCompatActivity {
             String create_date = (String)params[6];
             String happiness = (String)params[7];
             String num_of_people = (String)params[8];
+            String record_path = (String)params[9];
 
             String postParameters = "&userName=" + userName
                     +"&userPass=" + userPass
@@ -211,7 +213,9 @@ public class DBMainActivity extends AppCompatActivity {
                     +"&location=" + location
                     +"&create_date=" + create_date
                     +"&happiness=" + happiness
-                    +"&num_of_people=" + num_of_people; // php에 보낼값.
+                    +"&num_of_people=" + num_of_people
+                    +"&record_path=" + record_path; // php에 보낼값.
+
 
             try {
                 // php 가져오기.
