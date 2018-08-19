@@ -24,6 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.microsoft.projectoxford.face.samples.R;
 
 import java.io.File;
@@ -48,6 +54,9 @@ ImagePopup extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_popup);
         mContext = this;
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         /** 전송메시지 */
         Intent i = getIntent();
@@ -108,11 +117,22 @@ ImagePopup extends Activity implements OnClickListener{
                 player = null;
                 break;
             case R.id.btn_share:
-                sendMMS();
+                shareImageFacebook();
                 break;
         }
     }
 
+    public void shareImageFacebook(){
+        Bitmap image = bm;
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(image)
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+    }
 
     private void sendMMS() {
         try {
