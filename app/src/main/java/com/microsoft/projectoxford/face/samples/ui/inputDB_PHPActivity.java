@@ -86,7 +86,7 @@ public class inputDB_PHPActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"값이 삽입 되었습니다.",Toast.LENGTH_LONG).show();
         }
 
-
+// 소영ㅇㅇㅇㅇㅇㅇㅇ
         @Override
         protected String doInBackground(String... params) {
 
