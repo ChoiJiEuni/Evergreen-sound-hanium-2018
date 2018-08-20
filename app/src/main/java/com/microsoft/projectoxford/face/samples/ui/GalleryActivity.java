@@ -1,16 +1,13 @@
 package com.microsoft.projectoxford.face.samples.ui;
 
-import java.util.ArrayList;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,33 +15,29 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.microsoft.projectoxford.face.samples.R;
 
-public class Gallery extends Activity {
+import java.util.ArrayList;
 
+public class GalleryActivity extends AppCompatActivity {
     private Context mContext;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_gallery3);
+
         mContext = this;
 
         GridView gv = (GridView)findViewById(R.id.ImgGridView);
         final ImageAdapter ia = new ImageAdapter(this);
         gv.setAdapter(ia);
-        gv.setOnItemClickListener(new OnItemClickListener(){
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public void onItemClick(AdapterView<?> parent, View v, int position, long id){
                 ia.callImageViewer(position);
             }
         });
     }
-
-    /**==========================================
-     * 		        Adapter class
-     * ==========================================*/
     public class ImageAdapter extends BaseAdapter {
         private String imgData;
         private String geoData;
@@ -85,22 +78,23 @@ public class Gallery extends Activity {
 
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
+            String p=thumbsDataList.get(position);
             if (convertView == null){
                 imageView = new ImageView(mContext);
-               // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
-               // imageView.setAdjustViewBounds(false);
-               // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-               // imageView.setPadding(2, 2, 2, 2);
+                // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
+                // imageView.setAdjustViewBounds(false);
+                // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                // imageView.setPadding(2, 2, 2, 2);
             }else{
                 imageView = (ImageView) convertView;
             }
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
-            Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
+            Bitmap bmp = BitmapFactory.decodeFile(p, bo);
 
             if(bmp!=null) {
                 Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-               // if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
+                if (p.contains("evergreen"))  //경로명이 "evergreen"이 들어가면
                     imageView.setImageBitmap(resized); //갤러리에 보임
             }
             return imageView;

@@ -7,19 +7,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-  
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <application
         android:name=".helper.SampleApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <provider android:authorities="com.facebook.app.FacebookContentProvider2120866908232967"
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider2120866908232967"
             android:exported="true" />
+
         <activity
             android:name=".ui.IdentificationActivity"
             android:label="@string/identification"
@@ -93,7 +98,8 @@
             android:label="Select an Image" />
         <activity android:name=".db.ExifActivity" />
         <activity android:name=".db.RecordActivity" />
-        <activity android:name=".db.DBMainActivity"></activity>
+        <activity android:name=".db.DBMainActivity" />
+        <activity android:name=".ui.GalleryActivity"></activity>
     </application>
 
 </manifest>
