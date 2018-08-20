@@ -22,14 +22,14 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.microsoft.projectoxford.face.samples.R;
 
-public class Gallery extends Activity {
+public class GalleryActivity extends Activity {
 
     private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_gallery3);
         mContext = this;
 
         GridView gv = (GridView)findViewById(R.id.ImgGridView);
