@@ -290,7 +290,7 @@ public class PersonGroupActivity extends AppCompatActivity {
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
 
         editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
-        editTextPersonGroupName.setText(oldPersonGroupName);
+        //editTextPersonGroupName.setText(oldPersonGroupName);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

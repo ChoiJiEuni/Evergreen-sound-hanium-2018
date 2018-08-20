@@ -32,26 +32,29 @@ public class GalleryActivity extends Activity {
         setContentView(R.layout.activity_gallery3);
         mContext = this;
 
-        GridView gv = (GridView)findViewById(R.id.ImgGridView);
+        GridView gv = (GridView) findViewById(R.id.ImgGridView);
         final ImageAdapter ia = new ImageAdapter(this);
         gv.setAdapter(ia);
-        gv.setOnItemClickListener(new OnItemClickListener(){
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id){
+        gv.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ia.callImageViewer(position);
             }
         });
     }
 
-    /**==========================================
-     * 		        Adapter class
-     * ==========================================*/
+    /**
+     * ==========================================
+     * Adapter class
+     * ==========================================
+     */
     public class ImageAdapter extends BaseAdapter {
         private String imgData;
         private String geoData;
         private ArrayList<String> thumbsDataList;
         private ArrayList<String> thumbsIDList;
 
-        ImageAdapter(Context c){
+
+        ImageAdapter(Context c) {
             mContext = c;
             thumbsDataList = new ArrayList<String>();
             thumbsIDList = new ArrayList<String>();
@@ -59,15 +62,15 @@ public class GalleryActivity extends Activity {
         }
 
         //클릭한 사진 불러오는 함수
-        public final void callImageViewer(int selectedIndex){
+        public final void callImageViewer(int selectedIndex) {
             Intent i = new Intent(mContext, ImagePopup.class);
             String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
             i.putExtra("filename", imgPath);
-            Log.d("chae",imgPath);
+            Log.d("chae", imgPath);
             startActivityForResult(i, 1);
         }
 
-        public boolean deleteSelected(int sIndex){
+        public boolean deleteSelected(int sIndex) {
             return true;
         }
 
@@ -85,29 +88,29 @@ public class GalleryActivity extends Activity {
 
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
-            if (convertView == null){
+            if (convertView == null) {
                 imageView = new ImageView(mContext);
-               // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
-               // imageView.setAdjustViewBounds(false);
-               // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-               // imageView.setPadding(2, 2, 2, 2);
-            }else{
+                // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
+                // imageView.setAdjustViewBounds(false);
+                // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                // imageView.setPadding(2, 2, 2, 2);
+            } else {
                 imageView = (ImageView) convertView;
             }
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
 
-            if(bmp!=null) {
+            if (bmp != null) {
                 Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-               // if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
-                    imageView.setImageBitmap(resized); //갤러리에 보임
+                // if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
+                imageView.setImageBitmap(resized); //갤러리에 보임
             }
             return imageView;
 
         }
 
-        private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas){
+        private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas) {
             String[] proj = {MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.DISPLAY_NAME,
@@ -116,7 +119,7 @@ public class GalleryActivity extends Activity {
             Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     proj, null, null, null);
 
-            if (imageCursor != null && imageCursor.moveToFirst()){
+            if (imageCursor != null && imageCursor.moveToFirst()) {
                 String title;
                 String thumbsID;
                 String thumbsImageID;
@@ -135,30 +138,30 @@ public class GalleryActivity extends Activity {
                     thumbsImageID = imageCursor.getString(thumbsImageIDCol);
                     imgSize = imageCursor.getString(thumbsSizeCol);
                     num++;
-                    if (thumbsImageID != null){
+                    if (thumbsImageID != null&&thumbsData.contains("evergreen")) {
                         thumbsIDs.add(thumbsID);
                         thumbsDatas.add(thumbsData);
                     }
-                }while (imageCursor.moveToNext());
+                } while (imageCursor.moveToNext());
             }
             imageCursor.close();
             return;
         }
 
-        private String getImageInfo(String ImageData, String Location, String thumbID){
+        private String getImageInfo(String ImageData, String Location, String thumbID) {
             String imageDataPath = null;
             String[] proj = {MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.DISPLAY_NAME,
                     MediaStore.Images.Media.SIZE};
             Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    proj, "_ID='"+ thumbID +"'", null, null);
+                    proj, "_ID='" + thumbID + "'", null, null);
 
-            if (imageCursor != null && imageCursor.moveToFirst()){
-                if (imageCursor.getCount() > 0){
+            if (imageCursor != null && imageCursor.moveToFirst()) {
+                if (imageCursor.getCount() > 0) {
                     int imgData = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
                     imageDataPath = imageCursor.getString(imgData);
-                    Log.d("chae",imageDataPath);
+                    Log.d("chae", imageDataPath);
                 }
             }
             imageCursor.close();

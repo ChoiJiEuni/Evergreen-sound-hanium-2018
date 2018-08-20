@@ -47,7 +47,11 @@
         android:layout_above="@id/info"
         android:layout_marginBottom="@dimen/view_margin"
         android:text="@string/person_tip" />
-
+    <Button
+        android:id="@+id/Speech1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STT" />
     <GridView
         android:id="@+id/gridView_faces"
         android:layout_width="match_parent"

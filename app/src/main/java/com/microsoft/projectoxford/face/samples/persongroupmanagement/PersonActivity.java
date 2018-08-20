@@ -34,12 +34,14 @@ package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
@@ -70,6 +72,7 @@ import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -206,8 +209,9 @@ public class PersonActivity extends AppCompatActivity {
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
 
-
-
+    EditText editTextPersonName;
+    Button speech;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,12 +229,34 @@ public class PersonActivity extends AppCompatActivity {
         }
 
         initializeGridView();
-
-        EditText editTextPersonName = (EditText)findViewById(R.id.edit_person_name);
+        speech = (Button)findViewById(R.id.Speech1);
+        editTextPersonName = (EditText)findViewById(R.id.edit_person_name);
         editTextPersonName.setText(oldPersonName);
+
+        speech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
+    }
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initializeGridView() {
@@ -385,6 +411,15 @@ public class PersonActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 break;
+            case REQ_CODE_SPEECH_INPUT:
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    editTextPersonName.setText(result.get(0));
+                }
+                break;
+
             default:
                 break;
         }
