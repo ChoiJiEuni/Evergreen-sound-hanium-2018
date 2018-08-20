@@ -7,6 +7,8 @@
     <string name="endpoint">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</string>
 
     <!-- Main activity -->
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="facebook_app_id">2120866908232967</string>
     <string name="detection">Detection</string>
     <string name="face_verification">Face to Face Verification</string>
