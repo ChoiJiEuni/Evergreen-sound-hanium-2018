@@ -32,6 +32,7 @@
 //
 package com.microsoft.projectoxford.face.samples.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -122,20 +123,23 @@ public class IdentificationActivity extends AppCompatActivity {
     int inedx=0;
 
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
+    @SuppressLint("NewApi")
     public void DB(View view) {
         //*/ 지은: ExifInterface 생성
-        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
-        ExifInterface exif = null;
-        try {
-            in = getContentResolver().openInputStream(imageUri);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                exif = new ExifInterface(in); // 사진 상세정보 객체
-            }
-            in.close();
 
-            Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
-            Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
-            strLocation = location(Latitude, Longitude);//*/ 지은: location
+        try {
+            if(strLocation.equals("")){
+                InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
+                ExifInterface exif = null;
+                in = getContentResolver().openInputStream(imageUri);
+                exif = new ExifInterface(in); // 사진 상세정보 객체
+                in.close();
+
+                Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
+                Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
+                strLocation = location(Latitude, Longitude);//*/ 지은: location
+            }
+
 
         }catch (Exception e){
 
@@ -160,7 +164,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 String.valueOf(average),
                 String.valueOf(PersonCount),
                 record_path);
-        Toast.makeText(getApplicationContext(),"위치: "+strLocation,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
 
         SharedPreferences.Editor editor = insert.edit();
         editor.clear();
@@ -297,6 +301,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -371,7 +376,20 @@ public class IdentificationActivity extends AppCompatActivity {
         // Start detecting in image.
         detect(mBitmap);
 
+        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
+        ExifInterface exif = null;
+        try {
+            in = getContentResolver().openInputStream(imageUri);
+            exif = new ExifInterface(in); // 사진 상세정보 객체
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
+        Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
+        strLocation = location(Latitude, Longitude);//*/ 지은: location
 
+        Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
     }
 
     @Override
