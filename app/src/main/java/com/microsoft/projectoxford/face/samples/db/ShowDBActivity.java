@@ -1,5 +1,6 @@
 package com.microsoft.projectoxford.face.samples.db;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,13 +15,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ShowDBActivity extends AppCompatActivity {
+
     String myJSON;
 
     private static final String TAG_RESULTS="result";
@@ -119,5 +123,6 @@ public class ShowDBActivity extends AppCompatActivity {
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
     }
+
 
 }

@@ -48,5 +48,14 @@
             android:layout_marginRight="10dp"
             android:onClick="onButtonAddPHP"
             style="@style/ButtonStyle"/>
+        <TextView
+            android:layout_height="40dp"
+            android:layout_width="70dp"
+            android:text="검색"
+            android:onClick="onClickedSearch"
+            android:textSize="20sp"
+            android:gravity="center"
+            style="@style/ButtonStyle">
+        </TextView>
     </LinearLayout>
 </LinearLayout>

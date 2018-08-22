@@ -9,8 +9,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".helper.SampleApp"
@@ -101,7 +101,9 @@
         <activity android:name=".db.ExifActivity" />
         <activity android:name=".db.RecordActivity" />
         <activity android:name=".db.DBMainActivity" />
-        <activity android:name=".ui.GalleryActivity"></activity>
+        <activity android:name=".ui.GalleryActivity" />
+        <activity android:name=".db.searchActivity" />
+        <activity android:name=".db.SearchResultctivity"></activity>
     </application>
 
 </manifest>

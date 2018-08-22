@@ -32,6 +32,7 @@ import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
 import com.microsoft.projectoxford.face.samples.db.DBphpActivity;
 import com.microsoft.projectoxford.face.samples.db.ExifActivity;
+import com.microsoft.projectoxford.face.samples.db.searchActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
@@ -412,4 +413,9 @@ public class MainActivity extends AppCompatActivity {
         }
     } // createDatabaseAndTable() end.
 
+    // 검색
+    public void onClickedSearch(View view) {
+        Intent intent=new Intent(this,searchActivity.class);
+        startActivity(intent);
+    }
 }
