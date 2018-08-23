@@ -108,6 +108,7 @@ public class GalleryActivity extends Activity {
             }
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
+            /**이미지 상황에 맞게 회전 및 불러오기*/
             try{
             String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(position));
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
@@ -169,13 +170,15 @@ public class GalleryActivity extends Activity {
         }
 
         private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas) {
+            String sortOrderDESC = MediaStore.Images.Media._ID + " COLLATE LOCALIZED DESC";//최신순으로 정렬
+
             String[] proj = {MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.DISPLAY_NAME,
                     MediaStore.Images.Media.SIZE};
 
             imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    proj, null, null, null);
+                    proj, null, null, sortOrderDESC);
 
             if (imageCursor != null && imageCursor.moveToFirst()) {
                 String title;
@@ -208,12 +211,13 @@ public class GalleryActivity extends Activity {
 
         private String getImageInfo(String ImageData, String Location, String thumbID) {
             String imageDataPath = null;
+            String sortOrderDESC = MediaStore.Images.Media._ID + " COLLATE LOCALIZED DESC";//최신순으로 정렬
             String[] proj = {MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.DISPLAY_NAME,
                     MediaStore.Images.Media.SIZE};
             Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    proj, "_ID='" + thumbID + "'", null, null);
+                    proj, "_ID='" + thumbID + "'", null, sortOrderDESC);
 
             if (imageCursor != null && imageCursor.moveToFirst()) {
                 if (imageCursor.getCount() > 0) {
