@@ -1,7 +1,10 @@
 package com.microsoft.projectoxford.face.samples.db;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListAdapter;
@@ -15,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -25,10 +30,12 @@ import java.util.HashMap;
 
 public class SearchResultctivity extends AppCompatActivity {
     String myJSON;
+    public Bitmap b;
     private static final String TAG_RESULTS="evergreen";
     private static final String TAG_PATH = "path";
     JSONArray peoples = null;
     ArrayList<HashMap<String, String>> personList;
+    ArrayList<HashMap<String, Bitmap>> personListBit;
     ListView list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class SearchResultctivity extends AppCompatActivity {
 
         list = (ListView) findViewById(R.id.listView);
         personList = new ArrayList<HashMap<String,String>>();
+        personListBit = new ArrayList<HashMap<String,Bitmap>>();
         Intent intent = getIntent();
         String img_date= intent.getStringExtra("img_date");
         String img_location= intent.getStringExtra("img_location");
@@ -56,10 +64,14 @@ public class SearchResultctivity extends AppCompatActivity {
                 String path = c.getString(TAG_PATH);
 
                 HashMap<String,String> persons = new HashMap<String,String>();
+                HashMap<String,Bitmap> personBitmaps = new HashMap<String, Bitmap>();
+                b = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path));
 
+                personBitmaps.put(TAG_PATH, b);
                 persons.put(TAG_PATH,path);
 
-                personList.add(persons);
+                //personList.add(persons);
+                personListBit.add(personBitmaps);
             }
 
             ListAdapter adapter = new SimpleAdapter(
@@ -71,6 +83,10 @@ public class SearchResultctivity extends AppCompatActivity {
             list.setAdapter(adapter);
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
