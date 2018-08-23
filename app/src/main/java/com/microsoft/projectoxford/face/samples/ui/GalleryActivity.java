@@ -26,13 +26,20 @@ import com.microsoft.projectoxford.face.samples.R;
 
 public class GalleryActivity extends Activity {
 
-    private Context mContext;
+  //  private Context mContext;
+  Cursor imageCursor;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        imageCursor.close();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery3);
-        mContext = this;
+       // mContext = this;
 
         GridView gv = (GridView) findViewById(R.id.ImgGridView);
         final ImageAdapter ia = new ImageAdapter(this);
@@ -57,7 +64,7 @@ public class GalleryActivity extends Activity {
 
 
         ImageAdapter(Context c) {
-            mContext = c;
+           // mContext = c;
             thumbsDataList = new ArrayList<String>();
             thumbsIDList = new ArrayList<String>();
             getThumbInfo(thumbsIDList, thumbsDataList);
@@ -65,11 +72,11 @@ public class GalleryActivity extends Activity {
 
         //클릭한 사진 불러오는 함수
         public final void callImageViewer(int selectedIndex) {
-            Intent i = new Intent(mContext, ImagePopup.class);
+            Intent i = new Intent(getApplicationContext(), ImagePopup.class);
             String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
             i.putExtra("filename", imgPath);
             Log.d("chae", imgPath);
-            startActivityForResult(i, 1);
+            startActivityForResult(i, RESULT_OK);
         }
 
         public boolean deleteSelected(int sIndex) {
@@ -91,7 +98,7 @@ public class GalleryActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
-                imageView = new ImageView(mContext);
+                imageView = new ImageView(getApplicationContext());
                 // imageView.setLayoutParams(new GridView.LayoutParams(95, 95));
                 // imageView.setAdjustViewBounds(false);
                 // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -167,7 +174,7 @@ public class GalleryActivity extends Activity {
                     MediaStore.Images.Media.DISPLAY_NAME,
                     MediaStore.Images.Media.SIZE};
 
-            Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     proj, null, null, null);
 
             if (imageCursor != null && imageCursor.moveToFirst()) {
@@ -195,7 +202,7 @@ public class GalleryActivity extends Activity {
                     }
                 } while (imageCursor.moveToNext());
             }
-            imageCursor.close();
+            //imageCursor.close();
             return;
         }
 
@@ -215,7 +222,7 @@ public class GalleryActivity extends Activity {
                     Log.d("chae", imageDataPath);
                 }
             }
-            imageCursor.close();
+           // imageCursor.close();
             return imageDataPath;
         }
     }
