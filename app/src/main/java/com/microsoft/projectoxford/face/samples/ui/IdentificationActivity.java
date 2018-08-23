@@ -827,7 +827,6 @@ public class IdentificationActivity extends AppCompatActivity {
                     String name =  textView.getText().toString() ;
 
 
-
                    //  String personName = StorageHelper.getPersonName(
                          //   personId, mPersonGroupId, IdentificationActivity.this);
                     if(name.equals("Unknown person")){

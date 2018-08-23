@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -68,6 +70,15 @@ ImagePopup extends Activity implements OnClickListener{
         bfo.inSampleSize = 2;
         ImageView iv = (ImageView)findViewById(R.id.imageView);
         bm = BitmapFactory.decodeFile(imgPath, bfo);
+        try{
+            ExifInterface exif = new ExifInterface(imgPath);
+            int exifOrientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int exifDegree = exifOrientationToDegrees(exifOrientation);
+            bm = rotate(bm, exifDegree);
+        }catch(Exception e){
+
+        }
         //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
         iv.setImageBitmap(bm);
 
@@ -81,6 +92,47 @@ ImagePopup extends Activity implements OnClickListener{
         TextView btn4 = (TextView) findViewById(R.id.btn_share);
         btn4.setOnClickListener(this);
 
+    }
+    public int exifOrientationToDegrees(int exifOrientation)
+    {
+        if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)
+        {
+            return 90;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_180)
+        {
+            return 180;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_270)
+        {
+            return 270;
+        }
+        return 0;
+    }
+    public Bitmap rotate(Bitmap bitmap, int degrees)
+    {
+        if(degrees != 0 && bitmap != null)
+        {
+            Matrix m = new Matrix();
+            m.setRotate(degrees, (float) bitmap.getWidth() / 2,
+                    (float) bitmap.getHeight() / 2);
+
+            try
+            {
+                Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0,
+                        bitmap.getWidth(), bitmap.getHeight(), m, true);
+                if(bitmap != converted)
+                {
+                    bitmap.recycle();
+                    bitmap = converted;
+                }
+            }
+            catch(OutOfMemoryError ex)
+            {
+                // 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
+            }
+        }
+        return bitmap;
     }
 
     public void onClick(View v) {

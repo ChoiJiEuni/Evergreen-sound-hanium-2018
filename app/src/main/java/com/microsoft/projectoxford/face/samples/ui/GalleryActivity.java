@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -99,15 +101,64 @@ public class GalleryActivity extends Activity {
             }
             BitmapFactory.Options bo = new BitmapFactory.Options();
             bo.inSampleSize = 8;
+            try{
+            String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(position));
             Bitmap bmp = BitmapFactory.decodeFile(thumbsDataList.get(position), bo);
+            ExifInterface exif = new ExifInterface(imgPath);
+            int exifOrientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int exifDegree = exifOrientationToDegrees(exifOrientation);
+            bmp = rotate(bmp, exifDegree);
 
             if (bmp != null) {
                 Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
-                // if (thumbsDataList.get(position).contains("evergreen"))  //경로명이 "evergreen"이 들어가면
                 imageView.setImageBitmap(resized); //갤러리에 보임
+            }}catch(Exception e){
+
             }
             return imageView;
 
+        }
+        public int exifOrientationToDegrees(int exifOrientation)
+        {
+            if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)
+            {
+                return 90;
+            }
+            else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_180)
+            {
+                return 180;
+            }
+            else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_270)
+            {
+                return 270;
+            }
+            return 0;
+        }
+        public Bitmap rotate(Bitmap bitmap, int degrees)
+        {
+            if(degrees != 0 && bitmap != null)
+            {
+                Matrix m = new Matrix();
+                m.setRotate(degrees, (float) bitmap.getWidth() / 2,
+                        (float) bitmap.getHeight() / 2);
+
+                try
+                {
+                    Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0,
+                            bitmap.getWidth(), bitmap.getHeight(), m, true);
+                    if(bitmap != converted)
+                    {
+                        bitmap.recycle();
+                        bitmap = converted;
+                    }
+                }
+                catch(OutOfMemoryError ex)
+                {
+                    // 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
+                }
+            }
+            return bitmap;
         }
 
         private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas) {
