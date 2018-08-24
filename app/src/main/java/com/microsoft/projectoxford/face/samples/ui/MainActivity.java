@@ -275,9 +275,8 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
     }
-
-    public void OnButtonClickedGallery(View view){
-        Intent intent = new Intent(this,GalleryActivity.class);
+    public void OnButtonClickedShow(View view){
+        Intent intent = new Intent(this, ViewPhotoActivity.class);
         startActivity(intent);
     }
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
@@ -413,9 +412,4 @@ public class MainActivity extends AppCompatActivity {
         }
     } // createDatabaseAndTable() end.
 
-    // 검색
-    public void onClickedSearch(View view) {
-        Intent intent=new Intent(this,searchActivity.class);
-        startActivity(intent);
-    }
 }
