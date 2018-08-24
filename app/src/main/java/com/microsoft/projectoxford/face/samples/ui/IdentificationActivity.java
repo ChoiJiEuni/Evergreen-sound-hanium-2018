@@ -382,14 +382,15 @@ public class IdentificationActivity extends AppCompatActivity {
             in = getContentResolver().openInputStream(imageUri);
             exif = new ExifInterface(in); // 사진 상세정보 객체
             in.close();
+            Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
+            Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
+            strLocation = location(Latitude, Longitude);//*/ 지은: location
+
+            Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
-        Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
-        strLocation = location(Latitude, Longitude);//*/ 지은: location
 
-        Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
     }
 
     @Override
