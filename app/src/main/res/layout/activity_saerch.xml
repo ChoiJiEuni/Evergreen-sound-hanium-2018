@@ -5,82 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.microsoft.projectoxford.face.samples.db.searchActivity"
-    android:orientation="vertical">
-    <LinearLayout
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="25dp">
+
+    <TextView
+        android:id="@+id/butDateSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp">
-        <TextView
-            android:id="@+id/textDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="날짜: "
-            android:textSize="20sp"/>
-
-        <EditText
-            android:id="@+id/editDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="시간 입력" />
-    </LinearLayout>
-
-    <LinearLayout
+        android:onClick="butDateSearch"
+        style="@style/ButtonStyle"
+        android:paddingVertical="20dp"
+        android:gravity="center"
+        android:layout_marginVertical="30dp"
+        android:text="날짜 검색" />
+    <TextView
+        android:id="@+id/butLocationSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp">
-        <TextView
-            android:id="@+id/textLocation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="장소: "
-            android:textSize="20sp"/>
+        android:onClick="butLocationSearch"
+        style="@style/ButtonStyle"
+        android:paddingVertical="20dp"
+        android:layout_marginVertical="30dp"
+        android:gravity="center"
+        android:text="위치 검색" />
 
-        <EditText
-            android:id="@+id/editLocation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="장소 입력"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/butPersonSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp">
-        <TextView
-            android:id="@+id/textPerson"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="인물: "
-            android:textSize="20sp"/>
-
-        <EditText
-            android:id="@+id/editPerson"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="인물 입력" />
-    </LinearLayout>
+        android:onClick="butPersonSearch"
+        style="@style/ButtonStyle"
+        android:paddingVertical="20dp"
+        android:layout_marginVertical="30dp"
+        android:gravity="center"
+        android:text="인물 검색" />
     <TextView
         android:id="@+id/butSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="searchResult"
         style="@style/ButtonStyle"
-        android:paddingVertical="10dp"
+        android:paddingVertical="20dp"
+        android:layout_marginVertical="30dp"
         android:gravity="center"
-        android:text="검색" />
+        android:text="검색필터 적용." />
 </LinearLayout>

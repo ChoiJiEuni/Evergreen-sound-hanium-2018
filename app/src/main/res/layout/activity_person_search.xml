@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.microsoft.projectoxford.face.samples.db.PersonSearchActivity"
+    android:orientation="vertical"
+    android:paddingHorizontal="25dp"
+    android:gravity="center">
+    <EditText
+        android:id="@+id/personInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="26dp"
+        android:textStyle="normal"
+        android:layout_marginVertical="40dp"
+        android:hint="인물 입력 상자"/>
+    <TextView
+        android:id="@+id/btnSpeak"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:text="말하기버튼"
+        android:textColor="#00ffffff"
+        android:background="@drawable/ico_mic"
+        android:layout_gravity="center"
+        android:onClick="btnSpeak"
+        />
+    <TextView
+        android:id="@+id/butPersonSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="OnClickedfinsh"
+        style="@style/ButtonStyle"
+        android:paddingVertical="20dp"
+        android:gravity="center"
+
+        android:layout_marginVertical="40dp"
+        android:text="인물 검색 지정 완료" />
+</LinearLayout>

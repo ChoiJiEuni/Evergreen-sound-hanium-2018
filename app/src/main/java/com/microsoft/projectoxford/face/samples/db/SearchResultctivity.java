@@ -1,6 +1,7 @@
 package com.microsoft.projectoxford.face.samples.db;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 
@@ -37,22 +39,42 @@ public class SearchResultctivity extends AppCompatActivity {
     ArrayList<HashMap<String, String>> personList;
     ArrayList<HashMap<String, Bitmap>> personListBit;
     ListView list;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
+        SharedPreferences.Editor editor = search.edit();
+        editor.clear();
+        editor.putString("date","");
+        editor.putString("location","");
+        editor.putString("person","");
+        editor.commit();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_resultctivity);
+        setTitle("");
+        Toast.makeText(getApplicationContext(),"검색 결과 입니다.\n종료하시려면 뒤로가기 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
 
         list = (ListView) findViewById(R.id.listView);
         personList = new ArrayList<HashMap<String,String>>();
         personListBit = new ArrayList<HashMap<String,Bitmap>>();
         Intent intent = getIntent();
-        String img_date= intent.getStringExtra("img_date");
-        String img_location= intent.getStringExtra("img_location");
-        String img_person= intent.getStringExtra("img_person");
+
+        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
+
+        String img_date= search.getString("date","");
+        String img_location= search.getString("location","");
+        String img_person= search.getString("person","");
 
         GetDataJSON task = new GetDataJSON();
         task.execute("http://14.63.195.105/showTest.php",img_date,img_location,img_person);
     } // onCreate() END.
+
+
 
     protected void showList(){
         try {
@@ -64,14 +86,14 @@ public class SearchResultctivity extends AppCompatActivity {
                 String path = c.getString(TAG_PATH);
 
                 HashMap<String,String> persons = new HashMap<String,String>();
-                HashMap<String,Bitmap> personBitmaps = new HashMap<String, Bitmap>();
-                b = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path));
+               // HashMap<String,Bitmap> personBitmaps = new HashMap<String, Bitmap>();
+             //   b = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path));
 
-                personBitmaps.put(TAG_PATH, b);
+               // personBitmaps.put(TAG_PATH, b);
                 persons.put(TAG_PATH,path);
 
-                //personList.add(persons);
-                personListBit.add(personBitmaps);
+                personList.add(persons);
+               // personListBit.add(personBitmaps);
             }
 
             ListAdapter adapter = new SimpleAdapter(
@@ -84,11 +106,11 @@ public class SearchResultctivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } /*catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     } // showList() END.
 

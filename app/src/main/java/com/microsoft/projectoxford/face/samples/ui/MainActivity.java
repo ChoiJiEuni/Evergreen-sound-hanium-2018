@@ -277,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void OnButtonClickedShow(View view){
         Intent intent = new Intent(this, ViewPhotoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
