@@ -102,7 +102,7 @@ import java.util.UUID;
 public class IdentificationActivity extends AppCompatActivity {
 
     private static int PersonCount=0; // 전체 인원 수
-    HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
+   // HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
     private View convertView;
@@ -121,6 +121,12 @@ public class IdentificationActivity extends AppCompatActivity {
     Float Longitude =  Float.valueOf(0); //경도
     String strLocation = "";
     int inedx=0;
+
+    //*/0825
+    static  HashMap map=new HashMap();
+    static HashMap bitmaps=new HashMap();
+    int i =0;
+    int count =0;
 
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
@@ -188,12 +194,20 @@ public class IdentificationActivity extends AppCompatActivity {
 
     }
 
+    public static HashMap getter1(){ //getter1
+        return map;
+    }
+    public static HashMap getter2(){ //getter2
+        return bitmaps;
+    }
+
     //*/ DB 리스트뷰에서 등록된 사람들 이름만 뽑고, 평균까지 구함.
     public void registered_count() {
         inedx=0;
         int count = mFaceListAdapter.getCount();
         List<IdentifyResult> mIdentifyResults = mFaceListAdapter.mIdentifyResults;
         List<Face> faces = mFaceListAdapter.faces;
+        List<Bitmap> faceThumbnails = mFaceListAdapter.faceThumbnails; //crop된 이미지 가지고 있음.
 
         if (mIdentifyResults.size() == faces.size()) {
             DecimalFormat formatter = new DecimalFormat("#0.00");
@@ -207,6 +221,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     String per = personName;
                     //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
                     map.put(inedx, per); // 전역변수 PersonName 해시맵에다가 넣기
+                    bitmaps.put(inedx,getImageUri(getApplicationContext(), faceThumbnails.get(position)));
                     inedx++;
                     //  PersonName = String.valueOf(map);
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
@@ -216,8 +231,20 @@ public class IdentificationActivity extends AppCompatActivity {
             }
         }
         average = sum/map.size();
-
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putInt("index", 0);
+        editor.commit(); //완료한다.
+        Intent testIntent = new Intent(this,LearningActivity.class);
+        startActivity(testIntent);
     }
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
 
 
     // Background task of face identification.
@@ -301,19 +328,31 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        Boolean end = insert.getBoolean("end",false);
+        Boolean group = insert.getBoolean("group",false);
+        if(group != true){
+            if(end == true){
+                finish();
+            }}
+    }
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
-
+        super.setTitle("사진 분석 화면");
 
         // 소히
         // AActivity = IdentificationActivity.this;
-        detected = false;
+     detected = false;
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        //progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        progressDialog.setTitle("기다려 주세요.");
 
         LogHelper.clearIdentificationLog();
 
@@ -376,20 +415,12 @@ public class IdentificationActivity extends AppCompatActivity {
         // Start detecting in image.
         detect(mBitmap);
 
-        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
-        ExifInterface exif = null;
-        try {
-            in = getContentResolver().openInputStream(imageUri);
-            exif = new ExifInterface(in); // 사진 상세정보 객체
-            in.close();
-            Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
-            Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
-            strLocation = location(Latitude, Longitude);//*/ 지은: location
 
-            Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("repeat", false);
+        editor.commit(); //완료한다.
+
 
     }
 
@@ -459,7 +490,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
         if (succeed) {
             // Set the information about the detection result.
-            setInfo("Identification is done");
+            setInfo("분석이 완료되었습니다.");
             average = sum/map.size(); //분석버튼 누르면 행복도 평균값 계산
 
             if (result != null) {
@@ -470,7 +501,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     logString += "Face " + identifyResult.faceId.toString() + " is identified as "
                             + (identifyResult.candidates.size() > 0
                             ? identifyResult.candidates.get(0).personId.toString()
-                            : "Unknown Person")
+                            : "Unknown person")
                             + ". ";
                     }
                 addLog(logString);
@@ -490,7 +521,7 @@ public class IdentificationActivity extends AppCompatActivity {
             // Get an instance of face service client to detect faces in image.
             FaceServiceClient faceServiceClient = SampleApp.getFaceServiceClient();
             try{
-                publishProgress("Detecting...");
+                publishProgress("분석 중...");
 
                 // Start detection.
                 return faceServiceClient.detect(
@@ -540,10 +571,10 @@ public class IdentificationActivity extends AppCompatActivity {
 
                 if (result.length == 0) {
                     detected = false;
-                    setInfo("No faces detected!");
+                    setInfo("감지된 얼굴이 없습니다! 다시 한 번 촬영해 주세요");
                 } else {
                     detected = true;
-                    setInfo("Click on the \"Identify\" button to identify the faces in image.");
+                    setInfo("\"Identify\" 버튼을 클릭하여 분석을 시작해 주세요.");
                 }
             } else {
                 detected = false;
@@ -650,7 +681,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     faceIds.toArray(new UUID[faceIds.size()]));
         } else {
             // Not detected or person group exists.
-            setInfo("Please select an image and create a person group first.");
+            //setInfo("Please select an image and create a person group first.");
+            setInfo("이미지를 선택해 주세요. 그리고 인물 그룹을 먼저 생성해 주세요.");
         }
     }
     //*/
@@ -803,10 +835,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
                     //*/sum += Float.parseFloat(EmotionValue);
-                    String Emotion = String.format("Happiness: "+EmotionValue);
+                    String Emotion = String.format("행복도: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
-                    String identity = "Person: " + personName + "\n"
-                            + "Confidence: " + formatter.format(
+                    String identity = "사람: " + personName + "\n"
+                            + "신뢰도: " + formatter.format(
                             mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
@@ -994,7 +1026,7 @@ public class IdentificationActivity extends AppCompatActivity {
             super.onPreExecute();
 
             progressDialog = ProgressDialog.show(IdentificationActivity.this,
-                    "Please Wait", null, true, true);
+                    "기다려 주세요.", null, true, true);
         }
 
 
@@ -1093,7 +1125,7 @@ public class IdentificationActivity extends AppCompatActivity {
             super.onPreExecute();
 
             progressDialog = ProgressDialog.show(IdentificationActivity.this,
-                    "Please Wait", null, true, true);
+                    "기다려 주세요.", null, true, true);
         }
 
 

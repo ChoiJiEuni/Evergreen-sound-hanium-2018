@@ -132,6 +132,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group_list);
+        super.setTitle("그룹 생성 화면");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
@@ -149,6 +150,11 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 intent.putExtra("AddNewPersonGroup", false);
                 intent.putExtra("PersonGroupName", personGroupName);
                 intent.putExtra("PersonGroupId", personGroupId);
+                //0825
+                Intent learning = getIntent();
+                intent.putExtra("bitmap",learning.getStringExtra("bitmap"));
+                intent.putExtra("name",learning.getStringExtra("name"));
+                intent.putExtra("input",learning.getBooleanExtra("input",false));
                 startActivity(intent);
             }
 

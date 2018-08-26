@@ -8,6 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="#ffffff"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupActivity">
 
     <RelativeLayout
@@ -15,27 +16,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/view_margin">
+        android:layout_centerHorizontal="true">
 
-        <TextView
-            android:id="@+id/person_group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="@string/person_group_name" />
-
-        <EditText
-            android:id="@+id/edit_person_group_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/person_group_name"
-            android:layout_toEndOf="@id/person_group_name"
-            android:singleLine="true"
-            android:maxLength="30"
-            android:hint="@string/type_in_person_group_name_tip" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
+            <TextView
+                android:id="@+id/Speech"
+                style="@style/ButtonStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/icon_mike"
+                android:gravity="center"
+                android:text="말하기 버튼"
+                android:textColor="#00ffffff" />
+
+            <EditText
+                android:id="@+id/edit_person_group_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="이름을 지정해 주세요."
+                android:maxLength="30"
+                android:singleLine="true" />
+
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView
@@ -46,13 +55,10 @@
         android:layout_alignParentStart="true"
         android:layout_above="@id/info"
         android:layout_marginBottom="@dimen/view_margin"
-        android:text="@string/person_group_tip" />
+        android:textColor="#000000"
+        android:text="* 탭 해서 수정할 수 있고, 길게 눌러서 삭제할 수 있습니다." />
 
-    <Button
-        android:id="@+id/Speech"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STT" />
+
 
     <GridView
         android:id="@+id/gridView_persons"
@@ -88,8 +94,9 @@
             android:layout_weight="1"
             android:layout_marginRight="@dimen/view_margin"
             android:layout_marginEnd="@dimen/view_margin"
-            android:text="@string/add_person"
+            android:text="인물 추가하기"
             android:gravity="center"
+            android:background="#47e8b2"
             android:textSize="30dp"
             android:onClick="addPerson"
             style="@style/ButtonStyle" />

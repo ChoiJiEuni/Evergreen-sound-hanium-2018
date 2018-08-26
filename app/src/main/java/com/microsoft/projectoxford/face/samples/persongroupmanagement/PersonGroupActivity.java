@@ -36,6 +36,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -93,7 +94,7 @@ public class PersonGroupActivity extends AppCompatActivity {
             // Get an instance of face service client.
             FaceServiceClient faceServiceClient = SampleApp.getFaceServiceClient();
             try{
-                publishProgress("Syncing with server to add person group...");
+                publishProgress("동기화하는 중입니다..");
 
                 // Start creating person group in server.
                 faceServiceClient.createLargePersonGroup(
@@ -266,15 +267,16 @@ public class PersonGroupActivity extends AppCompatActivity {
 
     // Progress dialog popped up when communicating with server.
     ProgressDialog progressDialog;
-    Button btn;
+    TextView btn;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     EditText editTextPersonGroupName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group);
+        setTitle("그룹 화면");
 
-        btn = (Button)findViewById(R.id.Speech);
+        btn = (TextView)findViewById(R.id.Speech);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -287,10 +289,11 @@ public class PersonGroupActivity extends AppCompatActivity {
         initializeGridView();
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(getString(R.string.progress_dialog_title));
+      //  progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        progressDialog.setTitle("기다려 주세요.");
 
         editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
-        //editTextPersonGroupName.setText(oldPersonGroupName);
+        editTextPersonGroupName.setText(oldPersonGroupName); //*/ 0825주석풀음.
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -466,7 +469,7 @@ public class PersonGroupActivity extends AppCompatActivity {
         EditText editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
         String newPersonGroupName = editTextPersonGroupName.getText().toString();
         if (newPersonGroupName.equals("")) {
-            setInfo("Person group name could not be empty");
+            setInfo("그룹 이름을 지정하여 주세요.");
             return;
         }
 
@@ -555,6 +558,16 @@ public class PersonGroupActivity extends AppCompatActivity {
             convertView.setId(position);
 
             String personId = personIdList.get(position);
+
+            //*/0825
+            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            Boolean input = insert.getBoolean("input",false);
+            if(input == true){
+                test();
+            }
+            //*/
+
+
             Set<String> faceIdSet = StorageHelper.getAllFaceIds(personId, PersonGroupActivity.this);
             if (!faceIdSet.isEmpty()) {
                 Iterator<String> it = faceIdSet.iterator();
@@ -587,6 +600,38 @@ public class PersonGroupActivity extends AppCompatActivity {
 
             return convertView;
         }
+    }
+
+    //*/0825
+    public void test(){
+        int size = personGridViewAdapter.personIdList.size();
+
+        Intent learningIntent = getIntent();
+        // String input = learningIntent.getStringExtra("input");
+        String bmUri = learningIntent.getStringExtra("bitmap");
+        String name = learningIntent.getStringExtra("name");
+        // String input = learningIntent.getStringExtra("input");
+        String personId = null;
+        for(int position = 0 ; position < size ; position++){
+            personId = personGridViewAdapter.personIdList.get(position);
+            String personName = StorageHelper.getPersonName(
+                    personId, personGroupId, PersonGroupActivity.this);
+            if(personName.equals(name)){
+                break;
+            }
+        }
+
+
+        Intent intent = new Intent(PersonGroupActivity.this, PersonActivity.class);
+        intent.putExtra("bitmap",bmUri+"");
+        intent.putExtra("name",name+"");
+        intent.putExtra("input",true);
+        intent.putExtra("AddNewPerson", false);
+        intent.putExtra("PersonName", name);
+        intent.putExtra("PersonId", personId);
+        intent.putExtra("PersonGroupId", personGroupId);
+
+        startActivity(intent);
     }
 
 }

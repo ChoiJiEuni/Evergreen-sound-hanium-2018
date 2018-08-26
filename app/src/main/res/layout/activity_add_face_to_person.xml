@@ -6,6 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#ffffff"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.AddFaceToPersonActivity">
 
     <TextView
@@ -18,7 +19,7 @@
         android:layout_marginBottom="@dimen/view_margin"
         android:textColor="#000000"
         android:textSize="@dimen/abc_text_size_large_material"
-        android:text="@string/select_face_tip" />
+        android:text="그룹에 생성할 인물을 선택해 주세요." />
 
     <TextView
         android:id="@+id/done_and_save"
@@ -26,7 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/done_and_save"
+        android:text="저장하기"
+        android:background="#47e8b2"
         android:textSize="30dp"
         android:gravity="center"
         android:onClick="doneAndSave"

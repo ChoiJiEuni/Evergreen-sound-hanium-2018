@@ -6,6 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#ffffff"
     tools:context="com.microsoft.projectoxford.face.samples.ui.IdentificationActivity">
 
     <LinearLayout
@@ -27,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="#E0E0E0"
+                android:background="#ffffff"
                 android:contentDescription="@string/detection" />
 
         </RelativeLayout>
@@ -90,7 +91,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/faces" />
+            android:text="분석된 이미지"
+            android:textColor="#000000"/>
 
         <ListView
             android:id="@+id/list_identified_faces"
@@ -122,10 +124,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginRight="@dimen/view_margin"
+            android:layout_marginRight="10dp"
             android:layout_marginEnd="@dimen/view_margin"
-            android:text="@string/identify"
-            android:textSize="20dp"
+            android:text="분석"
+            android:background="#47e8b2"
+            android:textSize="25dp"
             android:gravity="center"
             android:onClick="identify"
             style="@style/ButtonStyle" />
@@ -136,8 +139,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="녹음"
-            android:textSize="20dp"
+            android:background="#47e8b2"
+            android:textSize="25dp"
+            android:layout_marginLeft="5dp"
             android:gravity="center"
+            android:layout_marginRight="10dp"
             android:onClick="record"
             style="@style/ButtonStyle" />
 
@@ -148,8 +154,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="DB"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:gravity="center"
+            android:background="#47e8b2"
             android:layout_marginLeft="@dimen/view_margin"
             android:layout_marginEnd="@dimen/view_margin"
             android:onClick="DB"

@@ -103,7 +103,8 @@
         <activity android:name=".db.DBMainActivity" />
         <activity android:name=".ui.GalleryActivity" />
         <activity android:name=".db.searchActivity" />
-        <activity android:name=".db.SearchResultctivity"></activity>
+        <activity android:name=".db.SearchResultctivity" />
+        <activity android:name=".ui.LearningActivity"></activity>
     </application>
 
 </manifest>

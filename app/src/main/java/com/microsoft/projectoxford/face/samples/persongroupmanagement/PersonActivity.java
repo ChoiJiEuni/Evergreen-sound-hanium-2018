@@ -67,6 +67,7 @@ import com.microsoft.projectoxford.face.contract.CreatePersonResult;
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
+import com.microsoft.projectoxford.face.samples.ui.LearningActivity;
 import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
@@ -94,7 +95,7 @@ public class PersonActivity extends AppCompatActivity {
             // Get an instance of face service client.
             FaceServiceClient faceServiceClient = SampleApp.getFaceServiceClient();
             try{
-                publishProgress("Syncing with server to add person...");
+                publishProgress("동기화 하는 중입니다..");
                 addLog("Request: Creating Person in person group" + params[0]);
 
                 // Start the request to creating person.
@@ -128,7 +129,8 @@ public class PersonActivity extends AppCompatActivity {
             if (result != null) {
                 addLog("Response: Success. Person " + result + " created.");
                 personId = result;
-                setInfo("Successfully Synchronized!");
+                //setInfo("Successfully Synchronized!");
+                setInfo("성공적으로 동기화되었습니다!");
 
                 if (mAddFace) {
                     addFace();
@@ -210,12 +212,13 @@ public class PersonActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     EditText editTextPersonName;
-    Button speech;
+    TextView speech;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
+        super.setTitle("인물 화면");
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -229,7 +232,7 @@ public class PersonActivity extends AppCompatActivity {
         }
 
         initializeGridView();
-        speech = (Button)findViewById(R.id.Speech1);
+        speech = (TextView)findViewById(R.id.Speech1);
         editTextPersonName = (EditText)findViewById(R.id.edit_person_name);
         editTextPersonName.setText(oldPersonName);
 
@@ -241,7 +244,8 @@ public class PersonActivity extends AppCompatActivity {
         });
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        //progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        progressDialog.setTitle("기다려 주세요.");
     }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -372,7 +376,8 @@ public class PersonActivity extends AppCompatActivity {
         EditText editTextPersonName = (EditText)findViewById(R.id.edit_person_name);
         String newPersonName = editTextPersonName.getText().toString();
         if (newPersonName.equals("")) {
-            textWarning.setText(R.string.person_name_empty_warning_message);
+            //textWarning.setText(R.string.person_name_empty_warning_message);
+            textWarning.setText("이름을 지정하여 주세요.");
             return;
         }
 
@@ -522,6 +527,27 @@ public class PersonActivity extends AppCompatActivity {
                 checkBox.setVisibility(View.INVISIBLE);
             }
 
+            //*/0828
+            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            Boolean input = insert.getBoolean("input",false);
+            if(input == true){
+                test();
+            }
+            //*/
+
+            Boolean end = insert.getBoolean("end",false);
+            Boolean group = insert.getBoolean("group",false);
+            if(group != true){
+                if(end == true){
+
+                    if (personId == null) {
+                        new AddPersonTask(false).execute(personGroupId);
+                    } else {
+                        doneAndSave();
+                    }
+                }}
+
+
             return convertView;
         }
     }
@@ -529,10 +555,49 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (personId == null) {
-            new AddPersonTask(false).execute(personGroupId);
-        } else {
-            doneAndSave();
-        }
+       /* SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        Boolean end = insert.getBoolean("end",false);
+        Boolean group = insert.getBoolean("group",false);
+        if(group != true){
+            if(end == true){
+
+                Intent intent = new Intent(PersonActivity.this,LearningActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            }
+        }else{*/
+            if (personId == null) {
+                new AddPersonTask(false).execute(personGroupId);
+            } else {
+                doneAndSave();
+            }
+       // }
+
+    }
+    //0825
+    public void test(){
+
+        //*/
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("input", false); //First라는 key값으로 infoFirst 데이터를 저장한다.
+        editor.commit(); //완료한다.
+        //*/
+        //0823 조건걸어야함.
+        Intent learningIntent = getIntent();
+        String bmUri = learningIntent.getStringExtra("bitmap");
+        String name = learningIntent.getStringExtra("name");
+
+        Intent intent = new Intent(this, AddFaceToPersonActivity.class);
+        intent.putExtra("PersonId", personId);
+        intent.putExtra("PersonGroupId", personGroupId);
+        intent.putExtra("ImageUriStr", bmUri);
+        intent.putExtra("bitmap",bmUri);
+        intent.putExtra("name",name);
+        startActivity(intent);
+
+
+
+
     }
 }

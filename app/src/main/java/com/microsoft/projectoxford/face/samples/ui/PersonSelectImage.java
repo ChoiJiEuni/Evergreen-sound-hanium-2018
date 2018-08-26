@@ -42,6 +42,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.microsoft.projectoxford.face.samples.R;
@@ -58,7 +59,7 @@ public class PersonSelectImage extends AppCompatActivity {
     // Flag to indicate the request of the next task to be performed
     private static final int REQUEST_TAKE_PHOTO = 0;
     private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
-    private TextToSpeech tts;
+   // private TextToSpeech tts;
 
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
@@ -69,8 +70,11 @@ public class PersonSelectImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_select_image);
 
+        super.setTitle("사진 촬영 선택 화면");
         /////추가용
         // TTS를 생성하고 OnInitListener로 초기화 한다.
+
+        /*
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -79,8 +83,10 @@ public class PersonSelectImage extends AppCompatActivity {
                     tts.setLanguage(Locale.KOREAN);
                 }
             }
-        });
+        });*/
     }
+
+
 
     @Override
 
@@ -92,12 +98,12 @@ public class PersonSelectImage extends AppCompatActivity {
 
 
     void appEnd() {
-
+/*
         if (tts.isSpeaking()) tts.stop();
 
         if (tts != null) tts.shutdown();
 
-
+*/
 
     }
     // Save the activity state when it's going to stop.
@@ -146,7 +152,9 @@ public class PersonSelectImage extends AppCompatActivity {
     // 카메라로 사진 찍기 버튼을 누르면 됩니다.
     public void takePhoto(View view) {
 
-        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+       // tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+
+        Toast.makeText(getApplicationContext(), "촬영이 시작됩니다. 정면을 응시하여 주세요.", Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {

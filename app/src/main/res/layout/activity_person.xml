@@ -7,6 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:focusable="true"
+    android:background="#ffffff"
     android:focusableInTouchMode="true"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonActivity">
 
@@ -17,24 +18,31 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/view_margin">
 
-        <TextView
-            android:id="@+id/person_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="@string/person_name" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edit_person_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/person_name"
-            android:layout_toEndOf="@id/person_name"
-            android:singleLine="true"
-            android:maxLength="30"
-            android:hint="@string/type_in_person_name_tip" />
+    <TextView
+        android:id="@+id/Speech1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/icon_mike"
+        android:text="말하기버튼"
+        android:textColor="#00ffffff"
+        style="@style/ButtonStyle"/>
+
+    <EditText
+        android:id="@+id/edit_person_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:maxLength="30"
+        android:hint="이름을 지정해 주세요." />
+
+</LinearLayout>
+
 
     </RelativeLayout>
 
@@ -46,12 +54,9 @@
         android:layout_alignParentStart="true"
         android:layout_above="@id/info"
         android:layout_marginBottom="@dimen/view_margin"
-        android:text="@string/person_tip" />
-    <Button
-        android:id="@+id/Speech1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STT" />
+        android:textColor="#000000"
+        android:text="* 길게 클릭해서 얼굴을 지울 수 있습니다." />
+
     <GridView
         android:id="@+id/gridView_faces"
         android:layout_width="match_parent"
@@ -86,7 +91,8 @@
             android:layout_weight="1"
             android:layout_marginRight="@dimen/view_margin"
             android:layout_marginEnd="@dimen/view_margin"
-            android:text="@string/add_face"
+            android:text="인물 추가하기"
+            android:background="#47e8b2"
             android:gravity="center"
             android:textSize="30dp"
             android:onClick="addFace"

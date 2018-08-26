@@ -413,8 +413,25 @@ public class MainActivity extends AppCompatActivity {
         }
     } // createDatabaseAndTable() end.
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        init();
+    }
+
+    public void init(){
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("input", false);
+        editor.putBoolean("group", true);
+        editor.putBoolean("end", false);
+        editor.putBoolean("repeat", false);
+        editor.commit(); //완료한다.
+    }
     // 검색
     public void onClickedSearch(View view) {
+        init();
+
         Intent intent=new Intent(this,searchActivity.class);
         startActivity(intent);
     }

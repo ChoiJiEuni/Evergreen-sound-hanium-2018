@@ -42,6 +42,7 @@ public class RecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+        super.setTitle("녹음 화면");
 
         File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/audio");
 

@@ -272,6 +272,9 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             // Show the detailed list of detected faces.
             GridView gridView = (GridView) findViewById(R.id.gridView_faces_to_select);
             gridView.setAdapter(mFaceGridViewAdapter);
+
+            //*/0825
+            test();
         }
     }
 
@@ -288,7 +291,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_face_to_person);
-
+        super.setTitle("인물 추가 화면");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mPersonId = bundle.getString("PersonId");
@@ -297,8 +300,16 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
         }
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setTitle(getString(R.string.progress_dialog_title));
+        //mProgressDialog.setTitle(getString(R.string.progress_dialog_title));
+        mProgressDialog.setTitle("잠시 기다려 주세요.");
 
+        //*/
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("end", true);
+        editor.putBoolean("group", false);
+        editor.commit(); //완료한다.
+        //*/
 
     }
 
@@ -448,7 +459,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             super.onPreExecute();
 
             progressDialog = ProgressDialog.show(AddFaceToPersonActivity.this,
-                    "Please Wait", null, true, true);
+                    "잠시 기다려 주세요.", null, true, true);
         }
 
 
@@ -531,4 +542,28 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
 
         }
     } //insert_registered_person_tb() end
+
+    //0825
+    public void test(){
+        try{
+            if (mFaceGridViewAdapter != null) {
+                List<Integer> faceIndices = new ArrayList<>();
+
+                for (int i = 0; i < mFaceGridViewAdapter.faceRectList.size(); ++i) {
+                    if (mFaceGridViewAdapter.faceChecked.get(i)) {
+                        faceIndices.add(i);
+                    }
+                }
+
+                if (faceIndices.size() > 0) {
+                    new AddFaceTask(faceIndices).execute();
+                } else {
+                    finish();
+                }
+            }
+        }catch (Exception e){
+            finish();
+        }
+
+    }
 }
