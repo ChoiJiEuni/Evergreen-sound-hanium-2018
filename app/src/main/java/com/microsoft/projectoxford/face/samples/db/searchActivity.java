@@ -94,7 +94,7 @@ public class searchActivity extends AppCompatActivity {
                 searchString += "\n위치   "+location;
             }
             if(!person.equals("")){
-                searchString += "\n사람   "+person;
+                searchString += "\n인물   "+person;
             }
             if((!date.equals(""))||(!location.equals(""))||(!person.equals(""))){
                 searchString += " 을 검색하시려는 것이 맞으신가요? \n맞다면 가장 아래에 위치한 검색하기 버튼을 눌러주세요." +

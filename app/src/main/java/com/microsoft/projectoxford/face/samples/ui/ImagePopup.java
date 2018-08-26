@@ -138,8 +138,8 @@ ImagePopup extends Activity implements OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_back:
-                Intent intent = new Intent(mContext, GalleryActivity.class);
-                startActivity(intent);
+
+                finish();
                 break;
             case R.id.btn_startPlay: //녹음재생
                 if (player != null) {
