@@ -332,13 +332,13 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+  /*      SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
         Boolean end = insert.getBoolean("end",false);
         Boolean group = insert.getBoolean("group",false);
         if(group != true){
             if(end == true){
                 finish();
-            }}
+            }}*/
     }
     @SuppressLint("NewApi")
     @Override
