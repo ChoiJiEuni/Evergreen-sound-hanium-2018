@@ -151,10 +151,10 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 intent.putExtra("PersonGroupName", personGroupName);
                 intent.putExtra("PersonGroupId", personGroupId);
                 //0825
-                Intent learning = getIntent();
+                /*Intent learning = getIntent();
                 intent.putExtra("bitmap",learning.getStringExtra("bitmap"));
                 intent.putExtra("name",learning.getStringExtra("name"));
-                intent.putExtra("input",learning.getBooleanExtra("input",false));
+                intent.putExtra("input",learning.getBooleanExtra("input",false));*/
                 startActivity(intent);
             }
 

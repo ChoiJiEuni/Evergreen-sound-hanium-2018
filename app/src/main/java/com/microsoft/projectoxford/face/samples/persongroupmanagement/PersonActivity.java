@@ -529,12 +529,12 @@ public class PersonActivity extends AppCompatActivity {
             }
 
             //*/0828
-            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+          /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
             Boolean input = insert.getBoolean("input",false);
             if(input == true){
                 test();
             }
-            //*/
+            //
 
             Boolean end = insert.getBoolean("end",false);
             Boolean group = insert.getBoolean("group",false);
@@ -546,7 +546,7 @@ public class PersonActivity extends AppCompatActivity {
                     } else {
                         doneAndSave();
                     }
-                }}
+                }}*/
 
 
             return convertView;

@@ -560,11 +560,11 @@ public class PersonGroupActivity extends AppCompatActivity {
             String personId = personIdList.get(position);
 
             //*/0825
-            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+          /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
             Boolean input = insert.getBoolean("input",false);
             if(input == true){
                 test();
-            }
+            }*/
             //*/
 
 

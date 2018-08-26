@@ -232,12 +232,12 @@ public class IdentificationActivity extends AppCompatActivity {
             }
         }
         average = sum/map.size();
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+      /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
         editor.putInt("index", 0);
         editor.commit(); //완료한다.
         Intent testIntent = new Intent(this,LearningActivity.class);
-        startActivity(testIntent);
+        startActivity(testIntent);*/
     }
     private Uri getImageUri(Context context, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

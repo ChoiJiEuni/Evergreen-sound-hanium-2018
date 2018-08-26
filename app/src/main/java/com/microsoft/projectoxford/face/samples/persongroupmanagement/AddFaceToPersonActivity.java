@@ -275,7 +275,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             gridView.setAdapter(mFaceGridViewAdapter);
 
             //*/0825
-            test();
+           // test();
         }
     }
 

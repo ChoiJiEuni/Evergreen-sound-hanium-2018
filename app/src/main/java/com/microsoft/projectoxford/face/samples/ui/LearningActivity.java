@@ -27,7 +27,7 @@ public class LearningActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
-        insert = getSharedPreferences("test", MODE_PRIVATE);
+       /* insert = getSharedPreferences("test", MODE_PRIVATE);
         editor = insert.edit();
         map =IdentificationActivity.getter1();
         bitmaps =IdentificationActivity.getter2();
@@ -37,7 +37,7 @@ public class LearningActivity extends AppCompatActivity {
         /*Bitmap mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                 (Uri) bitmaps.get(0), getContentResolver());
         ImageView iv = (ImageView)findViewById(R.id.testImageVie22w);
-        iv.setImageBitmap(mBitmap);*/
+        iv.setImageBitmap(mBitmap);//
         if(i<count){
             test();
         }
@@ -47,10 +47,10 @@ public class LearningActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
+*/
     }
 
-    @Override
+  /*  @Override
     protected void onRestart() {
         super.onRestart();
         Boolean end = insert.getBoolean("end",false);
@@ -76,5 +76,5 @@ public class LearningActivity extends AppCompatActivity {
         intent.putExtra("input",true);
 
         startActivity(intent);
-    }
+    }*/
 }
