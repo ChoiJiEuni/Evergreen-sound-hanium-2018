@@ -99,6 +99,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+// 유아이 : 소희
 public class IdentificationActivity extends AppCompatActivity {
 
     private static int PersonCount=0; // 전체 인원 수

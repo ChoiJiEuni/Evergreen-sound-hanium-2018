@@ -84,6 +84,7 @@ import java.util.UUID;
 
 public class AddFaceToPersonActivity extends AppCompatActivity {
     //등록된 인물 사진 저장경로 - 211번째줄에서 처리
+    // 유아이 : 소희
     private Uri personImageUri;
 
     //*/ DB

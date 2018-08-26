@@ -80,6 +80,7 @@ import java.util.UUID;
 
 public class PersonActivity extends AppCompatActivity {
     //등록된 인물 이름 - 220번째줄에서 처리
+    // 유아이 소희 (코밋 확인 용)
     String personName;
     // Background task of adding a person to person group.
     class AddPersonTask extends AsyncTask<String, String, String> {
