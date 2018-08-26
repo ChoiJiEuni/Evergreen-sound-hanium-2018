@@ -111,7 +111,7 @@
     <string name="user_provided_person_group_description_data">User data</string>
     <string name="title_activity_input_db_php">inputDBActivity_PHP</string>
 
-    <string name="search_info">말하기 버튼을 누르고 음성으로 입력해주세요.</string>
+    <string name="search_info">말하기 버튼을 누르고 음성으로 입력해주세요.\n키보드를 사용하여 입력해주셔도 됩니다.</string>
 
     <string name="search_info2">검색하시려는것이 맞나요? 아니시라면 다시 말하기 버튼 누르고 한번더 말해주세요.</string>
 </resources>

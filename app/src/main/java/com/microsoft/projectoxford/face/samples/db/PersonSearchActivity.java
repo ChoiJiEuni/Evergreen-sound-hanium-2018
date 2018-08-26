@@ -56,6 +56,9 @@ public class PersonSearchActivity extends AppCompatActivity {
 
     public void OnClickedfinsh(View view) {
 
+        if(personResult.equals("")){
+            personResult = personInput.getText().toString();
+        }
         SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
         SharedPreferences.Editor editor = search.edit();
         editor.putString("person",personResult);
@@ -89,6 +92,7 @@ public class PersonSearchActivity extends AppCompatActivity {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
                     personResult = result.get(0);
                     personInput.setText(personResult);
 

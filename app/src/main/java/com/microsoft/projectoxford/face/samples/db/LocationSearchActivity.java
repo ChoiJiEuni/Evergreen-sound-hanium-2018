@@ -51,6 +51,11 @@ public class LocationSearchActivity extends AppCompatActivity {
     }
 
     public void OnClickedfinsh(View view) {
+
+        if(locationResult.equals("")){
+            locationResult = locationInput.getText().toString();
+        }
+
         SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
         SharedPreferences.Editor editor = search.edit();
         editor.putString("location",locationResult);
@@ -83,8 +88,10 @@ public class LocationSearchActivity extends AppCompatActivity {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
                     locationResult = result.get(0);
                     locationInput.setText(locationResult);
+
 
                     Toast.makeText(getApplicationContext(),locationResult+" "+getString(R.string.search_info2),Toast.LENGTH_LONG).show();
                     //tts.setSpeechRate(0.9f);
