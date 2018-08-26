@@ -3,6 +3,7 @@ package com.microsoft.projectoxford.face.samples.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,9 +36,18 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.microsoft.projectoxford.face.samples.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -48,6 +59,11 @@ ImagePopup extends Activity implements OnClickListener{
     private String imgPath;
     private Bitmap bm;
     MediaPlayer player;
+
+    private String infoMessage;
+    private static String TAG = "kwon";
+    private String mJsonString;
+
     private static String RECORDED_FILE;//재생될 녹음 파일명
     // private URI mImageCaptureUri;
 
@@ -65,6 +81,11 @@ ImagePopup extends Activity implements OnClickListener{
         Intent i = getIntent();
         Bundle extras = i.getExtras();
         imgPath = extras.getString("filename");
+
+        /**이미지 정보 가져오기*/
+        infoMessage = "";
+        GetData task = new GetData();
+        task.execute("http://14.63.195.105/showImageInfo.php", imgPath);
 
         /** 완성된 이미지 보여주기  */
         BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -93,7 +114,10 @@ ImagePopup extends Activity implements OnClickListener{
         TextView btn4 = (TextView) findViewById(R.id.btn_share);
         btn4.setOnClickListener(this);
 
+        /*정보 읽어주기*/
+
     }
+
     public int exifOrientationToDegrees(int exifOrientation)
     {
         if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)
@@ -173,6 +197,143 @@ ImagePopup extends Activity implements OnClickListener{
                 break;
         }
     }
+
+    private class GetData extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(ImagePopup.this,
+                    "데이터를 가져오는 중입니다", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String imgInfo) {
+            super.onPostExecute(imgInfo);
+
+            progressDialog.dismiss();
+            Log.d(TAG, "response - " + imgInfo);
+
+            /*정상적으로 정보를 가져왔을 경우 결과값을 삽입*/
+            if (imgInfo == null){
+                infoMessage = errorString;
+            }
+            else {
+                mJsonString = imgInfo;
+                showResult();
+            }
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = params[0];
+            String postParameters = "img_path=" + params[1];
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "GetData : Error ", e);
+                errorString = e.toString();
+
+                return null;
+            }
+        }
+    }
+
+
+    private void showResult(){
+
+        String TAG_JSON="evergreen";
+        String TAG_LOC = "location";
+        String TAG_DATE = "date";
+        String TAG_HAP ="happiness";
+        String TAG_CNT ="personCount";
+        String TAG_KNOW ="personKnowCount";
+        String TAG_NAME = "personName";
+
+
+        try {
+            JSONObject jsonObject = new JSONObject(mJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+            for(int i=0;i<jsonArray.length();i++){
+
+                JSONObject item = jsonArray.getJSONObject(i);
+
+                String location = item.getString(TAG_LOC);
+                String date = item.getString(TAG_DATE);
+                String happiness = item.getString(TAG_HAP);
+                String personCount = item.getString(TAG_CNT);
+                String personKnowCount = item.getString(TAG_KNOW);
+                String name = item.getString(TAG_NAME);
+
+                if (location != "")
+                    infoMessage += location + "에서 ";
+                infoMessage += date.substring(0,4) + "년 " + date.substring(4,6) + "월 " + date.substring(6) + "일에 ";
+                int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
+                if (unknownCount != Integer.parseInt(personCount)){
+                    infoMessage += name + "외 ";
+                }
+                infoMessage += unknownCount + "명과 찍은 사진입니다.";
+
+                Log.d(TAG, infoMessage);
+                Toast.makeText(getApplicationContext(), infoMessage, Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+            Log.d(TAG, "showResult : ", e);
+        }
+
+    }
+
 
     public void shareImageFacebook(){
         Bitmap image = bm;
