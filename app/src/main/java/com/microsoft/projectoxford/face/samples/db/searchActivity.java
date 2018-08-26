@@ -87,7 +87,7 @@ public class searchActivity extends AppCompatActivity {
             if(!date.equals("")){
                 String strYear = date.substring(0,4);
                 String strMonth = date.substring(4,6);
-                String strday = date.substring(4,6);
+                String strday = date.substring(6);
                 searchString += "날짜   "+strYear+"년 "+strMonth+"월 "+strday+"일 ";
             }
             if(!location.equals("")){
