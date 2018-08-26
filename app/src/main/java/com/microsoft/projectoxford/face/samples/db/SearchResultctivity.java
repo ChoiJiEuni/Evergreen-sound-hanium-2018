@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -20,13 +19,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
-import com.microsoft.projectoxford.face.samples.ui.GalleryActivity;
 import com.microsoft.projectoxford.face.samples.ui.ImagePopup;
 
 import org.json.JSONArray;
@@ -34,8 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -45,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SearchResultctivity extends AppCompatActivity {
+
     String myJSON;
     public Bitmap b;
     private static final String TAG_RESULTS="evergreen";
@@ -54,30 +48,13 @@ public class SearchResultctivity extends AppCompatActivity {
     ArrayList<String> personList;
     ArrayList<HashMap<String, Bitmap>> personListBit;
     //ListView list;
-
-    Cursor imageCursor = null;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try{
-            imageCursor.close();
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(),"cursor 오류",Toast.LENGTH_LONG).show();
-        }
-        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
-        SharedPreferences.Editor editor = search.edit();
-        editor.clear();
-        editor.putString("date","");
-        editor.putString("location","");
-        editor.putString("person","");
-        editor.commit();
-    }
     GridView gv;
+    Cursor imageCursor = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_resultctivity);
+
         setTitle("");
         Toast.makeText(getApplicationContext(),"검색 결과 입니다.\n종료하시려면 뒤로가기 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
 
@@ -95,11 +72,23 @@ public class SearchResultctivity extends AppCompatActivity {
 
         GetDataJSON task = new GetDataJSON();
         task.execute("http://14.63.195.105/showTest.php",img_date,img_location,img_person);
-
-
-    } // onCreate() END.
-
-
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            imageCursor.close();
+        }catch (Exception e){
+            //Toast.makeText(getApplicationContext(),"cursor 오류",Toast.LENGTH_LONG).show();
+        }
+        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
+        SharedPreferences.Editor editor = search.edit();
+        editor.clear();
+        editor.putString("date","");
+        editor.putString("location","");
+        editor.putString("person","");
+        editor.commit();
+    }
     /**
      * ==========================================
      * Adapter class
@@ -114,7 +103,7 @@ public class SearchResultctivity extends AppCompatActivity {
         Context mContext = null;
 
         ImageAdapter(Context c,ArrayList<String> personList) {
-             mContext = c;
+            mContext = c;
             //thumbsDataList = new ArrayList<String>();
             //thumbsIDList = new ArrayList<String>();
             this.personList = personList;
@@ -301,10 +290,10 @@ public class SearchResultctivity extends AppCompatActivity {
                 //b = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path));
 
                 //personBitmaps.put("bitmap",MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path)));
-               // personBitmaps.put(TAG_PATH, b);
+                // personBitmaps.put(TAG_PATH, b);
                 //persons.put(TAG_PATH,path);
 
-               // personList.add(persons);
+                // personList.add(persons);
                 personList.add(path);
                 //personListBit.add(personBitmaps);
             }
@@ -397,5 +386,4 @@ public class SearchResultctivity extends AppCompatActivity {
             showList();
         }
     } // GetDataJSON() END.
-
 }

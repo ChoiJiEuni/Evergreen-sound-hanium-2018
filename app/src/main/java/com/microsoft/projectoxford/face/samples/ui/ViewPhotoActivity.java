@@ -5,13 +5,9 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.searchActivity;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ViewPhotoActivity extends AppCompatActivity {
 

@@ -3,12 +3,10 @@ package com.microsoft.projectoxford.face.samples.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Color;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -23,16 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
-import com.microsoft.projectoxford.face.samples.db.DBphpActivity;
-import com.microsoft.projectoxford.face.samples.db.ExifActivity;
-import com.microsoft.projectoxford.face.samples.db.searchActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
@@ -207,6 +200,11 @@ public class MainActivity extends AppCompatActivity {
     private void setInfo(String info) {
         TextView textView = (TextView) findViewById(R.id.info);
         textView.setText(info);
+    }
+
+    public void OnButtonClickedShow(View view) {
+        Intent intent = new Intent(this,ViewPhotoActivity.class);
+        startActivity(intent);
     }
 
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
@@ -415,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 검색
     public void onClickedSearch(View view) {
-        Intent intent=new Intent(this,searchActivity.class);
-        startActivity(intent);
+     //   Intent intent=new Intent(this,searchActivity.class);
+     //   startActivity(intent);
     }
 }

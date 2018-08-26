@@ -4,14 +4,11 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import static android.speech.tts.TextToSpeech.ERROR;
 
 import com.microsoft.projectoxford.face.samples.R;
 
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class LocationSearchActivity extends AppCompatActivity {
-
 
     private EditText locationInput;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -30,6 +26,7 @@ public class LocationSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
+
         setTitle("위치 검색 화면");
         locationInput = (EditText)findViewById(R.id.locationInput);
         Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
@@ -43,7 +40,6 @@ public class LocationSearchActivity extends AppCompatActivity {
                 }
             }
         });*/
-
     }
 
     public void btnSpeak(View view) {
@@ -51,7 +47,6 @@ public class LocationSearchActivity extends AppCompatActivity {
     }
 
     public void OnClickedfinsh(View view) {
-
         if(locationResult.equals("")){
             locationResult = locationInput.getText().toString();
         }
@@ -95,7 +90,7 @@ public class LocationSearchActivity extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(),locationResult+" "+getString(R.string.search_info2),Toast.LENGTH_LONG).show();
                     //tts.setSpeechRate(0.9f);
-                   // tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
+                    // tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
 
                 }
                 break;
@@ -113,8 +108,4 @@ public class LocationSearchActivity extends AppCompatActivity {
             tts = null;
         }
     }*/
-
 }
-
-
-

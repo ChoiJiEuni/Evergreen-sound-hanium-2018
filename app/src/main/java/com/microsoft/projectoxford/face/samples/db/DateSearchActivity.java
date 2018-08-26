@@ -1,31 +1,19 @@
 package com.microsoft.projectoxford.face.samples.db;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import static android.speech.tts.TextToSpeech.ERROR;
-
-public class DateSearch extends AppCompatActivity {
+public class DateSearchActivity extends AppCompatActivity {
 
     private EditText dateInput;
-
     private final int REQ_CODE_SPEECH_INPUT = 100;
-  //  private TextToSpeech tts;
-
+    //  private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +33,8 @@ public class DateSearch extends AppCompatActivity {
             }
         });*/
 
-
     }
 
-    // 검색버튼
     public void OnClickedfinsh(View view) {
         SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
         SharedPreferences.Editor editor = search.edit();
@@ -56,19 +42,4 @@ public class DateSearch extends AppCompatActivity {
         editor.commit();
         finish();
     }
-
-
-
-
-   /* @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
-        if(tts != null){
-            tts.stop();
-            tts.shutdown();
-            tts = null;
-        }
-    }*/
-
 }

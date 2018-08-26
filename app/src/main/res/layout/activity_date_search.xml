@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.microsoft.projectoxford.face.samples.db.DateSearch"
+    tools:context="com.microsoft.projectoxford.face.samples.db.DateSearchActivity"
     android:orientation="vertical"
     android:gravity="center"
     android:paddingHorizontal="25dp">
-
     <EditText
         android:id="@+id/dateInput"
         android:layout_width="match_parent"

@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static android.speech.tts.TextToSpeech.ERROR;
-
 import com.microsoft.projectoxford.face.samples.R;
 
 import java.util.ArrayList;
@@ -21,14 +19,9 @@ import java.util.Locale;
 public class PersonSearchActivity extends AppCompatActivity {
 
     private EditText personInput;
-
     private final int REQ_CODE_SPEECH_INPUT = 100;
-
-
     String personResult="";
-    private TextToSpeech tts;
-
-
+    //private TextToSpeech tts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +40,6 @@ public class PersonSearchActivity extends AppCompatActivity {
                 }
             }
         });*/
-
     }
 
     public void btnSpeak(View view) {
@@ -55,7 +47,6 @@ public class PersonSearchActivity extends AppCompatActivity {
     }
 
     public void OnClickedfinsh(View view) {
-
         if(personResult.equals("")){
             personResult = personInput.getText().toString();
         }
@@ -65,7 +56,6 @@ public class PersonSearchActivity extends AppCompatActivity {
         editor.commit();
         finish();
     }
-
     // Showing google speech input dialog.
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -116,6 +106,4 @@ public class PersonSearchActivity extends AppCompatActivity {
             tts = null;
         }
     }*/
-
 }
-
