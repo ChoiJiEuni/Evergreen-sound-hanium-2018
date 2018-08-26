@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.microsoft.projectoxford.face.samples.db.DateSearch"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="25dp">
+
+    <EditText
+        android:id="@+id/dateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        android:inputType="number"
+        android:textSize="26dp"
+        android:textStyle="normal"
+        android:hint="날짜 입력 상자"/>
+    <TextView
+        android:id="@+id/butDateSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="OnClickedfinsh"
+        style="@style/ButtonStyle"
+        android:paddingVertical="20dp"
+        android:layout_marginVertical="50dp"
+        android:gravity="center"
+        android:text="날짜 검색 지정 완료" />
+</LinearLayout>

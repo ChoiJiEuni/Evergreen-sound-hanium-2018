@@ -559,11 +559,14 @@ public class IdentificationActivity extends AppCompatActivity {
             //PersonCount = result.length
             // Log.d("sohee",PersonCount);
 
-            /////////////희
-            PersonCount=result.length; // 인원 수 반환
-            Log.d("sohee", String.valueOf(PersonCount));
+
 
             if (result != null) {
+
+                /////////////희 //*/>지은 : 사진 촬영시 인물 없으면 오류 나길래 if문 바로 위에 있었는데 안으로 집어 넣음.
+                PersonCount=result.length; // 인원 수 반환
+                Log.d("sohee", String.valueOf(PersonCount));
+
                 // Set the adapter of the ListView which contains the details of detected faces.
                 mFaceListAdapter = new FaceListAdapter(result);
                 ListView listView = (ListView) findViewById(R.id.list_identified_faces);

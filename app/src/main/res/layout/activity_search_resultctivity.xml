@@ -17,15 +17,23 @@
             android:gravity="center"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:text="검색된 경로명"/>
+            android:text="검색된 이미지들"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#dcdbdb"
         ></View>
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView" />
+    <GridView
+        android:id="@+id/SearchImgGridView"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
+        android:columnWidth="96dp"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        android:numColumns="2"
+
+        />
 </LinearLayout>
