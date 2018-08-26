@@ -15,6 +15,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_photo);
+        setTitle("갤러리 보기 방식 선택 화면");
     }
 
     public void onClickgallery(View view) {

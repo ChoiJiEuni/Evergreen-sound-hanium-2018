@@ -49,12 +49,13 @@ ImagePopup extends Activity implements OnClickListener{
     private Bitmap bm;
     MediaPlayer player;
     private static String RECORDED_FILE;//재생될 녹음 파일명
-   // private URI mImageCaptureUri;
+    // private URI mImageCaptureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_popup);
+        setTitle("선택한 사진 자세히 보기");
         mContext = this;
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -138,7 +139,6 @@ ImagePopup extends Activity implements OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_back:
-
                 finish();
                 break;
             case R.id.btn_startPlay: //녹음재생
@@ -185,7 +185,7 @@ ImagePopup extends Activity implements OnClickListener{
         ShareDialog shareDialog = new ShareDialog(this);
         shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }
-
+/*
     private void sendMMS() {
         try {
             ContentResolver contentR = this.getContentResolver();
@@ -209,7 +209,7 @@ ImagePopup extends Activity implements OnClickListener{
             e.printStackTrace();
         }
     }
-
+*/
 
 /*
     private void getImage(){
@@ -218,9 +218,10 @@ ImagePopup extends Activity implements OnClickListener{
         i.putExtra("mms_body", );  //보낼 문자내용을 추가로 전송, key값은 반드시 'sms_body'
         startActivity(i);//액티비티 실행
         } */
-
+/*
     // 소희 : 문자로 공유하기
     public void onButtonMsg() {
        // getImage();
     }
+*/
 }
