@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("너들나들");
+
         getHashKey();
         // DB, Table 생성
         initDB();
