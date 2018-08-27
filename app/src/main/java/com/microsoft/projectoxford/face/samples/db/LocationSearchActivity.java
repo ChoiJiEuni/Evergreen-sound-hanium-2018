@@ -47,13 +47,9 @@ public class LocationSearchActivity extends AppCompatActivity {
     }
 
     public void OnClickedfinsh(View view) {
-        if(locationResult.equals("")){
-            locationResult = locationInput.getText().toString();
-        }
-
         SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
         SharedPreferences.Editor editor = search.edit();
-        editor.putString("location",locationResult);
+        editor.putString("location",locationInput.getText().toString());
         editor.commit();
         finish();
     }
@@ -88,8 +84,7 @@ public class LocationSearchActivity extends AppCompatActivity {
                     locationInput.setText(locationResult);
 
 
-                    Toast.makeText(getApplicationContext(),locationResult+" "+getString(R.string.search_info2),Toast.LENGTH_LONG).show();
-                    //tts.setSpeechRate(0.9f);
+                     //tts.setSpeechRate(0.9f);
                     // tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
 
                 }
