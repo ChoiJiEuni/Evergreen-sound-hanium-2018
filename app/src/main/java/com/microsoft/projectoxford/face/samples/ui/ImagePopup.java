@@ -315,14 +315,18 @@ ImagePopup extends Activity implements OnClickListener{
                 String personKnowCount = item.getString(TAG_KNOW);
                 String name = item.getString(TAG_NAME);
 
-                if (location != "")
-                    infoMessage += location + "에서 ";
-                infoMessage += date.substring(0,4) + "년 " + date.substring(4,6) + "월 " + date.substring(6) + "일에 ";
-                int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
-                if (unknownCount != Integer.parseInt(personCount)){
-                    infoMessage += name + "외 ";
+                if (location != "N") {
+                    if (location != "")
+                        infoMessage += location + "에서 ";
+                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일에 ";
+                    int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
+                    if (unknownCount != Integer.parseInt(personCount)) {
+                        infoMessage += name + "외 ";
+                    }
+                    infoMessage += unknownCount + "명과 찍은 사진입니다.";
+                } else {
+                    infoMessage = "저장되지 않은 사진입니다.";
                 }
-                infoMessage += unknownCount + "명과 찍은 사진입니다.";
 
                 Log.d(TAG, infoMessage);
                 Toast.makeText(getApplicationContext(), infoMessage, Toast.LENGTH_LONG).show();
