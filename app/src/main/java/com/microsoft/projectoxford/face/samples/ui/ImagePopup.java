@@ -64,7 +64,7 @@ ImagePopup extends Activity implements OnClickListener{
     private static String TAG = "kwon";
     private String mJsonString;
 
-    private static String RECORDED_FILE;//재생될 녹음 파일명
+    private String RECORDED_FILE;//재생될 녹음 파일명
     // private URI mImageCaptureUri;
 
     @Override
@@ -172,7 +172,7 @@ ImagePopup extends Activity implements OnClickListener{
                     player = null;
                 }
 
-                if (RECORDED_FILE != null) {
+                if (RECORDED_FILE != null && !RECORDED_FILE.equals("")) {
                     Toast.makeText(getApplicationContext(), "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
                     try {
                         player = new MediaPlayer();
