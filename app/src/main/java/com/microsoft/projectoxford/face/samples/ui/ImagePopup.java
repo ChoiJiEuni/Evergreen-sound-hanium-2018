@@ -172,14 +172,18 @@ ImagePopup extends Activity implements OnClickListener{
                     player = null;
                 }
 
-                Toast.makeText(getApplicationContext(), "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
-                try {
-                    player = new MediaPlayer();
-                    player.setDataSource(RECORDED_FILE);
-                    player.prepare();
-                    player.start();
-                } catch (Exception e) {
-                    Log.e("SampleAudioRecorder", "Audio play failed.", e);
+                if (RECORDED_FILE != null) {
+                    Toast.makeText(getApplicationContext(), "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
+                    try {
+                        player = new MediaPlayer();
+                        player.setDataSource(RECORDED_FILE);
+                        player.prepare();
+                        player.start();
+                    } catch (Exception e) {
+                        Log.e("SampleAudioRecorder", "Audio play failed.", e);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "녹음된 파일이 없습니다.", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.btn_stopPlay:
@@ -298,6 +302,7 @@ ImagePopup extends Activity implements OnClickListener{
         String TAG_CNT ="personCount";
         String TAG_KNOW ="personKnowCount";
         String TAG_NAME = "personName";
+        String TAG_REC = "record";
 
 
         try {
@@ -314,9 +319,10 @@ ImagePopup extends Activity implements OnClickListener{
                 String personCount = item.getString(TAG_CNT);
                 String personKnowCount = item.getString(TAG_KNOW);
                 String name = item.getString(TAG_NAME);
+                RECORDED_FILE = item.getString(TAG_REC);
 
-                if (location != "N") {
-                    if (location != "")
+                if (!location.equals("N")) {
+                    if (!location.equals(""))
                         infoMessage += location + "에서 ";
                     infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일에 ";
                     int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
