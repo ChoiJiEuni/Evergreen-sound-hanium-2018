@@ -47,12 +47,9 @@ public class PersonSearchActivity extends AppCompatActivity {
     }
 
     public void OnClickedfinsh(View view) {
-        if(personResult.equals("")){
-            personResult = personInput.getText().toString();
-        }
         SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
         SharedPreferences.Editor editor = search.edit();
-        editor.putString("person",personResult);
+        editor.putString("person",personInput.getText().toString());
         editor.commit();
         finish();
     }
@@ -86,7 +83,6 @@ public class PersonSearchActivity extends AppCompatActivity {
                     personResult = result.get(0);
                     personInput.setText(personResult);
 
-                    Toast.makeText(getApplicationContext(),personResult+getString(R.string.search_info2),Toast.LENGTH_LONG).show();
                     //tts.setSpeechRate(0.9f);
                     //tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
 

@@ -295,7 +295,10 @@ public class SearchResultctivity extends AppCompatActivity {
 
                 // personList.add(persons);
                 personList.add(path);
-                //personListBit.add(personBitmaps);
+                //personListBit.add(personBitmaps);//
+            }
+            if(personList.size() == 0){
+                Toast.makeText(getApplicationContext(),"검색된 사진이 존재하지 않습니다.",Toast.LENGTH_LONG).show();
             }
             gv = (GridView) findViewById(R.id.SearchImgGridView);
             final ImageAdapter ia = new ImageAdapter(this,personList);

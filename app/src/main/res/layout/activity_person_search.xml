@@ -36,7 +36,7 @@
         style="@style/ButtonStyle"
         android:paddingVertical="20dp"
         android:gravity="center"
-
+        android:textSize="20sp"
         android:layout_marginVertical="40dp"
         android:text="인물 검색 지정 완료" />
 </LinearLayout>
