@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -21,10 +22,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -197,7 +200,26 @@ ImagePopup extends Activity implements OnClickListener{
                 player = null;
                 break;
             case R.id.btn_share:
-                shareImageFacebook();
+                PopupMenu p = new PopupMenu(
+                        getApplicationContext(), // 현재 화면의 제어권자
+                        v); // anchor : 팝업을 띄울 기준될 위젯
+                getMenuInflater().inflate(R.menu.menu, p.getMenu());
+                // 이벤트 처리
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("페이스북")){
+                            shareImageFacebook();
+                        }
+                        else if(item.getTitle().equals("인스타그램")){
+                            shareImageInstagram();
+                        }
+                        return false;
+                    }
+                });
+                p.show(); // 메뉴를 띄우기
+
+
                 break;
         }
     }
@@ -355,6 +377,24 @@ ImagePopup extends Activity implements OnClickListener{
                 .build();
         ShareDialog shareDialog = new ShareDialog(this);
         shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+    }
+    public void shareImageInstagram(){
+        PackageManager manager = getBaseContext().getPackageManager();
+        Intent i = manager.getLaunchIntentForPackage("com.instagram.android");
+        if(i==null){
+            i=new Intent(Intent.ACTION_VIEW,Uri.parse("marker://details?id=com.instagram.android"));
+            startActivity(i); return;
+        }
+        String type="image/*";
+
+       Intent shareIntent = new Intent(Intent.ACTION_SEND);
+       shareIntent.setType(type);
+       shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+       File media = new File(imgPath);
+       Uri uri = Uri.fromFile(media);
+       shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+       shareIntent.setPackage("com.instagram.android");
+       startActivity(shareIntent);
     }
 /*
     private void sendMMS() {
