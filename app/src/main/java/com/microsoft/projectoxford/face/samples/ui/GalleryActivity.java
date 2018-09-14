@@ -39,6 +39,7 @@ public class GalleryActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery3);
+        setTitle("갤러리 펼쳐 보기");
        // mContext = this;
 
         GridView gv = (GridView) findViewById(R.id.ImgGridView);
