@@ -54,8 +54,8 @@
         <TextView
             android:layout_height="50dp"
             android:layout_width="0dp"
-            android:id="@+id/btn_back"
-            android:text="돌아가기"
+            android:id="@+id/btn_delete"
+            android:text="삭제하기"
             android:textSize="30dp"
             android:layout_gravity="center"
             android:gravity="center"

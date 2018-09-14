@@ -25,7 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.microsoft.projectoxford.face.samples.R;
 
 public class GalleryActivity extends Activity {
-
+    ImageAdapter ia;
   //  private Context mContext;
   Cursor imageCursor;
 
@@ -36,14 +36,22 @@ public class GalleryActivity extends Activity {
     }
 
     @Override
+    protected void onRestart() {
+        this.onCreate(null);
+        super.onRestart();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("chae","oncreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery3);
        // mContext = this;
 
         GridView gv = (GridView) findViewById(R.id.ImgGridView);
-        final ImageAdapter ia = new ImageAdapter(this);
+        ia = new ImageAdapter(this);
         gv.setAdapter(ia);
+        ia.notifyDataSetChanged();
         gv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ia.callImageViewer(position);
@@ -75,7 +83,6 @@ public class GalleryActivity extends Activity {
             Intent i = new Intent(getApplicationContext(), ImagePopup.class);
             String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
             i.putExtra("filename", imgPath);
-            Log.d("chae", imgPath);
             startActivityForResult(i, RESULT_OK);
         }
 

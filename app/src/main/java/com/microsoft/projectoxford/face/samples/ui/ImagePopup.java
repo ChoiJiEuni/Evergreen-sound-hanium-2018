@@ -108,7 +108,7 @@ ImagePopup extends Activity implements OnClickListener{
         iv.setImageBitmap(bm);
 
         /** 리스트로 가기 버튼 */
-        TextView btn1 = (TextView) findViewById(R.id.btn_back);
+        TextView btn1 = (TextView) findViewById(R.id.btn_delete);
         btn1.setOnClickListener(this);
         TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
         btn2.setOnClickListener(this);
@@ -165,7 +165,16 @@ ImagePopup extends Activity implements OnClickListener{
 
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.btn_back:
+            case R.id.btn_delete:
+                //삭제
+                File file = new File(imgPath);
+                file.delete();
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+
+                intent.setData(Uri.fromFile(file));
+
+                sendBroadcast(intent);
+
                 finish();
                 break;
             case R.id.btn_startPlay: //녹음재생
