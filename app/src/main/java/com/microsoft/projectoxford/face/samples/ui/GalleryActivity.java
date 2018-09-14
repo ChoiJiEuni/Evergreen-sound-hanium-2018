@@ -122,6 +122,7 @@ public class GalleryActivity extends Activity {
             if (bmp != null) {
                 Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
                 imageView.setImageBitmap(resized); //갤러리에 보임
+                imageView.setContentDescription(imgPath);
             }}catch(Exception e){
 
             }
