@@ -36,6 +36,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -45,9 +46,12 @@ import android.location.Geocoder;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,11 +72,13 @@ import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.RecordActivity;
+import com.microsoft.projectoxford.face.samples.db.renameLoc_Activity;
 import com.microsoft.projectoxford.face.samples.helper.ImageHelper;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
+import com.microsoft.projectoxford.face.samples.persongroupmanagement.AddFaceToPersonActivity;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
 import java.io.BufferedReader;
@@ -102,10 +108,16 @@ import java.util.UUID;
 // 유아이 : 소희
 public class IdentificationActivity extends AppCompatActivity {
 
+    private static final int RENAME_LOC_INFO= 1689;
     private static int PersonCount=0; // 전체 인원 수
-   // HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
+    // HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
 
+    Float Longitude =  Float.valueOf(0); //경도
+    String strLocation = "";
+    int inedx=0;
+
+    //*/0825
     private View convertView;
     private float average=0; // 행복도 평균값 => 383번째줄 identify(분석)버튼 누르면 행복도 평균값 계산
     float sum = 0;
@@ -119,11 +131,6 @@ public class IdentificationActivity extends AppCompatActivity {
     String DatabaseName ="B_db";
     String EmotionValue = "";
     Float Latitude = Float.valueOf(0); // 위도
-    Float Longitude =  Float.valueOf(0); //경도
-    String strLocation = "";
-    int inedx=0;
-
-    //*/0825
     static  HashMap map=new HashMap();
     static HashMap bitmaps=new HashMap();
     int i =0;
@@ -349,7 +356,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
         // 소히
         // AActivity = IdentificationActivity.this;
-     detected = false;
+        detected = false;
 
         progressDialog = new ProgressDialog(this);
         //progressDialog.setTitle(getString(R.string.progress_dialog_title));
@@ -385,7 +392,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
         }*/
         ///////////////////////////////
-       ///원래코드
+        ///원래코드
         mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                 imageUri, getContentResolver());
 
@@ -504,12 +511,61 @@ public class IdentificationActivity extends AppCompatActivity {
                             ? identifyResult.candidates.get(0).personId.toString()
                             : "Unknown person")
                             + ". ";
-                    }
+                }
                 addLog(logString);
 
                 // Show the detailed list of detected faces.
                 ListView listView = (ListView) findViewById(R.id.list_identified_faces);
                 listView.setAdapter(mFaceListAdapter);
+
+                // 지은: ExifInterface 생성
+                try {
+                    if(strLocation.equals("")){
+                        InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
+                        ExifInterface exif = null;
+                        in = getContentResolver().openInputStream(imageUri);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            exif = new ExifInterface(in); // 사진 상세정보 객체
+                        }
+                        in.close();
+
+                        Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
+                        Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
+                        strLocation = location(Latitude, Longitude);//*/ 지은: location
+
+                        registered_count();
+                        StringBuffer names=new StringBuffer();
+                        for(int i=0;i<inedx;i++){
+                            if(!(map.get(i).equals(""))){
+                                String img_path = imageUri.getPath();
+                                String name=map.get(i).toString();
+
+                                names.append(name+" ");
+                            }
+                        }
+
+                        if(names.toString().equals("")){
+                            Toast.makeText(getApplicationContext(), "등록된 인물이 없습니다. 인물 등록 후 사용해 주세요.",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+
+                            SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = insert.edit();
+                            editor.putString("location",strLocation);
+                            editor.commit();
+                            renameLoc();
+                           /* int num = PersonCount - (inedx-1);
+
+                            Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
+
+
+                        }
+                    }
+
+
+                }catch (Exception e){
+
+                }
             }
         }
     }
@@ -574,11 +630,14 @@ public class IdentificationActivity extends AppCompatActivity {
                 listView.setAdapter(mFaceListAdapter);
 
                 if (result.length == 0) {
+                    // 지은 : 이때 재촬영하라고 토스트 띄워야하고
                     detected = false;
                     setInfo("감지된 얼굴이 없습니다! 다시 한 번 촬영해 주세요");
+                    Toast.makeText(getApplicationContext(),"감지된 얼굴이 없습니다! 다시 한 번 촬영해 주세요",Toast.LENGTH_LONG).show();
                 } else {
                     detected = true;
                     setInfo("\"Identify\" 버튼을 클릭하여 분석을 시작해 주세요.");
+                    identify();
                 }
             } else {
                 detected = false;
@@ -669,6 +728,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
     // Called when the "Detect" button is clicked.
+    // 분석버튼 행위
     public void identify(View view) {
         // Start detection task only if the image to detect is selected.
         // 감지할 이미지를 선택한 경우에만 감지 작업을 시작합니다.
@@ -687,6 +747,29 @@ public class IdentificationActivity extends AppCompatActivity {
             // Not detected or person group exists.
             //setInfo("Please select an image and create a person group first.");
             setInfo("이미지를 선택해 주세요. 그리고 인물 그룹을 먼저 생성해 주세요.");
+        }
+    }
+    // 지은 분석버튼 행위 > 버튼 아님.
+    public void identify() {
+        // Start detection task only if the image to detect is selected.
+        // 감지할 이미지를 선택한 경우에만 감지 작업을 시작합니다.
+        if (detected && mPersonGroupId != null) {
+            // Start a background task to identify faces in the image.
+            List<UUID> faceIds = new ArrayList<>();
+            for (Face face:  mFaceListAdapter.faces) {
+                faceIds.add(face.faceId);
+            }
+
+            setAllButtonsEnabledStatus(false);
+
+            new IdentificationTask(mPersonGroupId).execute(
+                    faceIds.toArray(new UUID[faceIds.size()]));
+        } else {
+            // Not detected or person group exists.
+            //setInfo("Please select an image and create a person group first.");
+            setInfo("이미지를 선택해 주세요. 그리고 인물 그룹을 먼저 생성해 주세요.");
+            //*/
+            Toast.makeText(getApplicationContext(),"인물 그룹을 먼저 생성해 주세요.",Toast.LENGTH_LONG).show();
         }
     }
     //*/
@@ -712,7 +795,7 @@ public class IdentificationActivity extends AppCompatActivity {
         Button selectImageButton = (Button) findViewById(R.id.manage_person_groups);
         selectImageButton.setEnabled(isEnabled);
 
-       // Button groupButton = (Button) findViewById(R.id.select_image);
+        // Button groupButton = (Button) findViewById(R.id.select_image);
         //groupButton.setEnabled(isEnabled);
 
         TextView identifyButton = (TextView) findViewById(R.id.identify);
@@ -864,8 +947,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     String name =  textView.getText().toString() ;
 
 
-                   //  String personName = StorageHelper.getPersonName(
-                         //   personId, mPersonGroupId, IdentificationActivity.this);
+                    //  String personName = StorageHelper.getPersonName(
+                    //   personId, mPersonGroupId, IdentificationActivity.this);
                     if(name.equals("Unknown person")){
 
                         Intent intent = new Intent(IdentificationActivity.this, PersonGroupListActivity.class);
@@ -1213,4 +1296,69 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     } // insert_recognition_tb() end.
 
+    // 위치 변경 다이얼로그
+    public void renameLoc(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String insertLocation="";
+        String message="";
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+        if(insert.getString("location","").equals("")){
+            message = "장소 추출이 실패하였습니다. 위치정보 변경 화면으로 전환하여 장소를 등록해 주세요.";
+        }
+        else{
+            insertLocation = insert.getString("location","");
+            message = "촬영 장소가 " +  insertLocation + " 아닌가요?\n변경하시겠습니까?";
+        }
+
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(IdentificationActivity.this,renameLoc_Activity.class);
+                        startActivityForResult(intent, RENAME_LOC_INFO);
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        showInfo();
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                });
+        builder.show();
+    } //renameLoc () end.
+
+    // 사용자에게 사진 정보 알려주는 토스트
+    public void showInfo(){
+        StringBuffer names=new StringBuffer();
+        for(int i=0;i<inedx;i++){
+            if(!(map.get(i).equals(""))){
+                String img_path = imageUri.getPath();
+                String name=map.get(i).toString();
+
+                names.append(name+" ");
+            }
+        }
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+        String getTime = mFormat.format(date);
+        int num = PersonCount - inedx;
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+        strLocation = insert.getString("location","");
+        Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime,Toast.LENGTH_LONG).show();
+    } // showInfo() end.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case RENAME_LOC_INFO:
+                if (resultCode == RESULT_OK) {
+                    showInfo();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

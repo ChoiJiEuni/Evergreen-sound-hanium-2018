@@ -107,7 +107,8 @@
         <activity android:name=".db.LocationSearchActivity" />
         <activity android:name=".db.PersonSearchActivity" />
         <activity android:name=".db.searchActivity" />
-        <activity android:name=".db.SearchResultctivity"></activity>
+        <activity android:name=".db.SearchResultctivity" />
+        <activity android:name=".db.renameLoc_Activity"></activity>
     </application>
 
 </manifest>
