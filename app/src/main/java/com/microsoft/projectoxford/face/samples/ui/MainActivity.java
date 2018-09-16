@@ -3,6 +3,7 @@ package com.microsoft.projectoxford.face.samples.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -39,9 +40,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 import static android.speech.tts.TextToSpeech.ERROR;
@@ -60,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
     //*/ DB
     private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
     private static String TAG = "php";
-    String userName="B_tester";
+    String userName="";
     String userPass="1111";
-    String DatabaseName ="B_db";
+    String DatabaseName ="";
 
     // The URI of photo taken with camera
     private Uri mUriPhotoTaken;
@@ -319,9 +323,24 @@ public class MainActivity extends AppCompatActivity {
 
     // DB, Table 생성.
     private void initDB(){
+        SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        if(sharedPreferences.getString("ID","").equals("")){
+            Random random = new Random();
+            int randomFir = random.nextInt(999999999);
+            String userID = String.valueOf(randomFir);
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            SimpleDateFormat mFormat = new SimpleDateFormat("YYMMdd");
+            String getTime = mFormat.format(date);
+            userName = "a"+getTime+userID;
+            DatabaseName = userName+"_db";
+            editor.putString("ID",userName);
+            editor.commit();
+        }
+
         createDatabaseAndTable DBTask = new createDatabaseAndTable();
         DBTask.execute("http://" + IP_ADDRESS + "/DB.php",userName,userPass,DatabaseName);
-
         createDatabaseAndTable TableTask = new createDatabaseAndTable();
         TableTask.execute("http://" + IP_ADDRESS + "/tableCreate.php",userName,userPass,DatabaseName);
 

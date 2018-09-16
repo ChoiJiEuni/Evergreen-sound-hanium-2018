@@ -169,16 +169,23 @@ public class IdentificationActivity extends AppCompatActivity {
 
         registered_count();
 
-        insert_picture_infoTask task = new insert_picture_infoTask();
-        task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",
-                userName,userPass,DatabaseName,
-                imageUri.getPath(),
-                strLocation,
-                getTime,
-                String.valueOf(average),
-                String.valueOf(PersonCount),
-                record_path);
-        Toast.makeText(getApplicationContext(),"(확인용)위치: "+strLocation,Toast.LENGTH_LONG).show();
+        //*/ 09
+        SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+        if(!(sharedPreferences.getString("ID","").equals(""))){
+            userName = sharedPreferences.getString("ID","");
+            DatabaseName = userName+"_db";
+            insert_picture_infoTask task = new insert_picture_infoTask();
+            task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",
+                    userName,userPass,DatabaseName,
+                    imageUri.getPath(),
+                    strLocation,
+                    getTime,
+                    String.valueOf(average),
+                    String.valueOf(PersonCount),
+                    record_path);
+        }
+
+        Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
 
         SharedPreferences.Editor editor = insert.edit();
         editor.clear();
@@ -1302,10 +1309,8 @@ public class IdentificationActivity extends AppCompatActivity {
         String insertLocation="";
         String message="";
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-        if(insert.getString("location","").equals("")){
-            message = "장소 추출이 실패하였습니다. 위치정보 변경 화면으로 전환하여 장소를 등록해 주세요.";
-        }
-        else{
+        message = "장소 추출이 실패하였습니다. 위치정보 변경 화면으로 전환하여 장소를 등록해 주세요.";
+        if(!(insert.getString("location","").equals(""))){
             insertLocation = insert.getString("location","");
             message = "촬영 장소가 " +  insertLocation + " 아닌가요?\n변경하시겠습니까?";
         }

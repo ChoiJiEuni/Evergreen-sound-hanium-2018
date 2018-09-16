@@ -233,8 +233,14 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     SharedPreferences insert = getSharedPreferences("RegisteredTB_Pref", MODE_PRIVATE);
                     String name = insert.getString("name","null");
 
-                    insert_registered_person_tb task = new insert_registered_person_tb();
-                    task.execute("http://" + IP_ADDRESS + "/insert_registered_person_tb.php",userName,userPass,DatabaseName,name,personImageUri+"");
+                    SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+                    if(!(sharedPreferences.getString("ID","").equals(""))){
+                        userName = sharedPreferences.getString("ID","");
+                        DatabaseName = userName+"_db";
+                        insert_registered_person_tb task = new insert_registered_person_tb();
+                        task.execute("http://" + IP_ADDRESS + "/insert_registered_person_tb.php",userName,userPass,DatabaseName,name,personImageUri+"");
+                    }
+
 
 
                 } catch (IOException e) {

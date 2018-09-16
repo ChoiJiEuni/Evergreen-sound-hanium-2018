@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -87,8 +88,14 @@ ImagePopup extends Activity implements OnClickListener{
 
         /**이미지 정보 가져오기*/
         infoMessage = "";
-        GetData task = new GetData();
-        task.execute("http://14.63.195.105/showImageInfo.php", imgPath);
+        SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+        if(!(sharedPreferences.getString("ID","").equals(""))){
+            String userName = sharedPreferences.getString("ID","");
+            String DatabaseName = userName+"_db";
+            GetData task = new GetData();
+            task.execute("http://14.63.195.105/showImageInfo.php", imgPath,userName,"1111",DatabaseName);
+        }
+
 
         /** 완성된 이미지 보여주기  */
         BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -269,7 +276,14 @@ ImagePopup extends Activity implements OnClickListener{
         protected String doInBackground(String... params) {
 
             String serverURL = params[0];
-            String postParameters = "img_path=" + params[1];
+            String userName = (String)params[2];
+            String userPass = (String)params[3];
+            String databaseName = (String)params[4];
+
+            String postParameters = "img_path=" + params[1]
+                    +"&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName;
 
 
             try {
