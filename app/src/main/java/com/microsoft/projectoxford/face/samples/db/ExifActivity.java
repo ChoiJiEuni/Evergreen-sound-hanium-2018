@@ -41,8 +41,6 @@ public class ExifActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exif);
         textView = (TextView)findViewById(R.id.textView);
         imageView = (ImageView)findViewById(R.id.imageView);
-
-
     }
 
     @Override

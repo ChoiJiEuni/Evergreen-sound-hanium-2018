@@ -153,8 +153,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
                 strLocation = location(Latitude, Longitude);//*/ 지은: location
             }
-
-
         }catch (Exception e){
 
         }
@@ -435,8 +433,6 @@ public class IdentificationActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = insert.edit();
         editor.putBoolean("repeat", false);
         editor.commit(); //완료한다.
-
-
     }
 
     @Override
@@ -545,7 +541,7 @@ public class IdentificationActivity extends AppCompatActivity {
                         for(int i=0;i<inedx;i++){
                             if(!(map.get(i).equals(""))){
                                 String img_path = imageUri.getPath();
-                                String name=map.get(i).toString();
+                                String name=map.get(i).toString(); // 이건 name에다가 Uri 집어넣는 거니까 필요없고
 
                                 names.append(name+" ");
                             }
@@ -622,8 +618,6 @@ public class IdentificationActivity extends AppCompatActivity {
 
             //PersonCount = result.length
             // Log.d("sohee",PersonCount);
-
-
 
             if (result != null) {
 
@@ -728,11 +722,6 @@ public class IdentificationActivity extends AppCompatActivity {
         // Start a background task to detect faces in the image.
         new DetectionTask().execute(inputStream);
     }
-
-
-
-
-
 
     // Called when the "Detect" button is clicked.
     // 분석버튼 행위
