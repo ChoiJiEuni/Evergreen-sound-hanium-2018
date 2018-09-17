@@ -536,37 +536,38 @@ public class IdentificationActivity extends AppCompatActivity {
                         Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
                         strLocation = location(Latitude, Longitude);//*/ 지은: location
 
-                        registered_count();
-                        StringBuffer names=new StringBuffer();
-                        for(int i=0;i<inedx;i++){
-                            if(!(map.get(i).equals(""))){
-                                String img_path = imageUri.getPath();
-                                String name=map.get(i).toString(); // 이건 name에다가 Uri 집어넣는 거니까 필요없고
-
-                                names.append(name+" ");
-                            }
-                        }
-
-                        if(names.toString().equals("")){
-                            Toast.makeText(getApplicationContext(), "등록된 인물이 없습니다. 인물 등록 후 사용해 주세요.",Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-
-                            SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = insert.edit();
-                            editor.putString("location",strLocation);
-                            editor.commit();
-                            renameLoc();
-                           /* int num = PersonCount - (inedx-1);
-
-                            Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
-
-
-                        }
                     }
 
 
                 }catch (Exception e){
+
+                }
+
+                registered_count();
+                StringBuffer names=new StringBuffer();
+                for(int i=0;i<inedx;i++){
+                    if(!(map.get(i).equals(""))){
+                        String img_path = imageUri.getPath();
+                        String name=map.get(i).toString(); // 이건 name에다가 Uri 집어넣는 거니까 필요없고
+
+                        names.append(name+" ");
+                    }
+                }
+
+                if(names.toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "등록된 인물이 없습니다. 인물 등록 후 사용해 주세요.",Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = insert.edit();
+                    editor.putString("location",strLocation);
+                    editor.commit();
+                    renameLoc();
+                           /* int num = PersonCount - (inedx-1);
+
+                            Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
+
 
                 }
             }
@@ -1081,6 +1082,7 @@ public class IdentificationActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("log", "입출력 오류 - 서버에서 주소변환시 에러발생");
+            return "";
         }
         if (list != null) {
             if (list.size()==0) {
@@ -1340,6 +1342,9 @@ public class IdentificationActivity extends AppCompatActivity {
         int num = PersonCount - inedx;
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
         strLocation = insert.getString("location","");
+        if(strLocation.equals("")){
+            strLocation = "위치 없음";
+        }
         Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime,Toast.LENGTH_LONG).show();
     } // showInfo() end.
     @Override
