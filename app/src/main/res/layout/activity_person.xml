@@ -4,11 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonActivity">
-    <ImageView
+    <TextView
         android:id="@+id/coverImg3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/cover"/>
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="로딩 중입니다."
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:background="#47e8b2"/>
     <RelativeLayout
         android:id="@+id/relative3"
         android:layout_width="match_parent"

@@ -81,7 +81,8 @@ import java.util.UUID;
 
 
 public class PersonActivity extends AppCompatActivity {
-    ImageView coverImg;
+    //ImageView coverImg;
+    TextView coverImg;
     RelativeLayout relative1;
     int imageIndex=0;
     //등록된 인물 이름 - 220번째줄에서 처리

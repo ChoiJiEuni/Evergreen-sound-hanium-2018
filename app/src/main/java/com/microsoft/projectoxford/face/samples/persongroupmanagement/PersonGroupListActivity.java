@@ -76,7 +76,8 @@ import java.util.UUID;
 
 public class PersonGroupListActivity extends AppCompatActivity {
     // Background task of deleting a person group.
-    ImageView coverImg;
+    //ImageView coverImg;
+    TextView coverImg;
     RelativeLayout relative1;
     int imageIndex=0;
 

@@ -5,11 +5,16 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity">
-    <ImageView
+    <TextView
         android:id="@+id/coverImg1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/cover"/>
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="로딩 중입니다."
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:background="#47e8b2"/>
     <RelativeLayout
         android:id="@+id/relative1"
         xmlns:tools="http://schemas.android.com/tools"

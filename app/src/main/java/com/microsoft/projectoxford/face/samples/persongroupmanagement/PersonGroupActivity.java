@@ -80,7 +80,8 @@ import java.util.UUID;
 
 
 public class PersonGroupActivity extends AppCompatActivity {
-    ImageView coverImg;
+    //ImageView coverImg;
+    TextView coverImg;
     LinearLayout relative1;
     int imageIndex=0;
 
