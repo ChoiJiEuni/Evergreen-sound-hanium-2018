@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +81,9 @@ import java.util.UUID;
 
 
 public class PersonActivity extends AppCompatActivity {
+    ImageView coverImg;
+    RelativeLayout relative1;
+    int imageIndex=0;
     //등록된 인물 이름 - 220번째줄에서 처리
     // 유아이 소희 (코밋 확인 용)
     String personName;
@@ -220,6 +225,11 @@ public class PersonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
         super.setTitle("인물 화면");
+        coverImg = findViewById(R.id.coverImg3);
+        relative1=findViewById(R.id.relative3);
+        imageIndex=0;
+        changeImage();
+
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -568,8 +578,14 @@ public class PersonActivity extends AppCompatActivity {
             }
         }else{*/
             if (personId == null) {
+                Log.d("chae","왜지");
                 new AddPersonTask(false).execute(personGroupId);
+                imageIndex=0;
+                changeImage();
             } else {
+                Log.d("chae","왜지?v");
+               // imageIndex=1;
+              //  changeImage();
                 doneAndSave();
             }
        // }
@@ -596,9 +612,14 @@ public class PersonActivity extends AppCompatActivity {
         intent.putExtra("bitmap",bmUri);
         intent.putExtra("name",name);
         startActivity(intent);
-
-
-
-
+    }
+    private void changeImage(){
+        if(imageIndex==0){
+            relative1.setVisibility(View.VISIBLE);
+            coverImg.setVisibility(View.INVISIBLE);
+        }else if(imageIndex==1){
+            relative1.setVisibility(View.INVISIBLE);
+            coverImg.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -37,6 +37,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +55,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +76,10 @@ import java.util.UUID;
 
 public class PersonGroupListActivity extends AppCompatActivity {
     // Background task of deleting a person group.
+    ImageView coverImg;
+    RelativeLayout relative1;
+    int imageIndex=0;
+
     class DeletePersonGroupTask extends AsyncTask<String, String, String> {
 
         @Override
@@ -133,6 +140,11 @@ public class PersonGroupListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group_list);
         super.setTitle("그룹 생성 화면");
+        coverImg = findViewById(R.id.coverImg1);
+        relative1=findViewById(R.id.relative1);
+        imageIndex=0;
+        changeImage();
+
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getString(R.string.progress_dialog_title));
@@ -183,7 +195,6 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 inflater.inflate(R.menu.menu_delete_items, menu);
 
                 personGroupsListAdapter.longPressed = true;
-
                 ListView listView = (ListView) findViewById(R.id.list_person_groups);
                 listView.setAdapter(personGroupsListAdapter);
 
@@ -372,6 +383,17 @@ public class PersonGroupListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        imageIndex=1;
+        changeImage();
         finish();
+    }
+    private void changeImage(){
+        if(imageIndex==0){
+            relative1.setVisibility(View.VISIBLE);
+            coverImg.setVisibility(View.INVISIBLE);
+        }else if(imageIndex==1){
+            relative1.setVisibility(View.INVISIBLE);
+            coverImg.setVisibility(View.VISIBLE);
+        }
     }
 }

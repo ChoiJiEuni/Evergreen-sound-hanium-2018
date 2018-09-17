@@ -60,6 +60,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +80,10 @@ import java.util.UUID;
 
 
 public class PersonGroupActivity extends AppCompatActivity {
+    ImageView coverImg;
+    LinearLayout relative1;
+    int imageIndex=0;
+
     // Background task of adding a person group.
     class AddPersonGroupTask extends AsyncTask<String, String, String> {
         // Indicate the next step is to add person in this group, or finish editing this group.
@@ -275,6 +281,11 @@ public class PersonGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group);
         setTitle("그룹 화면");
+        coverImg = findViewById(R.id.coverImg2);
+        relative1=findViewById(R.id.relative2);
+
+        imageIndex=0;
+        changeImage();
 
         btn = (TextView)findViewById(R.id.Speech);
 
@@ -430,8 +441,13 @@ public class PersonGroupActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         if (!personGroupExists) {
+            imageIndex=0;
+            changeImage();
             new AddPersonGroupTask(false).execute(personGroupId);
         } else {
+
+            imageIndex=1;
+            changeImage();
             doneAndSave(true);
         }
     }
@@ -633,5 +649,13 @@ public class PersonGroupActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
-
+    private void changeImage(){
+        if(imageIndex==0){
+            relative1.setVisibility(View.VISIBLE);
+            coverImg.setVisibility(View.INVISIBLE);
+        }else if(imageIndex==1){
+            relative1.setVisibility(View.INVISIBLE);
+            coverImg.setVisibility(View.VISIBLE);
+        }
+    }
 }
