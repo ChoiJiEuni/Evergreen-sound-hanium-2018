@@ -119,13 +119,28 @@
         android:orientation="horizontal" >
 
         <TextView
+            android:id="@+id/camera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="@dimen/view_margin"
+            android:text="재촬영"
+            android:background="#47e8b2"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:onClick="OnButtonClickedImage"
+            style="@style/ButtonStyle" />
+
+        <TextView
+            android:visibility="gone"
             android:id="@+id/identify"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="@dimen/view_margin"
-            android:text="분석"
+            android:text="재촬영"
             android:background="#47e8b2"
             android:textSize="25dp"
             android:gravity="center"

@@ -51,6 +51,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -115,7 +116,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     Float Longitude =  Float.valueOf(0); //경도
     String strLocation = "";
-    int inedx=0;
+    int index=0;
 
     //*/0825
     private View convertView;
@@ -135,6 +136,11 @@ public class IdentificationActivity extends AppCompatActivity {
     static HashMap bitmaps=new HashMap();
     int i =0;
     int count =0;
+
+    // 재촬영
+    private TextToSpeech tts;
+    private Uri mUriPhotoTaken;
+    private static final int REQUEST_TAKE_PHOTO = 1234;
 
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
@@ -189,7 +195,7 @@ public class IdentificationActivity extends AppCompatActivity {
         editor.clear();
         editor.commit();
 
-        for(int i=0;i<inedx;i++){
+        for(int i=0;i<index;i++){
             if(!(map.get(i).equals(""))){
                 String img_path = imageUri.getPath();
                 String name=map.get(i).toString();
@@ -216,7 +222,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     //*/ DB 리스트뷰에서 등록된 사람들 이름만 뽑고, 평균까지 구함.
     public void registered_count() {
-        inedx=0;
+        index=0;
         int count = mFaceListAdapter.getCount();
         List<IdentifyResult> mIdentifyResults = mFaceListAdapter.mIdentifyResults;
         List<Face> faces = mFaceListAdapter.faces;
@@ -233,9 +239,9 @@ public class IdentificationActivity extends AppCompatActivity {
                             personId, mPersonGroupId, IdentificationActivity.this);
                     String per = personName;
                     //PersonName= personName; // 여기서 받은 이름 위에 지정한 전역변수에다가 반환
-                    map.put(inedx, per); // 전역변수 PersonName 해시맵에다가 넣기
-                    bitmaps.put(inedx,getImageUri(getApplicationContext(), faceThumbnails.get(position)));
-                    inedx++;
+                    map.put(index, per); // 전역변수 PersonName 해시맵에다가 넣기
+                    bitmaps.put(index,getImageUri(getApplicationContext(), faceThumbnails.get(position)));
+                    index++;
                     //  PersonName = String.valueOf(map);
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
                     sum += Float.parseFloat(EmotionValue);
@@ -258,6 +264,42 @@ public class IdentificationActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
+    public void OnButtonClickedImage(View view) {
+        //명:
+        Toast.makeText(getApplicationContext(),"촬영이 시작됩니다. 정면을 응시하여 주세요.",Toast.LENGTH_SHORT).show();
+
+        // 재촬영 : tts 오류나서 토스트로 대체
+        // tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            // Save the photo taken to a temporary file.
+            // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                /////////////////////새 저장 폴더 만들기//////////////////////
+                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
+                // File dir = new File(storageDir.getPath(), "evergreen");
+                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                Log.d("chae",dir+"");
+
+                if(!dir.exists())
+
+                    dir.mkdirs();
+                ///////////////////////////////////////////////////////////////
+                File file = File.createTempFile("evergreen_", ".jpg", dir);
+                mUriPhotoTaken = Uri.fromFile(file);
+                Log.d("chae",mUriPhotoTaken+"넘긴거");
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+            } catch (IOException e) {
+                setInfo(e.getMessage());
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 
     // Background task of face identification.
@@ -428,11 +470,14 @@ public class IdentificationActivity extends AppCompatActivity {
         // Start detecting in image.
         detect(mBitmap);
 
-
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
-        editor.putBoolean("repeat", false);
-        editor.commit(); //완료한다.
+        editor.remove("location");
+        editor.commit();
+
+        //머신러닝
+       /* editor.putBoolean("repeat", false);
+        editor.commit(); //완료한다.*/
     }
 
     @Override
@@ -521,6 +566,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.list_identified_faces);
                 listView.setAdapter(mFaceListAdapter);
 
+                strLocation="";
                 // 지은: ExifInterface 생성
                 try {
                     if(strLocation.equals("")){
@@ -545,7 +591,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
                 registered_count();
                 StringBuffer names=new StringBuffer();
-                for(int i=0;i<inedx;i++){
+                for(int i=0;i<index;i++){
                     if(!(map.get(i).equals(""))){
                         String img_path = imageUri.getPath();
                         String name=map.get(i).toString(); // 이건 name에다가 Uri 집어넣는 거니까 필요없고
@@ -564,7 +610,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     editor.putString("location",strLocation);
                     editor.commit();
                     renameLoc();
-                           /* int num = PersonCount - (inedx-1);
+                           /* int num = PersonCount - (index-1);
 
                             Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
 
@@ -1327,7 +1373,7 @@ public class IdentificationActivity extends AppCompatActivity {
     // 사용자에게 사진 정보 알려주는 토스트
     public void showInfo(){
         StringBuffer names=new StringBuffer();
-        for(int i=0;i<inedx;i++){
+        for(int i=0;i<index;i++){
             if(!(map.get(i).equals(""))){
                 String img_path = imageUri.getPath();
                 String name=map.get(i).toString();
@@ -1339,7 +1385,7 @@ public class IdentificationActivity extends AppCompatActivity {
         Date date = new Date(now);
         SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
         String getTime = mFormat.format(date);
-        int num = PersonCount - inedx;
+        int num = PersonCount - index;
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
         strLocation = insert.getString("location","");
         if(strLocation.equals("")){
@@ -1355,7 +1401,58 @@ public class IdentificationActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     showInfo();
                 }
-                break;
+                break;case REQUEST_TAKE_PHOTO:
+            if (resultCode == RESULT_OK) {
+                Uri imageUri;
+                if (data == null || data.getData() == null) {
+                    imageUri = mUriPhotoTaken;
+                } else {
+                    imageUri = data.getData();
+                }
+
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle("기다려 주세요.");
+                detected = false;
+
+                Log.d("chae",imageUri.getPath()+"받은거");
+
+                ///원래코드
+                mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                        imageUri, getContentResolver());
+
+                //갤러리에 촬영 사진추가
+                //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+                File dir =new File( imageUri.getPath());
+                Log.d("chae",dir+"");
+
+                if(!dir.exists())
+
+                    dir.mkdirs();
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
+
+                if (mBitmap != null) {
+                    // Show the image on screen.
+                    ImageView imageView = (ImageView) findViewById(R.id.image);
+                    imageView.setImageBitmap(mBitmap);
+                }
+
+                // Clear the identification result.
+                FaceListAdapter faceListAdapter = new FaceListAdapter(null);
+                ListView listView = (ListView) findViewById(R.id.list_identified_faces);
+                listView.setAdapter(faceListAdapter);
+
+                // Clear the information panel.
+                setInfo("");
+
+                SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = insert.edit();
+                editor.remove("location");
+                editor.commit();
+
+                // Start detecting in image.
+                detect(mBitmap);
+            }
+            break;
             default:
                 break;
         }
