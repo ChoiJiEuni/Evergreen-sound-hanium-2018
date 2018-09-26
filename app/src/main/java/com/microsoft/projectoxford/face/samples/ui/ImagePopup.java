@@ -349,6 +349,9 @@ ImagePopup extends Activity implements OnClickListener{
         String TAG_NAME = "personName";
         String TAG_REC = "record";
 
+       // String TAG_PROPORTION = "ficial_proportion";
+        //String TAG_FACE = "face";
+
 
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
@@ -365,6 +368,10 @@ ImagePopup extends Activity implements OnClickListener{
                 String personKnowCount = item.getString(TAG_KNOW);
                 String name = item.getString(TAG_NAME);
                 RECORDED_FILE = item.getString(TAG_REC);
+
+                // 얼굴비율 값 가져오기
+
+                // 얼굴 화면 넘어갔는지 값 가져오기
 
                 if (!location.equals("N")) {
                     if (!location.equals(""))

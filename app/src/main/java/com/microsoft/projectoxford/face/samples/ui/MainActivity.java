@@ -187,19 +187,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("chae",dir+"");
 
                 if(!dir.exists())
-
                     dir.mkdirs();
                 ///////////////////////////////////////////////////////////////
                 File file = File.createTempFile("evergreen_", ".jpg", dir);
                 mUriPhotoTaken = Uri.fromFile(file);
-                Log.d("chae",mUriPhotoTaken+"넘긴거");
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+               // Log.d("chae",mUriPhotoTaken+"넘긴거");
+               //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             } catch (IOException e) {
                 setInfo(e.getMessage());
             }
+
         }
 
     }
@@ -300,6 +300,19 @@ public class MainActivity extends AppCompatActivity {
         {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
+                    File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                    Log.d("chae",dir+"");
+
+                    if(!dir.exists())
+                        dir.mkdirs();
+                    ///////////////////////////////////////////////////////////////
+
+                    //*/ 갤러리에 사진 저장하는 부분
+                    /*Intent intent  = new Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(mUriPhotoTaken);
+                    sendBroadcast(intent);*/
+
+
                     Uri imageUri;
                     if (data == null || data.getData() == null) {
                         imageUri = mUriPhotoTaken;
@@ -308,7 +321,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Intent intent = new Intent(this, IdentificationActivity.class);
                     intent.setData(imageUri);
-
 
                     // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     // intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);

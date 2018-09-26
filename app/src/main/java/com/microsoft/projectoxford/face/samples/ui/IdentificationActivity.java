@@ -40,7 +40,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.ExifInterface;
@@ -69,6 +71,7 @@ import android.widget.Toast;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.Emotion;
 import com.microsoft.projectoxford.face.contract.Face;
+import com.microsoft.projectoxford.face.contract.FaceRectangle;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
@@ -142,12 +145,24 @@ public class IdentificationActivity extends AppCompatActivity {
     private Uri mUriPhotoTaken;
     private static final int REQUEST_TAKE_PHOTO = 1234;
 
+    //09 얼굴 인식해서 사각형 그리기
+    static int people_num=0;
+    static int range=5; //얼굴영역에서 추가할 범위 값
+    static int face_size_sum = 0;
+    static StringBuffer isFaceMessage = null;
+
+    float facialProportion = (float) 0.0; // 얼굴 비율
+   // 화면안에서 벗어난 사람에 대한 메세지
+   static int message_index = 0;
+    static  HashMap messageMap=new HashMap();
+
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
     public void DB(View view) {
         //*/ 지은: ExifInterface 생성
 
         try {
+            Save(); // 사진 갤러리에 저장.
             if(strLocation.equals("")){
                 InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
                 ExifInterface exif = null;
@@ -175,40 +190,60 @@ public class IdentificationActivity extends AppCompatActivity {
 
         //*/ 09
         SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
-        if(!(sharedPreferences.getString("ID","").equals(""))){
-            userName = sharedPreferences.getString("ID","");
-            DatabaseName = userName+"_db";
-            insert_picture_infoTask task = new insert_picture_infoTask();
-            task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",
-                    userName,userPass,DatabaseName,
-                    imageUri.getPath(),
-                    strLocation,
-                    getTime,
-                    String.valueOf(average),
-                    String.valueOf(PersonCount),
-                    record_path);
-        }
+       try{
+           if(!(sharedPreferences.getString("ID","").equals(""))){
+               userName = sharedPreferences.getString("ID","");
+               DatabaseName = userName+"_db";
+               insert_picture_infoTask task = new insert_picture_infoTask();
+               task.execute("http://" + IP_ADDRESS + "/insert_picture_info.php",
+                       userName,userPass,DatabaseName,
+                       imageUri.getPath(),
+                       strLocation,
+                       getTime,
+                       String.valueOf(average),
+                       String.valueOf(PersonCount),
+                       record_path);
+           }
+       }catch (Exception e){
+
+       }
 
         Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
 
         SharedPreferences.Editor editor = insert.edit();
         editor.clear();
         editor.commit();
-
-        for(int i=0;i<index;i++){
-            if(!(map.get(i).equals(""))){
-                String img_path = imageUri.getPath();
-                String name=map.get(i).toString();
-
-
-                try {
-                    Thread.sleep(300);
-                    insert_recognition_tb task2 = new insert_recognition_tb();
-                    task2.execute("http://" + IP_ADDRESS + "/insert_recognition_tb.php",userName,userPass,DatabaseName,img_path,name);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        String img_path = imageUri.getPath();
+        try{
+            for(int i=0;i<index;i++){
+                if(!(map.get(i).equals(""))){
+                    String name=map.get(i).toString();
+                    try {
+                        Thread.sleep(300);
+                        insert_recognition_tb task2 = new insert_recognition_tb();
+                        task2.execute("http://" + IP_ADDRESS + "/insert_recognition_tb.php",userName,userPass,DatabaseName,img_path,name);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            insert_ficial_proportion_tb ficial_proportion_task = new insert_ficial_proportion_tb();
+            ficial_proportion_task.execute("http://" + IP_ADDRESS + "/insert_ficial_proportion_tb.php",userName,userPass,DatabaseName,img_path,Float.toString(facialProportion));
+
+
+            for(int i=0 ; i<message_index ; i++){
+                String message = "";
+                try{
+                    message = messageMap.get(i).toString();
+                    insert_out_of_range_tb out_of_task = new insert_out_of_range_tb();
+                    out_of_task.execute("http://" + IP_ADDRESS + "/insert_out_of_range_tb.php",userName,userPass,DatabaseName,img_path,message);
+
+                }catch (Exception e){
+                    // Toast.makeText(getApplicationContext(), "벗어났습니다.",Toast.LENGTH_LONG ).show();
+                }
+            }
+        }catch(Exception e){
+
         }
 
     }
@@ -268,6 +303,9 @@ public class IdentificationActivity extends AppCompatActivity {
         //명:
         Toast.makeText(getApplicationContext(),"촬영이 시작됩니다. 정면을 응시하여 주세요.",Toast.LENGTH_SHORT).show();
 
+        messageMap.clear();
+        message_index = 0;
+
         // 재촬영 : tts 오류나서 토스트로 대체
         // tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -282,13 +320,11 @@ public class IdentificationActivity extends AppCompatActivity {
                 Log.d("chae",dir+"");
 
                 if(!dir.exists())
-
                     dir.mkdirs();
                 ///////////////////////////////////////////////////////////////
                 File file = File.createTempFile("evergreen_", ".jpg", dir);
                 mUriPhotoTaken = Uri.fromFile(file);
                 Log.d("chae",mUriPhotoTaken+"넘긴거");
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
@@ -301,6 +337,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
     }
 
+
+    // 갤러리에 저장하는 시점.
+    public void Save() {
+        Intent intent  = new Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(imageUri);
+        sendBroadcast(intent);
+    }
 
     // Background task of face identification.
     // 얼굴 식별의 백그라운드 작업
@@ -443,15 +486,6 @@ public class IdentificationActivity extends AppCompatActivity {
         mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                 imageUri, getContentResolver());
 
-        //갤러리에 촬영 사진추가
-        //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
-        File dir =new File( imageUri.getPath());
-        Log.d("chae",dir+"");
-
-        if(!dir.exists())
-
-            dir.mkdirs();
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
 
         if (mBitmap != null) {
             // Show the image on screen.
@@ -610,10 +644,6 @@ public class IdentificationActivity extends AppCompatActivity {
                     editor.putString("location",strLocation);
                     editor.commit();
                     renameLoc();
-                           /* int num = PersonCount - (index-1);
-
-                            Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
-
 
                 }
             }
@@ -681,7 +711,12 @@ public class IdentificationActivity extends AppCompatActivity {
                     // 지은 : 이때 재촬영하라고 토스트 띄워야하고
                     detected = false;
                     setInfo("감지된 얼굴이 없습니다! 다시 한 번 촬영해 주세요");
-                    Toast.makeText(getApplicationContext(),"감지된 얼굴이 없습니다! 다시 한 번 촬영해 주세요",Toast.LENGTH_LONG).show();
+                    face_size_sum=0;
+                    people_num = 0;
+                    facialProportion = 0;
+                    message_index = 0;
+                    messageMap.clear();
+                    Toast.makeText(getApplicationContext(),"감지된 얼굴이 없습니다! 아래의 재촬영 버튼을 눌러 다시 한 번 촬영해 주세요",Toast.LENGTH_LONG).show();
                 } else {
                     detected = true;
                     setInfo("\"Identify\" 버튼을 클릭하여 분석을 시작해 주세요.");
@@ -691,7 +726,87 @@ public class IdentificationActivity extends AppCompatActivity {
                 detected = false;
             }
 
+            // 얼굴 인식해서 사각형 그리기
+            ImageView imageView = (ImageView) findViewById(R.id.image);
+            face_size_sum=0;
+            people_num = 0;
+            facialProportion = 0;
+            try{
+                imageView.setImageBitmap(
+                        drawFaceRectanglesOnBitmap(mBitmap, result));
+                int one_num = (face_size_sum/people_num);
+                int full_num = (mBitmap.getHeight())*(mBitmap.getWidth());
+                facialProportion = ((float)one_num/(float)full_num)*100;
+            }catch (Exception e){
+
+            }
+
+            Log.d("gom","얼굴비율: "+facialProportion+"%");
+            //if(!(isFaceMessage.toString().equals(""))){
+
+                //isFaceMessage.append("화면에서 얼굴 비율: "+facialProportion+"%");
+               // Toast.makeText(getApplicationContext(),isFaceMessage,Toast.LENGTH_SHORT).show();
+           // }
+
+            mBitmap.recycle();
+            //
             refreshIdentifyButtonEnabledStatus();
+        }
+    }
+    // 사진에서 사각형 그리기
+    private static Bitmap drawFaceRectanglesOnBitmap(
+            Bitmap originalBitmap, Face[] faces) {
+        Bitmap bitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        /*Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.argb(0,100,100,100));
+        paint.setStrokeWidth(5);*/
+        isFaceMessage = new StringBuffer();
+        if (faces != null) {
+            for (Face face : faces) {
+                people_num++;
+
+                FaceRectangle faceRectangle = face.faceRectangle;
+                int first_x = faceRectangle.left - range;
+                int first_y = faceRectangle.top - range;
+                int second_x = faceRectangle.left + faceRectangle.width + range + range;
+                int second_y = faceRectangle.top + faceRectangle.height + range + range;
+                /*canvas.drawRect(
+                        first_x,
+                        first_y,
+                        second_x,
+                        second_y,
+                        paint);*/
+                isFaceInRange(first_x,first_y,second_x,second_y,bitmap.getWidth(),bitmap.getHeight());
+                face_size_sum += faceRectangle.height*faceRectangle.width;
+            }
+        }
+        return bitmap;
+    }
+
+    // 인물이 화면 밖으로 나갔나 확인 후 나갔다면 메세지추가
+    private static void isFaceInRange(int first_x, int first_y, int second_x, int second_y, int bitmapWidth, int bitmapHeight) {
+        if(first_x<0){
+            messageMap.put(message_index,people_num+"번째 인물 왼쪽 화면에서 벗어남.");
+            message_index++;
+          // isFaceMessage.append(people_num+"번째 인물 왼쪽 화면에서 벗어남."+"\n");
+        }
+        if(bitmapWidth<second_x){
+            messageMap.put(message_index,people_num+"번째 인물 오른쪽 화면에서 벗어남.");
+            message_index++;
+           // isFaceMessage.append(people_num+"번째 인물 오른쪽 화면에서 벗어남."+"\n");
+        }
+        if(first_y<0){
+            messageMap.put(message_index,people_num+"번째 인물 위쪽 화면에서 벗어남.");
+            message_index++;
+            //isFaceMessage.append(people_num+"번째 인물 위쪽 화면에서 벗어남."+"\n");
+        }
+        if(bitmapHeight<second_y){
+            messageMap.put(message_index,people_num+"번째 인물 아래쪽 화면에서 벗어남.");
+            message_index++;
+            //isFaceMessage.append(people_num+"번째 인물 아래쪽 화면에서 벗어남."+"\n");
         }
     }
 
@@ -815,7 +930,7 @@ public class IdentificationActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"인물 그룹을 먼저 생성해 주세요.",Toast.LENGTH_LONG).show();
         }
     }
-    //*/
+
     public void managePersonGroups(View view) {
 
         Intent intent = new Intent(this, PersonGroupListActivity.class);
@@ -1340,6 +1455,189 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     } // insert_recognition_tb() end.
 
+    class insert_ficial_proportion_tb extends AsyncTask<String, Void, String> {
+    ProgressDialog progressDialog;
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+        progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                "기다려 주세요.", null, true, true);
+    }
+
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+        progressDialog.dismiss();
+    }
+
+
+    @Override
+    protected String doInBackground(String... params) {
+
+        String serverURL = (String)params[0];
+        String userName = (String)params[1];
+        String userPass = (String)params[2];
+        String databaseName = (String)params[3];
+        String img_path = (String)params[4];
+        String ficial_proportion = (String)params[5];
+
+        String postParameters = "&userName=" + userName
+                +"&userPass=" + userPass
+                +"&databaseName=" + databaseName
+                +"&img_path=" + img_path
+                +"&ficial_proportion=" + ficial_proportion; // php에 보낼값.
+
+        try {
+            // php 가져오기.
+            URL url = new URL(serverURL+"");
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+            httpURLConnection.setReadTimeout(5000);
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.connect();
+
+
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            outputStream.write(postParameters.getBytes("UTF-8"));
+            outputStream.flush();
+            outputStream.close();
+
+
+            int responseStatusCode = httpURLConnection.getResponseCode();
+
+            InputStream inputStream;
+            if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                inputStream = httpURLConnection.getInputStream();
+            }
+            else{
+                inputStream = httpURLConnection.getErrorStream();
+            }
+
+
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            while((line = bufferedReader.readLine()) != null){
+                sb.append(line);
+            }
+
+
+            bufferedReader.close();
+
+
+
+            return sb.toString();
+
+
+        } catch (Exception e) {
+
+            Log.d(TAG, "createDB: Error ", e);
+            return new String("Error: " + e.getMessage());
+        }
+
+    }
+} // insert_ficial_proportion_tb() end.
+
+    class insert_out_of_range_tb extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                    "기다려 주세요.", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String img_path = (String)params[4];
+            String face = (String)params[5];
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&img_path=" + img_path
+                    +"&face=" + face; // php에 보낼값.
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "createDB: Error ", e);
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // insert_out_of_range_tb() end.
+
+
     // 위치 변경 다이얼로그
     public void renameLoc(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1367,6 +1665,8 @@ public class IdentificationActivity extends AppCompatActivity {
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
+        builder.setCancelable(false); // 뒤로가기 버튼 종료 막기.
+
         builder.show();
     } //renameLoc () end.
 
@@ -1401,9 +1701,10 @@ public class IdentificationActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     showInfo();
                 }
-                break;case REQUEST_TAKE_PHOTO:
+                break;
+            case REQUEST_TAKE_PHOTO:
             if (resultCode == RESULT_OK) {
-                Uri imageUri;
+               // Uri imageUri;
                 if (data == null || data.getData() == null) {
                     imageUri = mUriPhotoTaken;
                 } else {
@@ -1420,15 +1721,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                         imageUri, getContentResolver());
 
-                //갤러리에 촬영 사진추가
-                //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
-                File dir =new File( imageUri.getPath());
-                Log.d("chae",dir+"");
-
-                if(!dir.exists())
-
-                    dir.mkdirs();
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
 
                 if (mBitmap != null) {
                     // Show the image on screen.
