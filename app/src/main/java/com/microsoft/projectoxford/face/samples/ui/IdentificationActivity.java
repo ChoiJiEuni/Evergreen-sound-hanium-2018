@@ -69,6 +69,7 @@ import android.widget.Toast;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.Emotion;
 import com.microsoft.projectoxford.face.contract.Face;
+import com.microsoft.projectoxford.face.contract.HeadPose;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 import com.microsoft.projectoxford.face.samples.R;
@@ -141,6 +142,8 @@ public class IdentificationActivity extends AppCompatActivity {
     private TextToSpeech tts;
     private Uri mUriPhotoTaken;
     private static final int REQUEST_TAKE_PHOTO = 1234;
+
+
 
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
@@ -638,7 +641,11 @@ public class IdentificationActivity extends AppCompatActivity {
                         /* Which face attributes to analyze, currently we support:
                            age,gender,headPose,smile,facialHair */
                         new FaceServiceClient.FaceAttributeType[] {
-                                FaceServiceClient.FaceAttributeType.Emotion
+                                FaceServiceClient.FaceAttributeType.Glasses,
+                                FaceServiceClient.FaceAttributeType.Emotion,
+                                FaceServiceClient.FaceAttributeType.HeadPose,
+                                FaceServiceClient.FaceAttributeType.Blur,
+                                FaceServiceClient.FaceAttributeType.Noise
                         });
             }  catch (Exception e) {
                 publishProgress(e.getMessage());
@@ -701,7 +708,10 @@ public class IdentificationActivity extends AppCompatActivity {
         Log.d("hee", String.valueOf(PersonCount));
     }
     */
-
+    String BlurValue ="";
+    String NoiseValue ="";
+    String HeadPoseValue ="";
+    String GlassesValue ="";
     // Flag to indicate which task is to be performed.
     private static final int REQUEST_SELECT_IMAGE = 0;
 
@@ -964,12 +974,22 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
+                    GlassesValue = String.format("안경 : %s", faces.get(position).faceAttributes.glasses);
+                    BlurValue = String.format("블러 : %s", faces.get(position).faceAttributes.blur.blurLevel);
+                    NoiseValue =String.format("노이즈 : %s", faces.get(position).faceAttributes.noise.noiseLevel);
+                    HeadPoseValue =String.format("기울기 : %s", getHeadPose(faces.get(position).faceAttributes.headPose));
+                    /*String Value = String.format("안경 : %s\n 블러 : %s\n 노이즈 : %s\n 기울기 : %s",
+                            faces.get(position).faceAttributes.glasses,
+                            faces.get(position).faceAttributes.blur.blurLevel,
+                            faces.get(position).faceAttributes.noise.noiseLevel,
+                            getHeadPose(faces.get(position).faceAttributes.headPose));
+                    */
                     //*/sum += Float.parseFloat(EmotionValue);
                     String Emotion = String.format("행복도: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
                     String identity = "사람: " + personName + "\n"
                             + "신뢰도: " + formatter.format(
-                            mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
+                            mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion+"\n"+GlassesValue+"\n"+BlurValue+"\n"+NoiseValue+"\n"+HeadPoseValue;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
 
@@ -1013,7 +1033,11 @@ public class IdentificationActivity extends AppCompatActivity {
         emotionType = "Happiness";
         return String.format("%f", emotionValue);
     }
-
+    //축정보 - 고개기울어짐과 측면틀어짐 측정
+    private String getHeadPose(HeadPose headPose)
+    {
+        return String.format("Roll: %s, Yaw: %s", headPose.roll, headPose.yaw);
+    }
     // The adapter of the ListView which contains the person groups.
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
     private class PersonGroupListAdapter extends BaseAdapter {
