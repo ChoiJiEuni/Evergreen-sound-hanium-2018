@@ -131,6 +131,7 @@ public class IdentificationActivity extends AppCompatActivity {
     String userPass="1111";
     String DatabaseName ="B_db";
     String EmotionValue = "";
+    String BlurValue="";
     Float Latitude = Float.valueOf(0); // 위도
     static  HashMap map=new HashMap();
     static HashMap bitmaps=new HashMap();
@@ -638,7 +639,8 @@ public class IdentificationActivity extends AppCompatActivity {
                         /* Which face attributes to analyze, currently we support:
                            age,gender,headPose,smile,facialHair */
                         new FaceServiceClient.FaceAttributeType[] {
-                                FaceServiceClient.FaceAttributeType.Emotion
+                                FaceServiceClient.FaceAttributeType.Emotion,
+                                FaceServiceClient.FaceAttributeType.Blur
                         });
             }  catch (Exception e) {
                 publishProgress(e.getMessage());
@@ -964,12 +966,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //*/ 지은: 데베에는 getEmotion(faces.get(position).faceAttributes.emotion)값만 들어가야하는데 2번호출하면 문제 생길까봐 분리시킴.
                     EmotionValue  = getEmotion(faces.get(position).faceAttributes.emotion);
+                    BlurValue = String.format("블러 : %s", faces.get(position).faceAttributes.blur.blurLevel);
                     //*/sum += Float.parseFloat(EmotionValue);
                     String Emotion = String.format("행복도: "+EmotionValue);
                     //String Emotion = String.format("Happiness: %s", getEmotion(faces.get(position).faceAttributes.emotion));
-                    String identity = "사람: " + personName + "\n"
+                    String identity = "이름: " + personName + "\n"
                             + "신뢰도: " + formatter.format(
-                            mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion;
+                            mIdentifyResults.get(position).candidates.get(0).confidence) +"\n"+ Emotion+"\n"+BlurValue;
                     ((TextView) convertView.findViewById(R.id.text_detected_face)).setText(
                             identity);
 
