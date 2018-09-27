@@ -109,6 +109,7 @@ import java.util.UUID;
 // 유아이 : 소희
 public class IdentificationActivity extends AppCompatActivity {
 
+    float brightness;//밝기
     private static final int RENAME_LOC_INFO= 1689;
     private static int PersonCount=0; // 전체 인원 수
     // HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
@@ -422,7 +423,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         Log.d("chae",imageUri.getPath()+"받은거");
-//////////////////////////////////////
+
        /* if (imageUri != null) {
 
             try {
@@ -439,11 +440,12 @@ public class IdentificationActivity extends AppCompatActivity {
            // mImageView.setImageBitmap(bm);
 
         }*/
-        ///////////////////////////////
+
         ///원래코드
         mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
                 imageUri, getContentResolver());
 
+        brightness=getBrightness(mBitmap);
         //갤러리에 촬영 사진추가
         //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
         File dir =new File( imageUri.getPath());
@@ -480,7 +482,33 @@ public class IdentificationActivity extends AppCompatActivity {
        /* editor.putBoolean("repeat", false);
         editor.commit(); //완료한다.*/
     }
+    public float getBrightness(Bitmap src) {
+        // original image size
+        int width = src.getWidth();
+        int height = src.getHeight();
+        // create output bitmap
 
+        // color information
+        float Y=0;
+        int R, G, B;
+        int pixel;
+
+        // scan through all pixels
+        for(int x = 0; x < width; ++x) {
+            for(int y = 0; y < height; ++y) {
+                // get pixel color
+                pixel = src.getPixel(x, y);
+                R = Color.red(pixel);
+                G = Color.green(pixel);
+                B = Color.blue(pixel);
+
+                Y+= R * 0.2126 + G * 0.7152 + B * 0.0722;
+            }
+        }
+        Y = Y/(width*height);
+        Log.d("Chae",Y+"");
+        return Y;
+    }
     @Override
     protected void onResume() {
         super.onResume();
