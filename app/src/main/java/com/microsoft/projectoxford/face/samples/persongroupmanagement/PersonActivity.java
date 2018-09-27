@@ -427,6 +427,9 @@ public class PersonActivity extends AppCompatActivity {
                     intent.putExtra("ImageUriStr", uriImagePicked.toString());
                     startActivity(intent);
                 }
+                if(requestCode==9999){
+                    onCreate(null);
+                }
                 break;
             case REQ_CODE_SPEECH_INPUT:
                 if (resultCode == RESULT_OK && null != data) {

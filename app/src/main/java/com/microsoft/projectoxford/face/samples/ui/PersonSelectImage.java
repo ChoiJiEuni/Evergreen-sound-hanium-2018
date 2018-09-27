@@ -84,6 +84,22 @@ public class PersonSelectImage extends AppCompatActivity {
                 }
             }
         });*/
+        Toast.makeText(getApplicationContext(), "촬영이 시작됩니다. 정면을 응시하여 주세요.", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            // Save the photo taken to a temporary file.
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                File file = File.createTempFile("IMG_", ".jpg", storageDir);
+                mUriPhotoTaken = Uri.fromFile(file);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+               // finish();
+            } catch (IOException e) {
+                setInfo(e.getMessage());
+            }
+        }
     }
 
 
@@ -142,6 +158,7 @@ public class PersonSelectImage extends AppCompatActivity {
                     setResult(RESULT_OK, intent);
                     finish();
                 }
+                if(resultCode==RESULT_CANCELED) {setResult(9999); finish(); };
                 break;
             default:
                 break;
@@ -150,26 +167,7 @@ public class PersonSelectImage extends AppCompatActivity {
 
     // When the button of "Take a Photo with Camera" is pressed.
     // 카메라로 사진 찍기 버튼을 누르면 됩니다.
-    public void takePhoto(View view) {
 
-       // tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
-
-        Toast.makeText(getApplicationContext(), "촬영이 시작됩니다. 정면을 응시하여 주세요.", Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null) {
-            // Save the photo taken to a temporary file.
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            try {
-                File file = File.createTempFile("IMG_", ".jpg", storageDir);
-                mUriPhotoTaken = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
-                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-            } catch (IOException e) {
-                setInfo(e.getMessage());
-            }
-        }
-    }
 /*
     // When the button of "Select a Photo in Album" is pressed.
     // 앨범에서 사진 선택 버튼을 누르면 됩니다.

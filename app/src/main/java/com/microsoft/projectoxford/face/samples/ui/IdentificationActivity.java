@@ -1482,6 +1482,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
                 // Start detecting in image.
                 detect(mBitmap);
+                brightness = getBrightness(mBitmap);
             }
             break;
             default:
