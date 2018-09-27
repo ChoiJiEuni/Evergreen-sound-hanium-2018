@@ -144,6 +144,13 @@ public class IdentificationActivity extends AppCompatActivity {
     private Uri mUriPhotoTaken;
     private static final int REQUEST_TAKE_PHOTO = 1234;
 
+    //09 얼굴 인식해서 사각형 그리기
+    static int people_num=0;
+    static int range=5; //얼굴영역에서 추가할 범위 값
+    static int face_size_sum = 0;
+    static StringBuffer isFaceMessage = null;
+    float facialProportion = (float) 0.0; // 얼굴 비율
+    
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
     public void DB(View view) {
