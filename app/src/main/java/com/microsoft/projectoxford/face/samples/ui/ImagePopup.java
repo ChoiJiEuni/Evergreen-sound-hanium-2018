@@ -191,7 +191,7 @@ ImagePopup extends Activity implements OnClickListener{
                     player = null;
                 }
 
-                if (RECORDED_FILE != null && !RECORDED_FILE.equals("")) {
+                //if (RECORDED_FILE != null && !RECORDED_FILE.equals("")) {
                     Toast.makeText(getApplicationContext(), "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
                     try {
                         player = new MediaPlayer();
@@ -201,9 +201,9 @@ ImagePopup extends Activity implements OnClickListener{
                     } catch (Exception e) {
                         Log.e("SampleAudioRecorder", "Audio play failed.", e);
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "녹음된 파일이 없습니다.", Toast.LENGTH_LONG).show();
-                }
+                //} else {
+                //    Toast.makeText(getApplicationContext(), "녹음된 파일이 없습니다.", Toast.LENGTH_LONG).show();
+                //}
                 break;
             case R.id.btn_stopPlay:
                 if (player == null)
@@ -343,7 +343,7 @@ ImagePopup extends Activity implements OnClickListener{
         String TAG_JSON="evergreen";
         String TAG_LOC = "location";
         String TAG_DATE = "date";
-        String TAG_HAP ="happiness";
+        //String TAG_HAP ="happiness";
         String TAG_CNT ="personCount";
         String TAG_KNOW ="personKnowCount";
         String TAG_NAME = "personName";
@@ -363,7 +363,7 @@ ImagePopup extends Activity implements OnClickListener{
 
                 String location = item.getString(TAG_LOC);
                 String date = item.getString(TAG_DATE);
-                String happiness = item.getString(TAG_HAP);
+                //String happiness = item.getString(TAG_HAP);
                 String personCount = item.getString(TAG_CNT);
                 String personKnowCount = item.getString(TAG_KNOW);
                 String name = item.getString(TAG_NAME);
