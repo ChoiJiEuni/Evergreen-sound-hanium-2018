@@ -70,8 +70,16 @@ public class SearchResultctivity extends AppCompatActivity {
         String img_location= search.getString("location","");
         String img_person= search.getString("person","");
 
-        GetDataJSON task = new GetDataJSON();
-        task.execute("http://14.63.195.105/showTest.php",img_date,img_location,img_person);
+        SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+        if(!(sharedPreferences.getString("ID","").equals(""))){
+            String userName = sharedPreferences.getString("ID","");
+            String DatabaseName = userName+"_db";
+            GetDataJSON task = new GetDataJSON();
+            task.execute("http://14.63.195.105/showTest.php",img_date,img_location,img_person, userName,"1111",DatabaseName);
+        }
+
+
+
     }
     @Override
     protected void onDestroy() {
@@ -334,9 +342,15 @@ public class SearchResultctivity extends AppCompatActivity {
             String img_date = params[1];
             String img_location = params[2];
             String img_person = params[3];
+            String username = params[4];
+            String pass = params[5];
+            String dbname = params[6];
             String postParameters = "&img_date=" + img_date
                     +"&img_location=" + img_location
-                    +"&img_person=" + img_person; // php에 보낼값.
+                    +"&img_person=" + img_person
+                    +"&user_name=" + username
+                    +"&user_pass=" + pass
+                    +"&db_name=" + dbname; // php에 보낼값.
             BufferedReader bufferedReader = null;
             try {
                 URL url = new URL(uri);
