@@ -113,7 +113,8 @@ ImagePopup extends Activity implements OnClickListener{
         }
         //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
         iv.setImageBitmap(bm);
-
+        //채윤 이미지에 설명추가
+        iv.setContentDescription("소영아 여기에 추가해줘");
         /** 리스트로 가기 버튼 */
         TextView btn1 = (TextView) findViewById(R.id.btn_delete);
         btn1.setOnClickListener(this);
