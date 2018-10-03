@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
+import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupActivity;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -174,33 +176,52 @@ public class MainActivity extends AppCompatActivity {
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       /////  startActivity(intent);
-        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null) {
-            // Save the photo taken to a temporary file.
-            // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            try {
-                /////////////////////새 저장 폴더 만들기//////////////////////
-                //문제있음: 여기서는 폴더가 생기는데 나중에 저장된 경로를 보면 사라져있음
-                // File dir = new File(storageDir.getPath(), "evergreen");
-                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
-                Log.d("chae",dir+"");
+        //채윤: 그룹없으면 인물등록후 사용
+        try{
+            Set<String> personGroupIds = StorageHelper.getAllPersonGroupIds(this);
+            Iterator iterator = personGroupIds.iterator();
+            if(iterator.hasNext()){
+                String personGroupId = personGroupIds.iterator().next();
+                String groupName=StorageHelper.getPersonGroupName( personGroupId, this);
+                Log.d("chae","goupName"+groupName);
+               if(groupName==null){
+                   tts.speak("등록된 인물이 없습니다. 등록 후 사용해 주세요",TextToSpeech.QUEUE_FLUSH, null);
+               }else{
 
-                if(!dir.exists())
-                    dir.mkdirs();
-                ///////////////////////////////////////////////////////////////
-                File file = File.createTempFile("evergreen_", ".jpg", dir);
-                mUriPhotoTaken = Uri.fromFile(file);
-               // Log.d("chae",mUriPhotoTaken+"넘긴거");
-               //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+                   tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+                   Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                   if(intent.resolveActivity(getPackageManager()) != null) {
+                       // Save the photo taken to a temporary file.
+                       // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                       try {
+                           File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                           Log.d("chae",dir+"");
 
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
-                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-            } catch (IOException e) {
-                setInfo(e.getMessage());
+                           if(!dir.exists())
+                               dir.mkdirs();
+                           File file = File.createTempFile("evergreen_", ".jpg", dir);
+                           mUriPhotoTaken = Uri.fromFile(file);
+                           // Log.d("chae",mUriPhotoTaken+"넘긴거");
+                           //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+
+                           intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+                           startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                       } catch (IOException e) {
+                           setInfo(e.getMessage());
+                       }
+
+                   }
+               }
+            }else{
+                tts.speak("등록된 인물이 없습니다. 등록 후 사용해 주세요",TextToSpeech.QUEUE_FLUSH, null);
+                Log.d("chae","딘ㄷ");
             }
 
+
+        }catch (Exception e){
+
         }
+
 
     }
     private void setInfo(String info) {
