@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -54,7 +55,7 @@ public class SearchResultctivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_resultctivity);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
         Toast.makeText(getApplicationContext(),"검색 결과 입니다.\n종료하시려면 뒤로가기 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
 
@@ -81,6 +82,16 @@ public class SearchResultctivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

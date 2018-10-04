@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class PersonSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_search);
         setTitle("인물 검색 화면");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         personInput = (EditText)findViewById(R.id.personInput);
 
         Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
@@ -41,7 +44,15 @@ public class PersonSearchActivity extends AppCompatActivity {
             }
         });*/
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void btnSpeak(View view) {
         promptSpeechInput();
     }

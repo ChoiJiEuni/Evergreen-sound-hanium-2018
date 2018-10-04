@@ -75,7 +75,6 @@
         </activity>
         <activity
             android:name=".log.IdentificationLogActivity"
-            android:label="@string/identification_log"
             android:parentActivityName=".ui.IdentificationActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -89,8 +88,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.Gallery" />
-        <activity android:name=".ui.ImagePopup" />
+        <activity android:name=".ui.ImagePopup"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".ui.inputDB_PHPActivity" />
         <activity android:name=".ui.Gallery2" />
         <activity android:name=".db.DBphpActivity" />
@@ -101,7 +100,8 @@
         <activity android:name=".db.ExifActivity" />
         <activity android:name=".db.RecordActivity" />
         <activity android:name=".db.DBMainActivity" />
-        <activity android:name=".ui.GalleryActivity" />
+        <activity android:name=".ui.GalleryActivity"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".ui.ViewPhotoActivity" />
         <activity android:name=".db.DateSearchActivity" />
         <activity android:name=".db.LocationSearchActivity" />

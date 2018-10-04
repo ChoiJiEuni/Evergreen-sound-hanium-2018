@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.microsoft.projectoxford.face.samples.R;
@@ -16,8 +17,20 @@ public class ViewPhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_photo);
         setTitle("갤러리 보기 방식 선택 화면");
-    }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void onClickgallery(View view) {
         Intent intent = new Intent(this,GalleryActivity.class);
         startActivity(intent);

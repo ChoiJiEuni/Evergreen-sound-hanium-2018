@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class LocationSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
 
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("위치 검색 화면");
         locationInput = (EditText)findViewById(R.id.locationInput);
         Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
@@ -42,6 +45,15 @@ public class LocationSearchActivity extends AppCompatActivity {
         });*/
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void btnSpeak(View view) {
         promptSpeechInput();
     }

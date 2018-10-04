@@ -3,6 +3,7 @@ package com.microsoft.projectoxford.face.samples.db;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ public class DateSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_search);
         setTitle("날짜 검색 화면");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dateInput = (EditText)findViewById(R.id.dateInput);
         Toast.makeText(getApplicationContext(),"입력상자에 2018 0306 \n형식으로 날짜를 입력해주세요." +
                 "\n 키보드는 숫자만 있는 키보드 입니다.",Toast.LENGTH_LONG).show();
@@ -33,6 +35,15 @@ public class DateSearchActivity extends AppCompatActivity {
             }
         });*/
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void OnClickedfinsh(View view) {

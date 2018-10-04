@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +23,12 @@ public class searchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         setTitle("검색필터 지정화면");
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
         Toast.makeText(getApplicationContext(),"검색버튼을 눌러 조건을 지정한 후 \n가장 아래에 있는 검색 필터 적용 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
         /*// TTS를 생성하고 OnInitListener로 초기화 한다.
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
@@ -97,6 +104,16 @@ public class searchActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
    /* @Override
     protected void onDestroy() {

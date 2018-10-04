@@ -57,6 +57,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -440,7 +441,7 @@ public class IdentificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
         super.setTitle("사진 분석 화면");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // 소히
         // AActivity = IdentificationActivity.this;
         detected = false;
@@ -519,6 +520,16 @@ public class IdentificationActivity extends AppCompatActivity {
        /* editor.putBoolean("repeat", false);
         editor.commit(); //완료한다.*/
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public float getBrightness(Bitmap src) {
         // original image size
         int width = src.getWidth();
