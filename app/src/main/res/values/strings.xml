@@ -3,7 +3,7 @@
 <resources>
     <!-- Please refer to https://azure.microsoft.com/en-us/services/cognitive-services/face/ to get your subscription key -->
     <!-- If you have subscription key with its corresponding endpoint, you can add them here to use the service -->
-    <string name="subscription_key">a1268dc2b0574397a5d1478e1de3212c</string>
+    <string name="subscription_key">37f21e211cfe4eb890380aed26457357</string>
     <string name="endpoint">https://eastasia.api.cognitive.microsoft.com/face/v1.0 </string>
 
     <!-- Main activity -->
