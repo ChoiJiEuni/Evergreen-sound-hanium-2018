@@ -31,7 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 package com.microsoft.projectoxford.face.samples.ui;
-
+import static android.speech.tts.TextToSpeech.ERROR;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -104,6 +104,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -113,6 +114,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
     float brightness;//밝기
     private static final int RENAME_LOC_INFO= 1689;
+    private static final int RENAME_LOC_INFO2= 1699;
+    private static final int REQ_IMAGE = 999;
     private static int PersonCount=0; // 전체 인원 수
     // HashMap map=new HashMap();////// 희:사람 이름 넣을 해시 맵
     private String PersonName=null; // 인식 된 사람 이름, 해쉬맵에 저장한 걸 여기다가 넣었음
@@ -156,12 +159,13 @@ public class IdentificationActivity extends AppCompatActivity {
     static int message_index = 0;
     static  HashMap messageMap=new HashMap();
 
+
     // DB picture_info_tb, recognition_tb 이렇게 2개의 테이블의 삽입 작업. >분석버튼 누르고 눌러야함.
     @SuppressLint("NewApi")
-    public void DB(View view) {
+    public void DB() { ///명희:저장버튼누르던거
         //*/ 지은: ExifInterface 생성
 
-        try {
+        try {//ㅊㅇ
             Save();
             if(strLocation.equals("")){
                 InputStream in; //Uri를 Exif객체 인자로 넣을 수 있게 변환.
@@ -241,7 +245,6 @@ public class IdentificationActivity extends AppCompatActivity {
         }catch(Exception e){
 
         }
-
     }
 
     public static HashMap getter1(){ //getter1
@@ -321,7 +324,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 File file = File.createTempFile("evergreen_", ".jpg", dir);
                 mUriPhotoTaken = Uri.fromFile(file);
                 Log.d("chae",mUriPhotoTaken+"넘긴거");
-               // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+                // sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
@@ -400,6 +403,7 @@ public class IdentificationActivity extends AppCompatActivity {
             setUiDuringBackgroundTask(values[0]);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(IdentifyResult[] result) {
             // Show the result on screen when detection is done.
@@ -457,7 +461,15 @@ public class IdentificationActivity extends AppCompatActivity {
         //Uri imageUri = intent_test.getData(); //*/지은: 찍은 사진 사진 uri
         imageUri = intent_test.getData(); //*/지은: 찍은 사진 사진 uri
 
-
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
 
         Log.d("chae",imageUri.getPath()+"받은거");
 
@@ -674,12 +686,30 @@ public class IdentificationActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = insert.edit();
                     editor.putString("location",strLocation);
                     editor.commit();
-                    renameLoc();
-                           /* int num = PersonCount - (index-1);
+                    //채윤:리스트뷰 텍스트뷰로
+                    TextView detailText= (TextView)findViewById(R.id.detailText);
+                    StringBuffer namess=new StringBuffer();
+                    for(int i=0;i<index;i++){
+                        if(!(map.get(i).equals(""))){
+                            String img_path = imageUri.getPath();
+                            String name=map.get(i).toString();
 
-                            Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
-
-
+                            namess.append(name+" ");
+                        }
+                    }
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+                    String getTime = mFormat.format(date);
+                    int num = PersonCount - index;
+                    //SharedPreferences inserts = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+                    //strLocation = inserts.getString("location","");
+                    if(strLocation.equals("")){
+                        strLocation = "위치 없음";
+                    }
+                    detailText.setText("인물: "+namess.toString()+"외 "+num+"명 \n"+"위치: "+strLocation+"\n촬영날짜: "+getTime);
+                    //////////채윤끝
+                    tts.speak("인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         }
@@ -823,12 +853,12 @@ public class IdentificationActivity extends AppCompatActivity {
         if(first_x<0){
             messageMap.put(message_index,people_num+"번째 인물 왼쪽 화면에서 벗어남.");
             message_index++;
-             isFaceMessage.append(people_num+"번째 인물 왼쪽 화면에서 벗어남."+"\n");
+            isFaceMessage.append(people_num+"번째 인물 왼쪽 화면에서 벗어남."+"\n");
         }
         if(bitmapWidth<second_x){
             messageMap.put(message_index,people_num+"번째 인물 오른쪽 화면에서 벗어남.");
             message_index++;
-             isFaceMessage.append(people_num+"번째 인물 오른쪽 화면에서 벗어남."+"\n");
+            isFaceMessage.append(people_num+"번째 인물 오른쪽 화면에서 벗어남."+"\n");
         }
         if(first_y<0){
             messageMap.put(message_index,people_num+"번째 인물 위쪽 화면에서 벗어남.");
@@ -971,11 +1001,6 @@ public class IdentificationActivity extends AppCompatActivity {
         refreshIdentifyButtonEnabledStatus();
     }
 
-    public void record(View view) {
-        Intent intent = new Intent(this, RecordActivity.class);
-        startActivity(intent);
-    }
-
     // Add a log item.
     private void addLog(String log) {
         LogHelper.addIdentificationLog(log);
@@ -992,8 +1017,8 @@ public class IdentificationActivity extends AppCompatActivity {
         TextView identifyButton = (TextView) findViewById(R.id.identify);
         identifyButton.setEnabled(isEnabled);
 
-        TextView viewLogButton = (TextView) findViewById(R.id.view_log);
-        viewLogButton.setEnabled(isEnabled);
+        //TextView viewLogButton = (TextView) findViewById(R.id.view_log);
+        //viewLogButton.setEnabled(isEnabled);
     }
 
     // Set the group button is enabled or not.
@@ -1671,15 +1696,15 @@ public class IdentificationActivity extends AppCompatActivity {
     } // insert_out_of_range_tb() end.
 
     // 위치 변경 다이얼로그
-    public void renameLoc(){
+    public void renameLoc(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String insertLocation="";
         String message="";
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-        message = "장소 추출이 실패하였습니다. 위치정보 변경 화면으로 전환하여 장소를 등록해 주세요.";
+        message = "장소를 직접 등록하시겠습니까?";
         if(!(insert.getString("location","").equals(""))){
             insertLocation = insert.getString("location","");
-            message = "촬영 장소가 " +  insertLocation + " 아닌가요?\n변경하시겠습니까?";
+            message = "촬영 장소가 " +  insertLocation + " 맞나요?\n변경하시겠습니까?";
         }
 
         builder.setMessage(message)
@@ -1692,8 +1717,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
-                        showInfo();
+                        Intent intent = new Intent(IdentificationActivity.this,RecordActivity.class);
+                        startActivityForResult(intent, RENAME_LOC_INFO);
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
@@ -1721,7 +1746,8 @@ public class IdentificationActivity extends AppCompatActivity {
         if(strLocation.equals("")){
             strLocation = "위치 없음";
         }
-        Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime,Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime,Toast.LENGTH_LONG).show();
     } // showInfo() end.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1730,60 +1756,64 @@ public class IdentificationActivity extends AppCompatActivity {
             case RENAME_LOC_INFO:
                 if (resultCode == RESULT_OK) {
                     showInfo();
+                    DB();
+
+                    finish();
                 }
-                break;case REQUEST_TAKE_PHOTO:
-            if (resultCode == RESULT_OK) {
+                break;
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
 
-                if (data == null || data.getData() == null) {
-                    imageUri = mUriPhotoTaken;
-                } else {
-                    imageUri = data.getData();
-                }
+                    if (data == null || data.getData() == null) {
+                        imageUri = mUriPhotoTaken;
+                    } else {
+                        imageUri = data.getData();
+                    }
 
-                progressDialog = new ProgressDialog(this);
-                progressDialog.setTitle("기다려 주세요.");
-                detected = false;
+                    progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("기다려 주세요.");
+                    detected = false;
 
-                Log.d("chae",imageUri.getPath()+"받은거");
+                    Log.d("chae",imageUri.getPath()+"받은거");
 
-                ///원래코드
-                mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
-                        imageUri, getContentResolver());
+                    ///원래코드
+                    mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                            imageUri, getContentResolver());
 
-                //갤러리에 촬영 사진추가
-                //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
+                    //갤러리에 촬영 사진추가
+                    //MediaStore.Images.Media.insertImage(getContentResolver(),mBitmap,"사진","저장");
                 /*File dir =new File( imageUri.getPath());
                 Log.d("chae",dir+"");
 
                 if(!dir.exists())
 
                     dir.mkdirs();*/
-                //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
+                    //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,imageUri));
 
-                if (mBitmap != null) {
-                    // Show the image on screen.
-                    ImageView imageView = (ImageView) findViewById(R.id.image);
-                    imageView.setImageBitmap(mBitmap);
+                    if (mBitmap != null) {
+                        // Show the image on screen.
+                        ImageView imageView = (ImageView) findViewById(R.id.image);
+                        imageView.setImageBitmap(mBitmap);
+                    }
+
+                    // Clear the identification result.
+                    FaceListAdapter faceListAdapter = new FaceListAdapter(null);
+                    ListView listView = (ListView) findViewById(R.id.list_identified_faces);
+                    listView.setAdapter(faceListAdapter);
+
+                    // Clear the information panel.
+                    setInfo("");
+
+                    SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = insert.edit();
+                    editor.remove("location");
+                    editor.commit();
+
+                    // Start detecting in image.
+                    detect(mBitmap);
+                    brightness = getBrightness(mBitmap);
                 }
-
-                // Clear the identification result.
-                FaceListAdapter faceListAdapter = new FaceListAdapter(null);
-                ListView listView = (ListView) findViewById(R.id.list_identified_faces);
-                listView.setAdapter(faceListAdapter);
-
-                // Clear the information panel.
-                setInfo("");
-
-                SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-                SharedPreferences.Editor editor = insert.edit();
-                editor.remove("location");
-                editor.commit();
-
-                // Start detecting in image.
-                detect(mBitmap);
-                brightness = getBrightness(mBitmap);
-            }
-            break;
+                break;
             default:
                 break;
         }
