@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.db.DBMainActivity;
@@ -185,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
                 String groupName=StorageHelper.getPersonGroupName( personGroupId, this);
                 Log.d("chae","goupName"+groupName);
                if(groupName==null){
-                   tts.speak("등록된 인물이 없습니다. 등록 후 사용해 주세요",TextToSpeech.QUEUE_FLUSH, null);
+                   Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
+
                }else{
 
                    tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
@@ -213,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
                    }
                }
             }else{
-                tts.speak("등록된 인물이 없습니다. 등록 후 사용해 주세요",TextToSpeech.QUEUE_FLUSH, null);
-                Log.d("chae","딘ㄷ");
+                Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
             }
 
 
