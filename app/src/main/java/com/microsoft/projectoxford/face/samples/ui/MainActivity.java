@@ -2,6 +2,7 @@ package com.microsoft.projectoxford.face.samples.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -186,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
                 String groupName=StorageHelper.getPersonGroupName( personGroupId, this);
                 Log.d("chae","goupName"+groupName);
                if(groupName==null){
-                   Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
+                   register();
+                  // Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
 
                }else{
 
@@ -215,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
                    }
                }
             }else{
-                Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
+                register();
+                //Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
             }
 
 
@@ -470,5 +474,39 @@ public class MainActivity extends AppCompatActivity {
     public void onClickedSearch(View view) {
      //   Intent intent=new Intent(this,searchActivity.class);
      //   startActivity(intent);
+    }
+    private void register(){
+        //Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String message="";
+        SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+        message = "등록된 인물이 없습니다. 등록 후 사용해 주세요\n등록하시겠습니까?";
+
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ii();
+
+
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        ;
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                });
+        builder.show();
+    }
+
+    private void ii(){
+        Intent intent = new Intent(this, PersonGroupListActivity.class);
+        startActivity(intent);
     }
 }
