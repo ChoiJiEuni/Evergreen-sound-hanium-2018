@@ -57,7 +57,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -239,9 +238,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     // Toast.makeText(getApplicationContext(), "벗어났습니다.",Toast.LENGTH_LONG ).show();
                 }
             }
-        }catch(Exception e) {
+        }catch(Exception e){
 
         }
+
     }
 
     public static HashMap getter1(){ //getter1
@@ -404,8 +404,6 @@ public class IdentificationActivity extends AppCompatActivity {
         protected void onPostExecute(IdentifyResult[] result) {
             // Show the result on screen when detection is done.
             setUiAfterIdentification(result, mSucceed);
-
-
         }
     }
 
@@ -441,7 +439,7 @@ public class IdentificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
         super.setTitle("사진 분석 화면");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // 소히
         // AActivity = IdentificationActivity.this;
         detected = false;
@@ -520,16 +518,6 @@ public class IdentificationActivity extends AppCompatActivity {
        /* editor.putBoolean("repeat", false);
         editor.commit(); //완료한다.*/
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public float getBrightness(Bitmap src) {
         // original image size
         int width = src.getWidth();
@@ -687,28 +675,6 @@ public class IdentificationActivity extends AppCompatActivity {
                     editor.putString("location",strLocation);
                     editor.commit();
                     renameLoc();
-                    //채윤
-                    TextView detailText= (TextView)findViewById(R.id.detailText);
-                    StringBuffer namess=new StringBuffer();
-                    for(int i=0;i<index;i++){
-                        if(!(map.get(i).equals(""))){
-                            String img_path = imageUri.getPath();
-                            String name=map.get(i).toString();
-
-                            namess.append(name+" ");
-                        }
-                    }
-                    long now = System.currentTimeMillis();
-                    Date date = new Date(now);
-                    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-                    String getTime = mFormat.format(date);
-                    int num = PersonCount - index;
-                    //SharedPreferences inserts = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-                    //strLocation = inserts.getString("location","");
-                    if(strLocation.equals("")){
-                        strLocation = "위치 없음";
-                    }
-                    detailText.setText("인물: "+namess.toString()+"외 "+num+"명 \n"+"위치: "+strLocation+"\n촬영날짜: "+getTime);
                            /* int num = PersonCount - (index-1);
 
                             Toast.makeText(getApplicationContext(),"인물: "+names.toString()+"외 "+num+"명 "+"위치: "+strLocation+"촬영 날짜: "+getTime,Toast.LENGTH_LONG).show();*/
@@ -1764,28 +1730,6 @@ public class IdentificationActivity extends AppCompatActivity {
             case RENAME_LOC_INFO:
                 if (resultCode == RESULT_OK) {
                     showInfo();
-                    //채윤
-                    TextView detailText= (TextView)findViewById(R.id.detailText);
-                    StringBuffer namess=new StringBuffer();
-                    for(int i=0;i<index;i++){
-                        if(!(map.get(i).equals(""))){
-                            String img_path = imageUri.getPath();
-                            String name=map.get(i).toString();
-
-                            namess.append(name+" ");
-                        }
-                    }
-                    long now = System.currentTimeMillis();
-                    Date date = new Date(now);
-                    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-                    String getTime = mFormat.format(date);
-                    int num = PersonCount - index;
-                    SharedPreferences inserts = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-                    strLocation = inserts.getString("location","");
-                    if(strLocation.equals("")){
-                        strLocation = "위치 없음";
-                    }
-                    detailText.setText("인물: "+namess.toString()+"외 "+num+"명\n"+"위치: "+strLocation+"\n촬영날짜: "+getTime);
                 }
                 break;case REQUEST_TAKE_PHOTO:
             if (resultCode == RESULT_OK) {
@@ -1827,29 +1771,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.list_identified_faces);
                 listView.setAdapter(faceListAdapter);
 
-                //채윤
-                TextView detailText= (TextView)findViewById(R.id.detailText);
-                StringBuffer namess=new StringBuffer();
-                for(int i=0;i<index;i++){
-                    if(!(map.get(i).equals(""))){
-                        String img_path = imageUri.getPath();
-                        String name=map.get(i).toString();
-
-                        namess.append(name+" ");
-                    }
-                }
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-                String getTime = mFormat.format(date);
-                int num = PersonCount - index;
-                SharedPreferences inserts = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-                strLocation = inserts.getString("location","");
-                if(strLocation.equals("")){
-                    strLocation = "위치 없음";
-                }
-                detailText.setText("인물: "+namess.toString()+"외 "+num+"명 "+"위치: "+strLocation+" 촬영날짜: "+getTime);
-////////////////////////////////////
                 // Clear the information panel.
                 setInfo("");
 

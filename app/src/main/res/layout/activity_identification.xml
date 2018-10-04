@@ -157,21 +157,6 @@
             style="@style/ButtonStyle" />
 
         <TextView
-            android:id="@+id/view_log"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="녹음"
-            android:background="#47e8b2"
-            android:textSize="25dp"
-            android:layout_marginLeft="5dp"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:onClick="record"
-            style="@style/ButtonStyle" />
-
-
-        <TextView
             android:id="@+id/DB"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -182,7 +167,7 @@
             android:background="#47e8b2"
             android:layout_marginLeft="@dimen/view_margin"
             android:layout_marginEnd="@dimen/view_margin"
-            android:onClick="DB"
+            android:onClick="renameLoc"
             style="@style/ButtonStyle"/>
     </LinearLayout>
 

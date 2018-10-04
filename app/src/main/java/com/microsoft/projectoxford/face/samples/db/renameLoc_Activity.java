@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.microsoft.projectoxford.face.samples.R;
+import com.microsoft.projectoxford.face.samples.ui.IdentificationActivity;
+import com.microsoft.projectoxford.face.samples.ui.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -28,7 +30,7 @@ public class renameLoc_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_rename_loc_);
         locationRenameInput = (EditText)findViewById(R.id.locationRenameInput);
         setTitle("위치정보 변경 화면");
-        Toast.makeText(getApplicationContext(),"변경하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"등록하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
     }
     public void btnSpeak(View view) {
         promptSpeechInput();
@@ -36,15 +38,14 @@ public class renameLoc_Activity extends AppCompatActivity {
 
     public void OnClickedRename(View view) {
         if(locationRenameInput.getText().toString().equals("")){
-            Toast.makeText(getApplicationContext(),"변경하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"등록하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
         }
         else{
             SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
             SharedPreferences.Editor editor = insert.edit();
             editor.putString("location",locationRenameInput.getText().toString());
             editor.commit();
-            setResult(RESULT_OK);
-            finish();
+            renameLoc(insert);
         }
     }
 
@@ -83,12 +84,13 @@ public class renameLoc_Activity extends AppCompatActivity {
 
         }
     }
-    // 위치 변경 다이얼로그
+    // 위치 변경 취소 다이얼로그
     public void factCheck (){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("이 화면을 나가시면 위치 정보를 이용하여 검색하실때 불이익이 있습니다.")
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("위치 정보 등록을 취소하시겠습니까? \n'네'를 누르면 다음으로 진행됩니다.")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        test();
                         setResult(RESULT_OK);
                         finish();
                         //긍정 버튼을 클릭했을 때, 실행할 동작
@@ -102,4 +104,36 @@ public class renameLoc_Activity extends AppCompatActivity {
                 });
         builder.show();
     } //renameLoc () end.
+
+    //위치 변경 다이얼로그
+    public void renameLoc(SharedPreferences in){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String insertLocation="";
+        String message="";
+        if(!(in.getString("location","").equals(""))){
+            insertLocation = in.getString("location","");
+            message = "촬영 장소가 " +  insertLocation + " 맞나요? \n'네'를 누르면 다음으로 진행됩니다.";
+        }
+
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        test();
+                        setResult(RESULT_OK);
+                        finish();
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                    }
+                });
+        builder.show();
+    }
+    public void test(){
+        Intent intent2 = new Intent(renameLoc_Activity.this,RecordActivity.class);
+        startActivity(intent2);
+    }
 }
