@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,7 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GalleryActivity extends Activity {
+public class GalleryActivity extends AppCompatActivity {
     ImageAdapter ia;
 
     //String result;
@@ -58,11 +59,6 @@ public class GalleryActivity extends Activity {
         imageCursor.close();
     }
 
-    @Override
-    protected void onRestart() {
-        this.onCreate(null);
-        super.onRestart();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +67,7 @@ public class GalleryActivity extends Activity {
         setContentView(R.layout.activity_gallery3);
         setTitle("갤러리 펼쳐 보기");
        // mContext = this;\
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent_test = getIntent();
         imageUri = intent_test.getData(); // 찍은 사진 사진 uri
 
@@ -86,7 +82,15 @@ public class GalleryActivity extends Activity {
         });
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     /**
      * ==========================================
      * Adapter class

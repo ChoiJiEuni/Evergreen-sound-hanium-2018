@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +57,7 @@ import java.util.ArrayList;
 
 
 public class
-ImagePopup extends Activity implements OnClickListener{
+ImagePopup extends AppCompatActivity implements OnClickListener{
     private Context mContext = null;
     private final int imgWidth = 320;
     private final int imgHeight = 372;
@@ -77,7 +78,7 @@ ImagePopup extends Activity implements OnClickListener{
         setContentView(R.layout.activity_image_popup);
         setTitle("선택한 사진 자세히 보기");
         mContext = this;
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -128,7 +129,15 @@ ImagePopup extends Activity implements OnClickListener{
         /*정보 읽어주기*/
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public int exifOrientationToDegrees(int exifOrientation)
     {
         if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)
