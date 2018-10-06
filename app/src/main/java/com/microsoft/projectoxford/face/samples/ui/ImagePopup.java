@@ -102,40 +102,40 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
             userPass = "1111";
             GetData task = new GetData();
             task.execute("http://"+IP+"/showImageInfo.php", imgPath, userName, userPass, databaseName);
-        }
+}
 
-        /** 완성된 이미지 보여주기  */
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
+    /** 완성된 이미지 보여주기  */
+    BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
-        ImageView iv = (ImageView)findViewById(R.id.imageView);
-        bm = BitmapFactory.decodeFile(imgPath, bfo);
-        try{
-            ExifInterface exif = new ExifInterface(imgPath);
-            int exifOrientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            int exifDegree = exifOrientationToDegrees(exifOrientation);
-            bm = rotate(bm, exifDegree);
-        }catch(Exception e){
+                ImageView iv = (ImageView)findViewById(R.id.imageView);
+                bm = BitmapFactory.decodeFile(imgPath, bfo);
+                try{
+                ExifInterface exif = new ExifInterface(imgPath);
+                int exifOrientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = exifOrientationToDegrees(exifOrientation);
+                bm = rotate(bm, exifDegree);
+                }catch(Exception e){
 
-        }
-        //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
-        iv.setImageBitmap(bm);
-        //채윤 이미지에 설명추가
-        iv.setContentDescription("소영아 여기에 추가해줘");
-        /** 리스트로 가기 버튼 */
-        TextView btn1 = (TextView) findViewById(R.id.btn_delete);
-        btn1.setOnClickListener(this);
-        TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
-        btn2.setOnClickListener(this);
-        TextView btn3 = (TextView) findViewById(R.id.btn_stopPlay);
-        btn3.setOnClickListener(this);
-        TextView btn4 = (TextView) findViewById(R.id.btn_share);
-        btn4.setOnClickListener(this);
+                }
+                //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
+                iv.setImageBitmap(bm);
+                //채윤 이미지에 설명추가
+                iv.setContentDescription("소영아 여기에 추가해줘");
+                /** 리스트로 가기 버튼 */
+                TextView btn1 = (TextView) findViewById(R.id.btn_delete);
+                btn1.setOnClickListener(this);
+                TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
+                btn2.setOnClickListener(this);
+                TextView btn3 = (TextView) findViewById(R.id.btn_stopPlay);
+                btn3.setOnClickListener(this);
+                TextView btn4 = (TextView) findViewById(R.id.btn_share);
+                btn4.setOnClickListener(this);
 
         /*정보 읽어주기*/
 
-    }
-    @Override
+                }
+@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -404,7 +404,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 if (!location.equals("N")) {
                     if (!location.equals(""))
                         infoMessage += location + "에서 ";
-                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일에 ";
+                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6,8) + "일에 ";
                     int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
                     if (unknownCount != Integer.parseInt(personCount)) {
                         infoMessage += name + "외 ";
