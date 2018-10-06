@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        TextView InfoChange = (TextView)findViewById(R.id.mainInfoChange);
         setTitle("너들나들");
 
         getHashKey();
@@ -99,6 +99,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Set<String> personGroupIds = StorageHelper.getAllPersonGroupIds(this);
+        Iterator iterator = personGroupIds.iterator();
+        if(iterator.hasNext()) {
+            String personGroupId = personGroupIds.iterator().next();
+            String groupName = StorageHelper.getPersonGroupName(personGroupId, this);
+            if (groupName != null) {
+                InfoChange.setText("");
+                // Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
+
+            }
+        }
     }
     private void getHashKey(){
         PackageInfo packageInfo = null;

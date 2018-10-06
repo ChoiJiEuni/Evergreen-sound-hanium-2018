@@ -5,11 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:paddingHorizontal="25dp"
-    tools:context="com.microsoft.projectoxford.face.samples.ui.MainActivity">
+    tools:context="com.microsoft.projectoxford.face.samples.ui.MainActivity"
+    android:gravity="center">
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:text="너들나들 어플을 사용하시기 전에 \n반드시 네트워크를 켜주세요!!"
+        android:textSize="15sp"/>
+    <TextView
+        android:id="@+id/mainInfoChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="등록되지 않은 인물은 식별할 수 없습니다.\n사진 촬영 전에 반드시 촬영할 인물을 등록하고 \n사용해주세요. "/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
