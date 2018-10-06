@@ -35,6 +35,7 @@ package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -43,6 +44,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -82,8 +84,16 @@ import java.util.UUID;
 public class PersonGroupActivity extends AppCompatActivity {
     //ImageView coverImg;
     TextView coverImg;
-    LinearLayout relative1;
+    LinearLayout relative1,relative2;
     int imageIndex=0;
+
+    public void addPerson2(View view) {
+        if (!personGroupExists) {
+            new AddPersonGroupTask(true).execute(personGroupId);
+        } else {
+            addPerson();
+        }
+    }
 
     // Background task of adding a person group.
     class AddPersonGroupTask extends AsyncTask<String, String, String> {
@@ -248,10 +258,15 @@ public class PersonGroupActivity extends AppCompatActivity {
     }
 
     public void addPerson(View view) {
-        if (!personGroupExists) {
-            new AddPersonGroupTask(true).execute(personGroupId);
-        } else {
-            addPerson();
+        EditText  edit_person_group_name = (EditText)findViewById(R.id.edit_person_group_name);
+        if((edit_person_group_name.getText().toString()).equals("")) { //그룹 이름을 입력하지 않았다면
+            Toast.makeText(getApplicationContext(),"앨범 이름을 입력 후 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
+        }else{
+            if (!personGroupExists) {
+                new AddPersonGroupTask(true).execute(personGroupId);
+            } else {
+                addPerson();
+            }
         }
     }
 
@@ -281,9 +296,10 @@ public class PersonGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group);
-        setTitle("그룹 화면");
+        setTitle("앨범 이름을 정해주세요.");
         coverImg = findViewById(R.id.coverImg2);
-        relative1=findViewById(R.id.relative2);
+        relative1=findViewById(R.id.relative2);// 기본 그룹 생성되어있지 "않은"(x) 경우
+        relative2=findViewById(R.id.createdGroup);// 기본 그룹 생성되어 "있는"(0) 경우
 
         imageIndex=0;
         changeImage();
@@ -306,6 +322,15 @@ public class PersonGroupActivity extends AppCompatActivity {
 
         editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
         editTextPersonGroupName.setText(oldPersonGroupName); //*/ 0825주석풀음.
+
+        if((editTextPersonGroupName.getText().toString()).equals("")){ //기본 그룹 생성 되어있지 않은 경우
+            relative1.setVisibility(View.VISIBLE);
+            relative2.setVisibility(View.GONE);
+        } else{ // 기본 그룹 생성되어있는 경우
+            setTitle("");
+            relative1.setVisibility(View.GONE);
+            relative2.setVisibility(View.VISIBLE);
+        }
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,6 +364,7 @@ public class PersonGroupActivity extends AppCompatActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     editTextPersonGroupName.setText(result.get(0));
+                    checkInput(result.get(0));
                 }
                 break;
             }
@@ -656,7 +682,35 @@ public class PersonGroupActivity extends AppCompatActivity {
             coverImg.setVisibility(View.INVISIBLE);
         }else if(imageIndex==1){
             relative1.setVisibility(View.INVISIBLE);
+            relative2.setVisibility(View.VISIBLE);
             coverImg.setVisibility(View.VISIBLE);
         }
     }
+    // 음성 입력 확인 다이얼로그
+    public void checkInput(String result){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String message="";
+
+        message = result+"을 입력하신게 맞습니까?";
+
+
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                        if (!personGroupExists) {
+                            new AddPersonGroupTask(true).execute(personGroupId);
+                        } else {
+                            addPerson();
+                        }
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                        Toast.makeText(getApplicationContext(),"다시 입력해주세요.",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+    } //checkInput () end.
 }

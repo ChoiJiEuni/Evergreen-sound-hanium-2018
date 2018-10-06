@@ -36,37 +36,60 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true">
+                    android:id="@+id/infoText1"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
+                    <TextView
+                        android:id="@+id/inputInfo1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:gravity="center_vertical"
+                        android:text="입력 방법으로는 자판을 사용하거나, 말하기 버튼을 통해 음성입력이 가능합니다."
+                        android:textSize="17sp" />
+                    <TextView
+                        android:id="@+id/inputInfo2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/inputInfo1"
+                        android:gravity="center_vertical"
+                        android:text="만약, 자판으로 입력하셨다면 입력하신 후에 맨 아래에 위치한 앨범 추가하기 버튼을 눌러주세요."
+                        android:textSize="17sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/infoText1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
+                    <EditText
+                        android:id="@+id/edit_person_group_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="30"
+                        android:singleLine="true" />
                     <TextView
                         android:id="@+id/Speech"
                         style="@style/ButtonStyle"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/icon_mike"
                         android:gravity="center"
                         android:text="말하기 버튼"
                         android:textColor="#00ffffff" />
 
-                    <EditText
-                        android:id="@+id/edit_person_group_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="이름을 지정해 주세요."
-                        android:maxLength="30"
-                        android:singleLine="true" />
-
                 </LinearLayout>
             </RelativeLayout>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/person_group_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,17 +100,7 @@
                 android:textColor="#000000"
                 android:text="* 탭 해서 수정할 수 있고, 길게 눌러서 삭제할 수 있습니다." />
 
-            <GridView
-                android:id="@+id/gridView_persons"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/person_group_name_view"
-                android:layout_above="@id/person_group_tip"
-                android:layout_marginBottom="@dimen/view_margin"
-                android:numColumns="3"
-                android:verticalSpacing="@dimen/view_margin"
-                android:horizontalSpacing="@dimen/view_margin"
-                android:gravity="center" />
+
 
             <TextView
                 android:id="@id/info"
@@ -106,19 +119,71 @@
 
                 <TextView
                     android:id="@+id/add_person"
+                    style="@style/ButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
                     android:layout_weight="1"
-                    android:layout_marginRight="@dimen/view_margin"
-                    android:layout_marginEnd="@dimen/view_margin"
-                    android:text="인물 추가하기"
-                    android:gravity="center"
                     android:background="#47e8b2"
-                    android:textSize="30dp"
+                    android:gravity="center"
                     android:onClick="addPerson"
-                    style="@style/ButtonStyle" />
+                    android:padding="10dp"
+                    android:text="앨범 추가하기"
+                    android:textSize="30dp" />
             </LinearLayout>
         </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/createdGroup"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:padding="16dp"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/infoText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:text="등록되어 있는 인물을 슬라이드 하여 확인한 후, \n새로운 인물을 등록하고 싶다면 \n인물 추가하기 버튼을 눌러주세요."
+            android:layout_marginVertical="20dp"/>
+        <GridView
+            android:id="@+id/gridView_persons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_below="@id/person_group_name_view"
+            android:layout_above="@id/person_group_tip"
+            android:layout_marginBottom="@dimen/view_margin"
+            android:numColumns="3"
+            android:verticalSpacing="@dimen/view_margin"
+            android:horizontalSpacing="@dimen/view_margin"
+            android:gravity="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/add_person_old"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/view_margin"
+                android:layout_marginEnd="@dimen/view_margin"
+                android:text="인물 추가하기"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="#47e8b2"
+                android:textSize="30dp"
+                android:onClick="addPerson2"
+                style="@style/ButtonStyle" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>
