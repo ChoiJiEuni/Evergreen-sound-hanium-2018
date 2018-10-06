@@ -225,7 +225,7 @@ public class PersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
-        super.setTitle("인물 화면");
+        super.setTitle("추가할 인물 이름을 정해주세요.");
         coverImg = findViewById(R.id.coverImg3);
         relative1=findViewById(R.id.relative3);
         imageIndex=0;
@@ -376,10 +376,16 @@ public class PersonActivity extends AppCompatActivity {
     }*/
 
     public void addFace(View view) {
-        if (personId == null) {
-            new AddPersonTask(true).execute(personGroupId);
-        } else {
-            addFace();
+        EditText edit_person_name = (EditText)findViewById(R.id.edit_person_name);
+
+        if(!(edit_person_name.getText().toString()).equals("")){
+            if (personId == null) {
+                new AddPersonTask(true).execute(personGroupId);
+            } else {
+                addFace();
+            }
+        } else{
+            Toast.makeText(getApplicationContext(),"등록하시려는 인물의 이름을 입력하시고 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
         }
     }
 

@@ -25,35 +25,62 @@
         android:focusable="true"
         android:background="#ffffff"
         android:focusableInTouchMode="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/infoText1"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+            <TextView
+                android:id="@+id/inputInfo1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center_vertical"
+                android:text="입력 방법으로는 자판을 사용하거나, 말하기 버튼을 통해 음성입력이 가능합니다."
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/inputInfo2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/inputInfo1"
+                android:gravity="center_vertical"
+                android:text="만약, 자판으로 입력하셨다면 입력하신 후에 맨 아래에 위치한 인물 사진 찍기 버튼을 눌러주세요."
+                android:textSize="17sp" />
+        </LinearLayout>
         <RelativeLayout
             android:id="@+id/person_name_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/infoText1"
             android:layout_marginBottom="@dimen/view_margin">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/Speech1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/icon_mike"
-                    android:text="말하기버튼"
-                    android:textColor="#00ffffff"
-                    style="@style/ButtonStyle"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
                 <EditText
                     android:id="@+id/edit_person_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:maxLength="30"
-                    android:hint="이름을 지정해 주세요." />
+                    android:maxLength="30" />
+
+                <TextView
+                    android:id="@+id/Speech1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_mike"
+                    android:text="말하기버튼"
+                    android:textColor="#00ffffff"
+                    style="@style/ButtonStyle"
+                    />
 
             </LinearLayout>
 
@@ -62,6 +89,7 @@
 
         <TextView
             android:id="@+id/person_tip"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -72,6 +100,7 @@
             android:text="* 길게 클릭해서 얼굴을 지울 수 있습니다." />
 
         <GridView
+            android:visibility="gone"
             android:id="@+id/gridView_faces"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -103,7 +132,8 @@
                 android:layout_weight="1"
                 android:layout_marginRight="@dimen/view_margin"
                 android:layout_marginEnd="@dimen/view_margin"
-                android:text="인물 추가하기"
+                android:text="인물 사진 찍기"
+                android:padding="10dp"
                 android:background="#47e8b2"
                 android:gravity="center"
                 android:textSize="30dp"
