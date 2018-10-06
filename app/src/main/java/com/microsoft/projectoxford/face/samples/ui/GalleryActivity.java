@@ -165,24 +165,22 @@ public class GalleryActivity extends AppCompatActivity {
                 StringBuffer time = new StringBuffer();
 
                 try {
+
                     timee=exif.getAttribute(ExifInterface.TAG_DATETIME).toString();
-
                     time.append(timee.substring(0,4));
-                    time.append("년");
+                    time.append("년  ");
                     time.append(timee.substring(4,7));
-                    time.append("월");
+                    time.append("월  ");
                     time.append(timee.substring(7,10));
-                    time.append("일");
+                    time.append("일  ");
+                    time.append(timee.substring(10,13));
+                    time.append("시");
 
 
-                    Latitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE).toString()); // 위도
-                    Longitude = convertToDegree(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE).toString()); //경도
-                    strLocation = location(Latitude, Longitude);//*/ 지은: locatio
                 } catch (Exception e) {
 
                 }
-                imageView.setContentDescription("장소 "+strLocation+"시간 "+time.toString());
-                Log.d("soheeeee","장소"+strLocation+"\n"+"시간"+timee);
+                imageView.setContentDescription(strLocation+" 시간 "+time.toString());
 
             }}catch(Exception e){
 

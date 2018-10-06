@@ -8,15 +8,21 @@
     android:orientation="vertical"
     android:gravity="center"
     android:paddingHorizontal="25dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="검색하시고 싶은 날짜를 입력해주세요.\n자판을 이용하여 2 0 1 8 1 0 1 0 형태로 날짜를 입력한 후,\n화면의 맨 아래에 위치한 날짜 검색 시작 버튼을 터치해주세요."
+        android:textSize="20sp"
+        />
     <EditText
         android:id="@+id/dateInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="50dp"
         android:inputType="number"
-        android:textSize="26dp"
+        android:textSize="20dp"
         android:textStyle="normal"
-        android:hint="날짜 입력 상자"/>
+        android:hint="두번 클릭하면 자판이 생깁니다."/>
     <TextView
         android:id="@+id/butDateSearch"
         android:layout_width="match_parent"
@@ -27,5 +33,5 @@
         android:layout_marginVertical="50dp"
         android:gravity="center"
         android:textSize="20sp"
-        android:text="날짜 검색 지정 완료" />
+        android:text="날짜 검색 시작" />
 </LinearLayout>

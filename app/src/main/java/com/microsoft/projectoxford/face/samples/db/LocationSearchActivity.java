@@ -1,9 +1,11 @@
 package com.microsoft.projectoxford.face.samples.db;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.speech.RecognizerIntent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -32,7 +34,7 @@ public class LocationSearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("위치 검색 화면");
         locationInput = (EditText)findViewById(R.id.locationInput);
-        Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
+
       /*  // TTS를 생성하고 OnInitListener로 초기화 한다.
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -63,7 +65,8 @@ public class LocationSearchActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = search.edit();
         editor.putString("location",locationInput.getText().toString());
         editor.commit();
-        finish();
+        Intent intent = new Intent(this,SearchResultctivity.class);
+        startActivity(intent);
     }
     // Showing google speech input dialog.
     private void promptSpeechInput() {
@@ -95,9 +98,10 @@ public class LocationSearchActivity extends AppCompatActivity {
                     locationResult = result.get(0);
                     locationInput.setText(locationResult);
 
-
-                     //tts.setSpeechRate(0.9f);
+                    checkInput(locationResult);
+                    //tts.setSpeechRate(0.9f);
                     // tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
+
 
                 }
                 break;
@@ -105,14 +109,46 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         }
     }
-   /* @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
-        if(tts != null){
-            tts.stop();
-            tts.shutdown();
-            tts = null;
-        }
-    }*/
+    /* @Override
+     protected void onDestroy() {
+         super.onDestroy();
+         // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
+         if(tts != null){
+             tts.stop();
+             tts.shutdown();
+             tts = null;
+         }
+
+     }*/
+    // 음성 입력 확인 다이얼로그
+    public void checkInput(String result){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String message="";
+        builder.setCancelable(false);
+        message = result+"을 입력하신게 맞습니까?";
+
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                        startPhotoSearch();
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                        Toast.makeText(getApplicationContext(),"다시 입력해주세요.",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+    } //checkInput () end.
+
+    private void startPhotoSearch() {
+        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
+        SharedPreferences.Editor editor = search.edit();
+        editor.putString("location",locationInput.getText().toString());
+        editor.commit();
+        Intent intent = new Intent(this,SearchResultctivity.class);
+        startActivity(intent);
+    }
 }

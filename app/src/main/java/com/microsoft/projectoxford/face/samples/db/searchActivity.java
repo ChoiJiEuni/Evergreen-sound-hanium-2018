@@ -22,7 +22,7 @@ public class searchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        setTitle("검색필터 지정화면");
+        setTitle("검색하고 싶은 조건을 선택해주세요.");
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,48 +63,14 @@ public class searchActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void searchResult(View view) {
-        Intent intent = new Intent(this,SearchResultctivity.class);
-        startActivityForResult(intent,REQUEST_SEARCH_RESULT);
-    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         show = false;
         Toast.makeText(getApplicationContext(),"검색을 종료하시려면 뒤로가기 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
     }
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        String searchString="";
 
-        SharedPreferences search = getSharedPreferences("searchSource", MODE_PRIVATE);
-        String date = search.getString("date","");
-        String location = search.getString("location","");
-        String person = search.getString("person","");
-
-        if(show == true){
-            if(!date.equals("")){
-                String strYear = date.substring(0,4);
-                String strMonth = date.substring(4,6);
-                String strday = date.substring(6);
-                searchString += "날짜   "+strYear+"년 "+strMonth+"월 "+strday+"일 ";
-            }
-            if(!location.equals("")){
-                searchString += "\n위치   "+location;
-            }
-            if(!person.equals("")){
-                searchString += "\n인물   "+person;
-            }
-            if((!date.equals(""))||(!location.equals(""))||(!person.equals(""))){
-                searchString += " 을 검색하시려는 것이 맞으신가요? \n맞다면 가장 아래에 위치한 검색하기 버튼을 눌러주세요." +
-                        "\n 검색조건을 더 지정하시려면 버튼을 눌러 지정해주세요.";
-                Toast.makeText(getApplicationContext(),searchString+"",Toast.LENGTH_LONG).show();
-            }
-        }
-
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

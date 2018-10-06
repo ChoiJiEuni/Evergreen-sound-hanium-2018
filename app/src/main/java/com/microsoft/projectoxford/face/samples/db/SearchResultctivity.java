@@ -41,16 +41,34 @@ import java.util.HashMap;
 public class SearchResultctivity extends AppCompatActivity {
 
     String myJSON;
+    String myJSONlocation;
     public Bitmap b;
     private static final String TAG_RESULTS="evergreen";
     private static final String TAG_PATH = "path";
+    private static final String TAG_LOCATION = "location";
     JSONArray peoples = null;
+    JSONArray locations = null;
     //ArrayList<HashMap<String, String>> personList;
-    ArrayList<String> personList;
+    ArrayList<String> personList = null;
+    ArrayList<String> locationList = null;
     ArrayList<HashMap<String, Bitmap>> personListBit;
     //ListView list;
     GridView gv;
     Cursor imageCursor = null;
+
+    public String timee;
+    public Float Latitude = Float.valueOf(0); // 위도
+    public Float Longitude =  Float.valueOf(0); //경도
+    public String strLocation = "";
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,22 +94,13 @@ public class SearchResultctivity extends AppCompatActivity {
             String userName = sharedPreferences.getString("ID","");
             String DatabaseName = userName+"_db";
             GetDataJSON task = new GetDataJSON();
-            task.execute("http://14.63.195.105/showTest.php",img_date,img_location,img_person, userName,"1111",DatabaseName);
+            task.execute("http://14.63.195.105/showqueryResult.php",img_date,img_location,img_person, userName,"1111",DatabaseName);
+
         }
 
 
 
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -123,10 +132,10 @@ public class SearchResultctivity extends AppCompatActivity {
 
         ImageAdapter(Context c,ArrayList<String> personList) {
             mContext = c;
-            //thumbsDataList = new ArrayList<String>();
-            //thumbsIDList = new ArrayList<String>();
+            thumbsDataList = new ArrayList<String>();
+            thumbsIDList = new ArrayList<String>();
             this.personList = personList;
-            //getThumbInfo(thumbsIDList, thumbsDataList);
+            getThumbInfo(thumbsIDList, thumbsDataList);
         }
 
         //클릭한 사진 불러오는 함수
@@ -185,6 +194,25 @@ public class SearchResultctivity extends AppCompatActivity {
                 if (bmp != null) {
                     Bitmap resized = Bitmap.createScaledBitmap(bmp, 500, 500, true);
                     imageView.setImageBitmap(resized); //갤러리에 보임
+                    StringBuffer time = new StringBuffer();
+
+                    try {
+
+                        timee=exif.getAttribute(ExifInterface.TAG_DATETIME).toString();
+                        time.append(timee.substring(0,4));
+                        time.append("년  ");
+                        time.append(timee.substring(4,7));
+                        time.append("월  ");
+                        time.append(timee.substring(7,10));
+                        time.append("일  ");
+                        time.append(timee.substring(10,13));
+                        time.append("시");
+
+
+                    } catch (Exception e) {
+
+                    }
+                    imageView.setContentDescription(strLocation+" 시간 "+time.toString());
                 }}catch(Exception e){
 
             }
@@ -359,9 +387,9 @@ public class SearchResultctivity extends AppCompatActivity {
             String postParameters = "&img_date=" + img_date
                     +"&img_location=" + img_location
                     +"&img_person=" + img_person
-                    +"&user_name=" + username
-                    +"&user_pass=" + pass
-                    +"&db_name=" + dbname; // php에 보낼값.
+                    +"&userName=" + username
+                    +"&userPass=" + pass
+                    +"&databaseName=" + dbname; // php에 보낼값.
             BufferedReader bufferedReader = null;
             try {
                 URL url = new URL(uri);
@@ -414,4 +442,86 @@ public class SearchResultctivity extends AppCompatActivity {
             showList();
         }
     } // GetDataJSON() END.
+  /*  class GetDataJSON_location extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String uri = params[0];
+            String username = params[1];
+            String pass = params[2];
+            String dbname = params[3];
+            String img_path = params[4];
+            String postParameters = "&userName=" + username
+                    +"&userPass=" + pass
+                    +"&databaseName=" + dbname
+                    +"&img_path=" + img_path; // php에 보낼값.
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(uri);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setReadTimeout(5000);
+                con.setConnectTimeout(5000);
+                con.setRequestMethod("POST");
+                con.connect();
+
+                OutputStream outputStream = con.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                int responseStatusCode = con.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = con.getInputStream();
+                }
+                else{
+                    inputStream = con.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+
+                StringBuilder sb = new StringBuilder();
+
+                bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                String json;
+                while((json = bufferedReader.readLine())!= null){
+                    sb.append(json+"\n");
+                }
+
+                return sb.toString().trim();
+
+            }catch(Exception e){
+                return null;
+            }
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            myJSONlocation=result;
+            showList_location();
+        }
+    } // GetDataJSON_location() END.
+    protected void showList_location(){
+        try {
+            JSONObject jsonObj = new JSONObject(myJSONlocation);
+            locations = jsonObj.getJSONArray(TAG_RESULTS);
+            JSONObject c = locations.getJSONObject(0);
+            if(c.getString(TAG_LOCATION).equals("")) {
+                locationList.add("gom");
+            }else{
+               // locationList.add(c.getString(TAG_LOCATION));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    } // showList_location() END.*/
 }
