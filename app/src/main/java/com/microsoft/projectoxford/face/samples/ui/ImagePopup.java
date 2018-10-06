@@ -117,20 +117,20 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 bm = rotate(bm, exifDegree);
                 }catch(Exception e){
 
-                }
-                //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
-                iv.setImageBitmap(bm);
-                //채윤 이미지에 설명추가
-                iv.setContentDescription("소영아 여기에 추가해줘");
-                /** 리스트로 가기 버튼 */
-                TextView btn1 = (TextView) findViewById(R.id.btn_delete);
-                btn1.setOnClickListener(this);
-                TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
-                btn2.setOnClickListener(this);
-                TextView btn3 = (TextView) findViewById(R.id.btn_stopPlay);
-                btn3.setOnClickListener(this);
-                TextView btn4 = (TextView) findViewById(R.id.btn_share);
-                btn4.setOnClickListener(this);
+        }
+        //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
+        iv.setImageBitmap(bm);
+        //채윤 이미지에 설명추가
+        iv.setContentDescription(infoMessage);
+        /** 리스트로 가기 버튼 */
+        TextView btn1 = (TextView) findViewById(R.id.btn_delete);
+        btn1.setOnClickListener(this);
+        TextView btn2 = (TextView) findViewById(R.id.btn_startPlay);
+        btn2.setOnClickListener(this);
+        TextView btn3 = (TextView) findViewById(R.id.btn_stopPlay);
+        btn3.setOnClickListener(this);
+        TextView btn4 = (TextView) findViewById(R.id.btn_share);
+        btn4.setOnClickListener(this);
 
         /*정보 읽어주기*/
 
@@ -404,7 +404,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 if (!location.equals("N")) {
                     if (!location.equals(""))
                         infoMessage += location + "에서 ";
-                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6,8) + "일에 ";
+                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일에 ";
                     int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
                     if (unknownCount != Integer.parseInt(personCount)) {
                         infoMessage += name + "외 ";

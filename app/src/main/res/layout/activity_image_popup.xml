@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.microsoft.projectoxford.face.samples.ui.ImagePopup">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         android:background="#FFFFFF"
+        android:layout_marginBottom="10dp"
         android:padding="3px" />
 
 
     <LinearLayout
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginBottom="35dp"
         android:background="#ffffff"
+        android:layout_marginBottom="10dp"
         android:id="@+id/lin_bottom_one"
         android:layout_gravity="bottom">
         <TextView
@@ -45,7 +47,7 @@
             style="@style/ButtonStyle"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:background="#ffffff"
         android:id="@+id/lin_bottom_two"
@@ -77,4 +79,4 @@
             android:layout_marginRight="10dp"
             style="@style/ButtonStyle"/>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
