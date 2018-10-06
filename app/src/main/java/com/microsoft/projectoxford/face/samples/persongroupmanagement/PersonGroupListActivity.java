@@ -140,7 +140,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_group_list);
-        super.setTitle("그룹 생성 화면");
+        super.setTitle("");
         coverImg = findViewById(R.id.coverImg1);
         relative1=findViewById(R.id.relative1);
         imageIndex=0;
@@ -169,6 +169,9 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 intent.putExtra("name",learning.getStringExtra("name"));
                 intent.putExtra("input",learning.getBooleanExtra("input",false));*/
                 startActivity(intent);
+            }
+            else{
+                addPersonGroup();
             }
 
         }catch (Exception e){
@@ -274,6 +277,15 @@ public class PersonGroupListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void addPersonGroup() {
+        String personGroupId = UUID.randomUUID().toString();
+        Intent intent = new Intent(PersonGroupListActivity.this, PersonGroupActivity.class);
+        intent.putExtra("AddNewPersonGroup", true);
+        intent.putExtra("PersonGroupName", "");
+        intent.putExtra("PersonGroupId", personGroupId);
+        startActivity(intent);
+
+    }
     /*public void doneAndSave(View view) {
         finish();
     }*/
