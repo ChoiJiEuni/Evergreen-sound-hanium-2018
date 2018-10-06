@@ -682,7 +682,7 @@ public class PersonGroupActivity extends AppCompatActivity {
             coverImg.setVisibility(View.INVISIBLE);
         }else if(imageIndex==1){
             relative1.setVisibility(View.INVISIBLE);
-            relative2.setVisibility(View.VISIBLE);
+            relative2.setVisibility(View.INVISIBLE);
             coverImg.setVisibility(View.VISIBLE);
         }
     }

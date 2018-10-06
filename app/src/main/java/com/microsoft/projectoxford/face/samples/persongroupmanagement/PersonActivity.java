@@ -378,6 +378,7 @@ public class PersonActivity extends AppCompatActivity {
     }*/
 
     public void addFace(View view) {
+
         EditText edit_person_name = (EditText)findViewById(R.id.edit_person_name);
 
         if(!(edit_person_name.getText().toString()).equals("")){
@@ -389,6 +390,7 @@ public class PersonActivity extends AppCompatActivity {
         } else{
             Toast.makeText(getApplicationContext(),"등록하시려는 인물의 이름을 입력하시고 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
         }
+
     }
 
     private void doneAndSave() {
@@ -590,18 +592,18 @@ public class PersonActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }else{*/
-            if (personId == null) {
-                Log.d("chae","왜지");
-                new AddPersonTask(false).execute(personGroupId);
-                imageIndex=0;
-                changeImage();
-            } else {
-                Log.d("chae","왜지?v");
-               // imageIndex=1;
-              //  changeImage();
-                doneAndSave();
-            }
-       // }
+        if (personId == null) {
+            Log.d("chae","왜지");
+            new AddPersonTask(false).execute(personGroupId);
+            imageIndex=0;
+            changeImage();
+        } else {
+            Log.d("chae","왜지?v");
+            // imageIndex=1;
+            //  changeImage();
+            doneAndSave();
+        }
+        // }
 
     }
     //0825

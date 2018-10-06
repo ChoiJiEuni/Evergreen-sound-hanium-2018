@@ -1,61 +1,77 @@
 <!-- Copyright (c) Microsoft. All rights reserved. -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#ffffff"
+    android:layout_height="match_parent"
     tools:context="com.microsoft.projectoxford.face.samples.persongroupmanagement.AddFaceToPersonActivity">
 
-    <TextView
-        android:id="@+id/text_select_face_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/view_margin"
-        android:textColor="#000000"
-        android:textSize="@dimen/abc_text_size_large_material"
-        android:text="그룹에 생성할 인물을 선택해 주세요." />
-
-    <TextView
-        android:id="@+id/done_and_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="저장하기"
-        android:background="#47e8b2"
-        android:textSize="30dp"
-        android:gravity="center"
-        android:onClick="doneAndSave"
-        style="@style/ButtonStyle" />
-
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/done_and_save"
-        android:layout_gravity="center" />
-
-    <GridView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/gridView_faces_to_select"
-        android:layout_above="@id/info"
-        android:layout_below="@id/text_select_face_tip"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/view_margin"
-        android:numColumns="3"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:gravity="center" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:background="#ffffff">
+        <TextView
+            android:id="@+id/text_select_face_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/view_margin"
+            android:textColor="#000000"
+            android:textSize="@dimen/abc_text_size_large_material"
+            android:text="그룹에 생성할 인물을 선택해 주세요." />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/done_and_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="저장하기"
+            android:background="#47e8b2"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:onClick="doneAndSave"
+            style="@style/ButtonStyle" />
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/done_and_save"
+            android:layout_gravity="center" />
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/gridView_faces_to_select"
+            android:layout_above="@id/info"
+            android:layout_below="@id/text_select_face_tip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/view_margin"
+            android:numColumns="3"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:gravity="center" />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/coverImg3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="로딩 중입니다."
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:background="#47e8b2"/>
+
+</FrameLayout>

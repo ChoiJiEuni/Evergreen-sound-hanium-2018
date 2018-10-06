@@ -34,6 +34,7 @@ package com.microsoft.projectoxford.face.samples.persongroupmanagement;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -41,6 +42,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +67,7 @@ import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.ui.MainActivity;
+import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -86,6 +89,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
     //등록된 인물 사진 저장경로 - 211번째줄에서 처리
     // 유아이 : 소희
     private Uri personImageUri;
+    private static final int REQUEST_SELECT_IMAGE = 0;
 
     //*/ DB
     private static String IP_ADDRESS = "14.63.195.105"; // 한이음 서버 IP
@@ -280,8 +284,18 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             GridView gridView = (GridView) findViewById(R.id.gridView_faces_to_select);
             gridView.setAdapter(mFaceGridViewAdapter);
 
+            // item 개수, 인식된 얼굴 개수
+            int count = mFaceGridViewAdapter.faceThumbnails.size();
+            if(count==0){
+                check("인물이 인식되지 않았습니다. 다시 촬영해주세요.");
+            }else if(count == 1){
+                doneAndSave();
+            }else{
+                check("여러명이 인식되었습니다. 한명의 인물만을 다시 촬영해주세요.");
+            }
+
             //*/0825
-           // test();
+            // test();
         }
     }
 
@@ -371,7 +385,23 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             }
         }
     }
+    public void doneAndSave(){
+        if (mFaceGridViewAdapter != null) {
+            List<Integer> faceIndices = new ArrayList<>();
 
+            for (int i = 0; i < mFaceGridViewAdapter.faceRectList.size(); ++i) {
+                if (mFaceGridViewAdapter.faceChecked.get(i)) {
+                    faceIndices.add(i);
+                }
+            }
+            Toast.makeText(getApplicationContext(),"등록되었습니다.",Toast.LENGTH_LONG).show();
+            if (faceIndices.size() > 0) {
+                new AddFaceTask(faceIndices).execute();
+            } else {
+                finish();
+            }
+        }
+    } // doneAndSave() end.
     // Add a log item.
     private void addLog(String log) {
         LogHelper.addIdentificationLog(log);
@@ -573,4 +603,47 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
         }
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case REQUEST_SELECT_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    Uri uriImagePicked = data.getData();
+                    Intent intent = new Intent(this, AddFaceToPersonActivity.class);
+                    intent.putExtra("PersonId", mPersonId);
+                    intent.putExtra("PersonGroupId", mPersonGroupId);
+                    intent.putExtra("ImageUriStr", uriImagePicked.toString());
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    // 인물등록 재촬영 확인 다이얼로그
+    public void check(String result){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String message="";
+
+        message = result;
+        builder.setCancelable(false);
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                        picture();
+                    }
+                });
+        builder.setCancelable(false);
+        builder.show();
+    } //checkInput () end.
+
+    private void picture(){
+        Intent intent = new Intent(this, PersonSelectImage.class);
+        startActivityForResult(intent, REQUEST_SELECT_IMAGE);
+    }
+
+
 }
