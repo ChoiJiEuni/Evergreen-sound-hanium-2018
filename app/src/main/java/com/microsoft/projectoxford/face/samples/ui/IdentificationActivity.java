@@ -203,12 +203,11 @@ public class IdentificationActivity extends AppCompatActivity {
                     imageUri.getPath(),
                     strLocation,
                     getTime,
-                    String.valueOf(average),
                     String.valueOf(PersonCount),
                     record_path);
         }
 
-        Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
+
 
         SharedPreferences.Editor editor = insert.edit();
         editor.clear();
@@ -227,24 +226,37 @@ public class IdentificationActivity extends AppCompatActivity {
                     }
                 }
             }
+            //얼굴 비율 테이블 삽입.
             insert_ficial_proportion_tb ficial_proportion_task = new insert_ficial_proportion_tb();
             ficial_proportion_task.execute("http://" + IP_ADDRESS + "/insert_ficial_proportion_tb.php",userName,userPass,DatabaseName,img_path,Float.toString(facialProportion));
 
+            // 사진 잘나왔는지 테이블 삽입.
+            insert_good_photo_conditions_tb good_photo_task = new insert_good_photo_conditions_tb();
 
-            for(int i=0 ; i<message_index ; i++){
-                String message = "";
-                try{
-                    message = messageMap.get(i).toString();
-                    insert_out_of_range_tb out_of_task = new insert_out_of_range_tb();
-                    out_of_task.execute("http://" + IP_ADDRESS + "/insert_out_of_range_tb.php",userName,userPass,DatabaseName,img_path,message);
+            //지은: 선명도가 string으로 저장되어 있길래. 값에 따라 숫자로 변환함.
+            //equals 안 쓴 이유는 공백이 포함된 string인지.. equals이 안먹음 high인데 길이가 9개로 나오고 그랬음.
+            int Blur = -1;
+            if(BlurValue.contains("High"))
+                Blur=0;
+            else if(BlurValue.contains("Medium"))
+                Blur=1;
+            else
+                Blur=2;
 
-                }catch (Exception e){
-                    // Toast.makeText(getApplicationContext(), "벗어났습니다.",Toast.LENGTH_LONG ).show();
-                }
-            }
+            good_photo_task.execute(
+                    "http://" + IP_ADDRESS + "/insert_good_photo_conditions_tb.php",
+                    userName,userPass,DatabaseName,
+                    img_path,
+                    String.valueOf(message_index),
+                    String.valueOf(brightness),
+                    String.valueOf(average),
+                    String.valueOf(Blur)
+            );
+
         }catch(Exception e){
 
         }
+        Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
     }
 
     public static HashMap getter1(){ //getter1
@@ -305,8 +317,6 @@ public class IdentificationActivity extends AppCompatActivity {
         messageMap.clear();
         message_index = 0;
 
-        // 재촬영 : tts 오류나서 토스트로 대체
-        // tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
@@ -426,17 +436,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-  /*      SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
-        Boolean end = insert.getBoolean("end",false);
-        Boolean group = insert.getBoolean("group",false);
-        if(group != true){
-            if(end == true){
-                finish();
-            }}*/
-    }
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -807,7 +807,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
             isFaceMessage.append("화면에서 얼굴 비율: "+facialProportion+"%");
             // 테스트 토스트 : 지워야함.
-            Toast.makeText(getApplicationContext(),isFaceMessage,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),isFaceMessage,Toast.LENGTH_SHORT).show();
             // }
 
             mBitmap.recycle();
@@ -1166,11 +1166,12 @@ public class IdentificationActivity extends AppCompatActivity {
 
                     //  String personName = StorageHelper.getPersonName(
                     //   personId, mPersonGroupId, IdentificationActivity.this);
-                    if(name.equals("Unknown person")){
+                    // 이제 리스트뷰 없으니까 지움.
+                    /*if(name.equals("Unknown person")){
 
                         Intent intent = new Intent(IdentificationActivity.this, PersonGroupListActivity.class);
                         startActivity(intent);
-                    }
+                    }*/
                 }
             });
             return convertView;
@@ -1345,6 +1346,7 @@ public class IdentificationActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+
             String serverURL = (String)params[0];
             String userName = (String)params[1];
             String userPass = (String)params[2];
@@ -1352,9 +1354,8 @@ public class IdentificationActivity extends AppCompatActivity {
             String img_path = (String)params[4];
             String location = (String)params[5];
             String create_date = (String)params[6];
-            String happiness = (String)params[7];
-            String num_of_people = (String)params[8];
-            String record_path = (String)params[9];
+            String num_of_people = (String)params[7];
+            String record_path = (String)params[8];
 
             String postParameters = "&userName=" + userName
                     +"&userPass=" + userPass
@@ -1362,7 +1363,6 @@ public class IdentificationActivity extends AppCompatActivity {
                     +"&img_path=" + img_path
                     +"&location=" + location
                     +"&create_date=" + create_date
-                    +"&happiness=" + happiness
                     +"&num_of_people=" + num_of_people
                     +"&record_path=" + record_path; // php에 보낼값.
 
@@ -1604,7 +1604,9 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     } // insert_ficial_proportion_tb() end.
 
-    class insert_out_of_range_tb extends AsyncTask<String, Void, String> {
+
+    class insert_good_photo_conditions_tb extends AsyncTask<String, Void, String> {
+
         ProgressDialog progressDialog;
 
         @Override
@@ -1632,12 +1634,18 @@ public class IdentificationActivity extends AppCompatActivity {
             String databaseName = (String)params[3];
             String img_path = (String)params[4];
             String face = (String)params[5];
+            String brightness = (String)params[6];
+            String happiness = (String)params[7];
+            String Blur = (String)params[8];
 
             String postParameters = "&userName=" + userName
                     +"&userPass=" + userPass
                     +"&databaseName=" + databaseName
                     +"&img_path=" + img_path
-                    +"&face=" + face; // php에 보낼값.
+                    +"&face=" + face
+                    +"&brightness=" + brightness
+                    +"&happiness=" + happiness
+                    +"&Blur=" + Blur; // php에 보낼값.
 
             try {
                 // php 가져오기.
@@ -1693,7 +1701,7 @@ public class IdentificationActivity extends AppCompatActivity {
             }
 
         }
-    } // insert_out_of_range_tb() end.
+    } // insert_good_photo_conditions_tb() end.
 
     // 위치 변경 다이얼로그
     public void renameLoc(View view){
@@ -1701,7 +1709,7 @@ public class IdentificationActivity extends AppCompatActivity {
         String insertLocation="";
         String message="";
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-        message = "장소를 직접 등록하시겠습니까?";
+        message = "촬영 장소를 직접 등록해주세요.";
         if(!(insert.getString("location","").equals(""))){
             insertLocation = insert.getString("location","");
             message = "촬영 장소가 " +  insertLocation + " 맞나요?\n변경하시겠습니까?";

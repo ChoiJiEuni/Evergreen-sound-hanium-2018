@@ -5,7 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/Sample3.iml" filepath="$PROJECT_DIR$/Sample3.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ClientLibrary/lib/lib.iml" filepath="$PROJECT_DIR$/../ClientLibrary/lib/lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../t6/ClientLibrary/lib/lib.iml" filepath="$PROJECT_DIR$/../../t6/ClientLibrary/lib/lib.iml" />
+      <module fileurl="file://C:\android\2\temp1006\t1\ClientLibrary\lib\lib.iml" filepath="C:\android\2\temp1006\t1\ClientLibrary\lib\lib.iml" />
+      <module fileurl="file://C:\android\2\temp1006\t6\ClientLibrary\lib\lib.iml" filepath="C:\android\2\temp1006\t6\ClientLibrary\lib\lib.iml" />
     </modules>
   </component>
 </project>
