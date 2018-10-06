@@ -169,13 +169,12 @@ public class GalleryActivity extends AppCompatActivity {
                     timee=exif.getAttribute(ExifInterface.TAG_DATETIME).toString();
                     time.append(timee.substring(0,4));
                     time.append("년  ");
-                    time.append(timee.substring(4,7));
+                    time.append(timee.substring(3,7));
                     time.append("월  ");
-                    time.append(timee.substring(7,10));
+                    time.append(timee.substring(8,10));
                     time.append("일  ");
-                    time.append(timee.substring(10,13));
+                    time.append(timee.substring(11,13));
                     time.append("시");
-
 
                 } catch (Exception e) {
 

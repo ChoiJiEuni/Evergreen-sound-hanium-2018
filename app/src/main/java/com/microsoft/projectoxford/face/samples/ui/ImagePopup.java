@@ -76,7 +76,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
 
     private String RECORDED_FILE;//재생될 녹음 파일명
     // private URI mImageCaptureUri;
-
+    ImageView iv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +107,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
     /** 완성된 이미지 보여주기  */
     BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
-                ImageView iv = (ImageView)findViewById(R.id.imageView);
+                iv = (ImageView)findViewById(R.id.imageView);
                 bm = BitmapFactory.decodeFile(imgPath, bfo);
                 try{
                 ExifInterface exif = new ExifInterface(imgPath);
@@ -120,8 +120,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
         }
         //Bitmap resized = Bitmap.createScaledBitmap(bm, imgWidth, imgHeight, true);
         iv.setImageBitmap(bm);
-        //채윤 이미지에 설명추가
-        iv.setContentDescription(infoMessage);
+
         /** 리스트로 가기 버튼 */
         TextView btn1 = (TextView) findViewById(R.id.btn_delete);
         btn1.setOnClickListener(this);
@@ -404,7 +403,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 if (!location.equals("N")) {
                     if (!location.equals(""))
                         infoMessage += location + "에서 ";
-                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일에 ";
+                    infoMessage += date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6,8) + "일에 ";
                     int unknownCount = Integer.parseInt(personCount) - Integer.parseInt(personKnowCount);
                     if (unknownCount != Integer.parseInt(personCount)) {
                         infoMessage += name + "외 ";
@@ -415,6 +414,8 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 }
 
                 Log.d(TAG, infoMessage);
+                //채윤 이미지에 설명추가
+                iv.setContentDescription(infoMessage);
                 Toast.makeText(getApplicationContext(), infoMessage, Toast.LENGTH_LONG).show();
             }
 
