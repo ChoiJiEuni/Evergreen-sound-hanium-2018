@@ -376,7 +376,10 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("ID",userName);
             editor.commit();
         }
-
+        else{
+            userName = sharedPreferences.getString("ID","");
+            DatabaseName = userName+"_db";
+        }
         createDatabaseAndTable DBTask = new createDatabaseAndTable();
         DBTask.execute("http://" + IP_ADDRESS + "/DB.php",userName,userPass,DatabaseName);
         createDatabaseAndTable TableTask = new createDatabaseAndTable();

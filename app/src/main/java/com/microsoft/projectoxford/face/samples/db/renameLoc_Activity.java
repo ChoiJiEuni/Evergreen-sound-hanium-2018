@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,14 +24,26 @@ public class renameLoc_Activity extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
     String locationResult="";
     private EditText locationRenameInput;
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rename_loc_);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         locationRenameInput = (EditText)findViewById(R.id.locationRenameInput);
-        setTitle("위치정보 변경 화면");
-        Toast.makeText(getApplicationContext(),"등록하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
+
+        setTitle("");
+       // Toast.makeText(getApplicationContext(),"등록하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
     }
     public void btnSpeak(View view) {
         promptSpeechInput();
@@ -49,9 +62,6 @@ public class renameLoc_Activity extends AppCompatActivity {
         }
     }
 
-    public void OnClickedfinsh(View view) {
-          factCheck();
-    }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -77,7 +87,7 @@ public class renameLoc_Activity extends AppCompatActivity {
                     locationRenameInput.setText(locationResult);
                     //tts.setSpeechRate(0.9f);
                     // tts.speak(result.get(0)+"을 검색하실건가요? 아니면 버튼을 누르고 다시 말해주세요.",TextToSpeech.QUEUE_FLUSH, null);
-
+                    factCheck ();
                 }
                 break;
             }
@@ -86,23 +96,16 @@ public class renameLoc_Activity extends AppCompatActivity {
     }
     // 위치 변경 취소 다이얼로그
     public void factCheck (){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("위치 정보 등록을 취소하시겠습니까? \n'네'를 누르면 다음으로 진행됩니다.")
-                .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        test();
-                        setResult(RESULT_OK);
-                        finish();
-                        //긍정 버튼을 클릭했을 때, 실행할 동작
-                    }
-                })
-                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        //부정 버튼을 클릭했을 때, 실행할 동작
-                    }
-                });
-        builder.show();
+        if(locationRenameInput.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(),"등록하실 위치를 음성 또는 텍스트로 입력해주세요.",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = insert.edit();
+            editor.putString("location",locationRenameInput.getText().toString());
+            editor.commit();
+            renameLoc(insert);
+        }
     } //renameLoc () end.
 
     //위치 변경 다이얼로그
@@ -130,6 +133,7 @@ public class renameLoc_Activity extends AppCompatActivity {
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
+        builder.setCancelable(false);
         builder.show();
     }
     public void test(){

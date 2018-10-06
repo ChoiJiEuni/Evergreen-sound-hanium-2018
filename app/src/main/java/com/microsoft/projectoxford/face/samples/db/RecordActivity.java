@@ -276,6 +276,7 @@ public class RecordActivity extends AppCompatActivity {
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
+        builder.setCancelable(false);
         builder.show();
     }
 }

@@ -8,16 +8,34 @@
     android:orientation="vertical"
     android:paddingHorizontal="25dp"
     android:gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="30dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="촬영 장소를 자판 또는 말하기 버튼을 이용해서 음성입력해주세요. "/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="자판 사용에는 아래에 있는 위치변경 완료 버튼을 눌러주세요."/>
+    </LinearLayout>
+
     <EditText
         android:id="@+id/locationRenameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="26dp"
-        android:layout_marginVertical="40dp"
+        android:textSize="17dp"
+        android:layout_marginVertical="20dp"
         android:textStyle="normal"
-        android:hint="위치 입력 상자" />
+        android:hint="두번 클릭하면 자판이 생깁니다." />
     <TextView
         android:id="@+id/btnSpeak"
         android:layout_width="150dp"
@@ -45,19 +63,7 @@
             android:gravity="center"
             android:textSize="20sp"
             android:text="위치 변경 완료"
-            android:layout_marginVertical="40dp"/>
-        <TextView
-            android:id="@+id/butLocationRenameFin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="OnClickedfinsh"
-            android:background="@color/button_enabled_background"
-            android:textColor="#ffffff"
-            android:paddingVertical="20dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:text="취소"
-            android:layout_marginVertical="40dp"/>
+            android:layout_marginVertical="30dp"/>
+
     </LinearLayout>
 </LinearLayout>

@@ -30,11 +30,10 @@ public class PersonSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_search);
         setTitle("인물 검색 화면");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         personInput = (EditText)findViewById(R.id.personInput);
 
-       // Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
+        // Toast.makeText(getApplicationContext(),getString(R.string.search_info),Toast.LENGTH_LONG).show();
        /* // TTS를 생성하고 OnInitListener로 초기화 한다.
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override

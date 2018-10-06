@@ -72,6 +72,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLength="30"
+                        android:layout_marginTop="20dp"
+                        android:hint="두번 클릭하면 자판이 생깁니다."/>
                         android:singleLine="true" />
                     <TextView
                         android:id="@+id/Speech"

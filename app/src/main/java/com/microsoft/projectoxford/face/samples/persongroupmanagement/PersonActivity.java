@@ -36,6 +36,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -43,6 +44,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ActionMode;
@@ -443,6 +445,7 @@ public class PersonActivity extends AppCompatActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     editTextPersonName.setText(result.get(0));
+                    checkInput(result.get(0));
                 }
                 break;
 
@@ -632,4 +635,30 @@ public class PersonActivity extends AppCompatActivity {
             coverImg.setVisibility(View.VISIBLE);
         }
     }
+    // 음성 입력 확인 다이얼로그
+    public void checkInput(String result){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String message="";
+
+        message = result+"을 입력하신게 맞습니까?";
+        builder.setCancelable(false);
+        builder.setMessage(message)
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //긍정 버튼을 클릭했을 때, 실행할 동작
+                        if (personId == null) {
+                            new AddPersonTask(true).execute(personGroupId);
+                        } else {
+                            addFace();
+                        }
+                    }
+                })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //부정 버튼을 클릭했을 때, 실행할 동작
+                        Toast.makeText(getApplicationContext(),"다시 입력해주세요.",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+    } //checkInput () end.
 }
