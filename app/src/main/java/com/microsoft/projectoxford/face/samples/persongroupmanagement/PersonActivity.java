@@ -72,6 +72,7 @@ import com.microsoft.projectoxford.face.samples.R;
 import com.microsoft.projectoxford.face.samples.helper.LogHelper;
 import com.microsoft.projectoxford.face.samples.helper.SampleApp;
 import com.microsoft.projectoxford.face.samples.ui.LearningActivity;
+import com.microsoft.projectoxford.face.samples.ui.LearningMainActivity;
 import com.microsoft.projectoxford.face.samples.ui.PersonSelectImage;
 import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 
@@ -260,6 +261,16 @@ public class PersonActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         //progressDialog.setTitle(getString(R.string.progress_dialog_title));
         progressDialog.setTitle("기다려 주세요.");
+
+        // 머신러닝
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        Boolean input = insert.getBoolean("input",false);
+
+        if(input == true){
+
+              test();
+        }
+
     }
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -553,15 +564,18 @@ public class PersonActivity extends AppCompatActivity {
                 checkBox.setVisibility(View.INVISIBLE);
             }
 
-            //*/0828
-          /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            // 머신러닝
+         /*   SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
             Boolean input = insert.getBoolean("input",false);
+            Log.d("gom","힝");
             if(input == true){
-                test();
-            }
+                Log.d("gom","들어옴");
+
+              //  test();
+            }*/
             //
 
-            Boolean end = insert.getBoolean("end",false);
+          /*  Boolean end = insert.getBoolean("end",false);
             Boolean group = insert.getBoolean("group",false);
             if(group != true){
                 if(end == true){
@@ -581,17 +595,16 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-       /* SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
         Boolean end = insert.getBoolean("end",false);
         Boolean group = insert.getBoolean("group",false);
         if(group != true){
             if(end == true){
-
-                Intent intent = new Intent(PersonActivity.this,LearningActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                Intent intent = new Intent(PersonActivity.this,LearningMainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
-        }else{*/
+        }else{
         if (personId == null) {
             Log.d("chae","왜지");
             new AddPersonTask(false).execute(personGroupId);
@@ -603,7 +616,7 @@ public class PersonActivity extends AppCompatActivity {
             //  changeImage();
             doneAndSave();
         }
-        // }
+         }
 
     }
     //0825

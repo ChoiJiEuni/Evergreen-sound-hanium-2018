@@ -301,7 +301,13 @@ public class PersonGroupActivity extends AppCompatActivity {
         relative1=findViewById(R.id.relative2);// 기본 그룹 생성되어있지 "않은"(x) 경우
         relative2=findViewById(R.id.createdGroup);// 기본 그룹 생성되어 "있는"(0) 경우
 
-        imageIndex=0;
+        SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
+        if(pref.getBoolean("input",false) == true){
+            imageIndex=1;
+        } else{
+            imageIndex=0;
+
+        }
         changeImage();
 
         btn = (TextView)findViewById(R.id.Speech);
@@ -602,12 +608,12 @@ public class PersonGroupActivity extends AppCompatActivity {
 
             String personId = personIdList.get(position);
 
-            //*/0825
-          /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            // 머신러닝
+            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
             Boolean input = insert.getBoolean("input",false);
             if(input == true){
                 test();
-            }*/
+            }
             //*/
 
 
@@ -645,7 +651,7 @@ public class PersonGroupActivity extends AppCompatActivity {
         }
     }
 
-    //*/0825
+    // 머신러닝
     public void test(){
         int size = personGridViewAdapter.personIdList.size();
 

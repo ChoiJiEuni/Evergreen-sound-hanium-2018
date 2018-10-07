@@ -184,7 +184,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
         }
         return bitmap;
     }
-
+//삭제
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_delete:

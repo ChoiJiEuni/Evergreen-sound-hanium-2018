@@ -245,8 +245,6 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                         task.execute("http://" + IP_ADDRESS + "/insert_registered_person_tb.php",userName,userPass,DatabaseName,name,personImageUri+"");
                     }
 
-
-
                 } catch (IOException e) {
                     setInfo(e.getMessage());
                 } finally {
@@ -284,15 +282,26 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             GridView gridView = (GridView) findViewById(R.id.gridView_faces_to_select);
             gridView.setAdapter(mFaceGridViewAdapter);
 
-            // item 개수, 인식된 얼굴 개수
-            int count = mFaceGridViewAdapter.faceThumbnails.size();
-            if(count==0){
-                check("인물이 인식되지 않았습니다. 다시 촬영해주세요.");
-            }else if(count == 1){
-                doneAndSave();
+            SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
+            if(pref.getBoolean("input",false) == false){
+                // item 개수, 인식된 얼굴 개수
+                int count = mFaceGridViewAdapter.faceThumbnails.size();
+                if(count==0){
+                    check("인물이 인식되지 않았습니다. 다시 촬영해주세요.");
+                }else if(count == 1){
+                    doneAndSave();
+                }else{
+                    check("여러명이 인식되었습니다. 한명의 인물만을 다시 촬영해주세요.");
+                }
             }else{
-                check("여러명이 인식되었습니다. 한명의 인물만을 다시 촬영해주세요.");
+                SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+                SharedPreferences.Editor editor = insert.edit();
+                editor.putBoolean("end", true);
+                editor.putBoolean("group", false);
+                editor.commit();
+                doneAndSave();
             }
+
 
             //*/0825
             // test();
@@ -325,11 +334,11 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
         mProgressDialog.setTitle("잠시 기다려 주세요.");
 
         //*/
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        /*SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
         editor.putBoolean("end", true);
         editor.putBoolean("group", false);
-        editor.commit(); //완료한다.
+        editor.commit(); //완료한다.*/
         //*/
 
     }
@@ -394,7 +403,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     faceIndices.add(i);
                 }
             }
-            Toast.makeText(getApplicationContext(),"등록되었습니다.",Toast.LENGTH_LONG).show();
+
             if (faceIndices.size() > 0) {
                 new AddFaceTask(faceIndices).execute();
             } else {

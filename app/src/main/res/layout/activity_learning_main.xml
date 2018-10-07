@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.microsoft.projectoxford.face.samples.ui.LearningMainActivity"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/coverImg2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="로딩 중입니다."
+        android:textSize="30dp"
+        android:textColor="#ffffff"
+        android:background="#47e8b2"/>
+</LinearLayout>

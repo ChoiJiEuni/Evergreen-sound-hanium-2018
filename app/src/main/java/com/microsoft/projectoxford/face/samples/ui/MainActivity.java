@@ -201,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("chae","goupName"+groupName);
                if(groupName==null){
                    register();
-                  // Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
 
                }else{
 
@@ -231,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
                }
             }else{
                 register();
-                //Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
             }
 
 
@@ -324,6 +322,14 @@ public class MainActivity extends AppCompatActivity {
     }
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
     public void onButtonAddPerson(View view) {
+
+        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("input", false);
+        editor.putBoolean("end", false);
+        editor.putBoolean("group", true);
+        editor.commit(); //완료한다.
+
         Intent intent = new Intent(this, PersonGroupListActivity.class);
         startActivity(intent);
 
@@ -491,37 +497,56 @@ public class MainActivity extends AppCompatActivity {
      //   startActivity(intent);
     }
     private void register(){
-        //Toast.makeText(this,"등록된 인물이 없습니다. 등록 후 사용해 주세요",Toast.LENGTH_LONG).show();
-
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         String message="";
         SharedPreferences insert = getSharedPreferences("Picture_info_Pref", MODE_PRIVATE);
-        message = "등록된 인물이 없습니다. 등록 후 사용해 주세요\n등록하시겠습니까?";
+        message = "생성된 앨범이 없습니다. 등록 후 사용해 주세요\n등록하시겠습니까?";
 
         builder.setMessage(message)
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ii();
+                        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = insert.edit();
+                        editor.putBoolean("input", false);
+                        editor.putBoolean("end", false);
+                        editor.putBoolean("group", true);
+                        editor.commit(); //완료한다.
 
-
+                        Intent intent = new Intent(MainActivity.this, PersonGroupListActivity.class);
+                        startActivity(intent);
                         //긍정 버튼을 클릭했을 때, 실행할 동작
                     }
                 })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if(intent.resolveActivity(getPackageManager()) != null) {
+                            // Save the photo taken to a temporary file.
+                            // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                            try {
+                                File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/");
+                                Log.d("chae",dir+"");
 
-                        ;
+                                if(!dir.exists())
+                                    dir.mkdirs();
+                                File file = File.createTempFile("evergreen_", ".jpg", dir);
+                                mUriPhotoTaken = Uri.fromFile(file);
+                                // Log.d("chae",mUriPhotoTaken+"넘긴거");
+                                //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,mUriPhotoTaken));
+
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
+                                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                            } catch (IOException e) {
+                                setInfo(e.getMessage());
+                            }
+
+                        }
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
         builder.show();
     }
 
-    private void ii(){
-        Intent intent = new Intent(this, PersonGroupListActivity.class);
-        startActivity(intent);
-    }
 }

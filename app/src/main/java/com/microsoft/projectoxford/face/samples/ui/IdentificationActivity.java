@@ -257,7 +257,7 @@ public class IdentificationActivity extends AppCompatActivity {
         }catch(Exception e){
 
         }
-        Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
+
     }
 
     public static HashMap getter1(){ //getter1
@@ -297,6 +297,18 @@ public class IdentificationActivity extends AppCompatActivity {
             }
         }
         average = sum/map.size();
+
+
+        // 머신러닝
+        /*if(PersonCount != 0){
+            // 인물이 인식되지 않은 사진입니다. 그래도 저장하시겠습니까?
+            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            SharedPreferences.Editor editor = insert.edit();
+            editor.putInt("index", 0);
+            editor.commit(); //완료한다.
+            Intent testIntent = new Intent(this,LearningMainActivity.class);
+            startActivity(testIntent);
+        }*/
       /*  SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
         editor.putInt("index", 0);
@@ -1776,9 +1788,26 @@ public class IdentificationActivity extends AppCompatActivity {
             case RENAME_LOC_INFO:
                 if (resultCode == RESULT_OK) {
                     showInfo();
+                    // 머신러닝
+
                     DB();
 
-                    finish();
+                    // 머신러닝
+        if(PersonCount != 0){
+            // 인물이 인식되지 않은 사진입니다. 그래도 저장하시겠습니까?
+            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            SharedPreferences.Editor editor = insert.edit();
+            editor.putInt("index", 0);
+            editor.commit(); //완료한다.
+            Intent testIntent = new Intent(this,LearningMainActivity.class);
+            startActivity(testIntent);
+        } else{
+            Toast.makeText(getApplicationContext(),"저장 되었습니다.",Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+
+
                 }
                 break;
             case REQUEST_TAKE_PHOTO:

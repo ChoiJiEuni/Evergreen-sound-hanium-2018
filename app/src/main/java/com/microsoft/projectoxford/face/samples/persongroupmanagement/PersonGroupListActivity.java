@@ -143,6 +143,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
         super.setTitle("");
         coverImg = findViewById(R.id.coverImg1);
         relative1=findViewById(R.id.relative1);
+        SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
         imageIndex=0;
         changeImage();
 
@@ -163,11 +164,16 @@ public class PersonGroupListActivity extends AppCompatActivity {
                 intent.putExtra("AddNewPersonGroup", false);
                 intent.putExtra("PersonGroupName", personGroupName);
                 intent.putExtra("PersonGroupId", personGroupId);
-                //0825
-                /*Intent learning = getIntent();
-                intent.putExtra("bitmap",learning.getStringExtra("bitmap"));
-                intent.putExtra("name",learning.getStringExtra("name"));
-                intent.putExtra("input",learning.getBooleanExtra("input",false));*/
+
+
+                if(pref.getBoolean("input",false) == true){
+                    // 머신러닝
+                    Intent learning = getIntent();
+                    intent.putExtra("bitmap",learning.getStringExtra("bitmap"));
+                    intent.putExtra("name",learning.getStringExtra("name"));
+                    intent.putExtra("input",learning.getBooleanExtra("input",false));
+
+                }
                 startActivity(intent);
             }
             else{
@@ -396,6 +402,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Toast.makeText(getApplicationContext(),"등록되었습니다.",Toast.LENGTH_LONG).show();
         imageIndex=1;
         changeImage();
         finish();
