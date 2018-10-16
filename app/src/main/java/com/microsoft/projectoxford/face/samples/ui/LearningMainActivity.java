@@ -25,7 +25,7 @@ public class LearningMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_main);
 
-        insert = getSharedPreferences("test", MODE_PRIVATE);
+        insert = getSharedPreferences("machine", MODE_PRIVATE);
         editor = insert.edit();
         map =IdentificationActivity.getter1();  // 사람이름 들어있는
         bitmaps =IdentificationActivity.getter2(); // 크롭된 이미지 map

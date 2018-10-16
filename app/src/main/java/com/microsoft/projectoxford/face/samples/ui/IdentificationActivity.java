@@ -1795,7 +1795,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     // 머신러닝
         if(PersonCount != 0){
             // 인물이 인식되지 않은 사진입니다. 그래도 저장하시겠습니까?
-            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
             SharedPreferences.Editor editor = insert.edit();
             editor.putInt("index", 0);
             editor.commit(); //완료한다.

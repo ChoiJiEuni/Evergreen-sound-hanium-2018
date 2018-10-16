@@ -282,7 +282,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
             GridView gridView = (GridView) findViewById(R.id.gridView_faces_to_select);
             gridView.setAdapter(mFaceGridViewAdapter);
 
-            SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences("machine",MODE_PRIVATE);
             if(pref.getBoolean("input",false) == false){
                 // item 개수, 인식된 얼굴 개수
                 int count = mFaceGridViewAdapter.faceThumbnails.size();
@@ -294,7 +294,7 @@ public class AddFaceToPersonActivity extends AppCompatActivity {
                     check("여러명이 인식되었습니다. 한명의 인물만을 다시 촬영해주세요.");
                 }
             }else{
-                SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+                SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
                 SharedPreferences.Editor editor = insert.edit();
                 editor.putBoolean("end", true);
                 editor.putBoolean("group", false);

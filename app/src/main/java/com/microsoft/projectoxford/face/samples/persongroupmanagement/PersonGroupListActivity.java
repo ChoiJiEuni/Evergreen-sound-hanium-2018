@@ -143,7 +143,7 @@ public class PersonGroupListActivity extends AppCompatActivity {
         super.setTitle("");
         coverImg = findViewById(R.id.coverImg1);
         relative1=findViewById(R.id.relative1);
-        SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("machine",MODE_PRIVATE);
         imageIndex=0;
         changeImage();
 

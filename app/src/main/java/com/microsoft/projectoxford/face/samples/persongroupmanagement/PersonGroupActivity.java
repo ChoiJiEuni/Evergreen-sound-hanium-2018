@@ -301,7 +301,7 @@ public class PersonGroupActivity extends AppCompatActivity {
         relative1=findViewById(R.id.relative2);// 기본 그룹 생성되어있지 "않은"(x) 경우
         relative2=findViewById(R.id.createdGroup);// 기본 그룹 생성되어 "있는"(0) 경우
 
-        SharedPreferences pref = getSharedPreferences("test",MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("machine",MODE_PRIVATE);
         if(pref.getBoolean("input",false) == true){
             imageIndex=1;
         } else{
@@ -609,7 +609,7 @@ public class PersonGroupActivity extends AppCompatActivity {
             String personId = personIdList.get(position);
 
             // 머신러닝
-            SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+            SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
             Boolean input = insert.getBoolean("input",false);
             if(input == true){
                 test();

@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
     /// 인물 등록하는 화면으로 넘어감!! 기존의 manage person groups 역할!
     public void onButtonAddPerson(View view) {
 
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
         editor.putBoolean("input", false);
         editor.putBoolean("end", false);
@@ -506,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(message)
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+                        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
                         SharedPreferences.Editor editor = insert.edit();
                         editor.putBoolean("input", false);
                         editor.putBoolean("end", false);

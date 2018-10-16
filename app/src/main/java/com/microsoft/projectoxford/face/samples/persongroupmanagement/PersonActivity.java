@@ -263,12 +263,12 @@ public class PersonActivity extends AppCompatActivity {
         progressDialog.setTitle("기다려 주세요.");
 
         // 머신러닝
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
         Boolean input = insert.getBoolean("input",false);
 
         if(input == true){
 
-              test();
+            machine();
         }
 
     }
@@ -595,7 +595,7 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
         Boolean end = insert.getBoolean("end",false);
         Boolean group = insert.getBoolean("group",false);
         if(group != true){
@@ -620,10 +620,10 @@ public class PersonActivity extends AppCompatActivity {
 
     }
     //0825
-    public void test(){
+    public void machine(){
 
         //*/
-        SharedPreferences insert = getSharedPreferences("test", MODE_PRIVATE);
+        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
         SharedPreferences.Editor editor = insert.edit();
         editor.putBoolean("input", false); //First라는 key값으로 infoFirst 데이터를 저장한다.
         editor.commit(); //완료한다.
