@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         TextView InfoChange = (TextView)findViewById(R.id.mainInfoChange);
         setTitle("너들나들");
 
