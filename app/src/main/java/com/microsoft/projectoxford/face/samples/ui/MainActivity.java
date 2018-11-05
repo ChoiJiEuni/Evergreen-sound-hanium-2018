@@ -189,6 +189,13 @@ public class MainActivity extends AppCompatActivity {
        //// Intent intent = new Intent(this, SelectImageActivity.class);
         // 추강
 
+        SharedPreferences insert = getSharedPreferences("machine", MODE_PRIVATE);
+        SharedPreferences.Editor editor = insert.edit();
+        editor.putBoolean("input", true);
+     //   editor.putBoolean("end", false);
+    //    editor.putBoolean("group", true);
+        editor.commit(); //완료한다.
+
        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       /////  startActivity(intent);

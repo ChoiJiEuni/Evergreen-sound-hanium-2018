@@ -302,13 +302,6 @@ public class PersonGroupActivity extends AppCompatActivity {
         relative2=findViewById(R.id.createdGroup);// 기본 그룹 생성되어 "있는"(0) 경우
 
         SharedPreferences pref = getSharedPreferences("machine",MODE_PRIVATE);
-        if(pref.getBoolean("input",false) == true){
-            imageIndex=1;
-        } else{
-            imageIndex=0;
-
-        }
-        changeImage();
 
         btn = (TextView)findViewById(R.id.Speech);
 
@@ -323,20 +316,30 @@ public class PersonGroupActivity extends AppCompatActivity {
         initializeGridView();
 
         progressDialog = new ProgressDialog(this);
-      //  progressDialog.setTitle(getString(R.string.progress_dialog_title));
+        //  progressDialog.setTitle(getString(R.string.progress_dialog_title));
         progressDialog.setTitle("기다려 주세요.");
 
         editTextPersonGroupName = (EditText)findViewById(R.id.edit_person_group_name);
         editTextPersonGroupName.setText(oldPersonGroupName); //*/ 0825주석풀음.
 
         if((editTextPersonGroupName.getText().toString()).equals("")){ //기본 그룹 생성 되어있지 않은 경우
+            coverImg.setVisibility(View.GONE);
             relative1.setVisibility(View.VISIBLE);
             relative2.setVisibility(View.GONE);
-        } else{ // 기본 그룹 생성되어있는 경우
+        }else{ // 기본 그룹 생성되어있는 경우
             setTitle("");
+            coverImg.setVisibility(View.GONE);
             relative1.setVisibility(View.GONE);
             relative2.setVisibility(View.VISIBLE);
         }
+
+            if(pref.getBoolean("input",false) == true){
+            imageIndex=1;
+        } else{
+            imageIndex=0;
+
+        }
+        changeImage();
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -685,7 +688,9 @@ public class PersonGroupActivity extends AppCompatActivity {
     private void changeImage(){
         if(imageIndex==0){
             relative1.setVisibility(View.VISIBLE);
+          //  relative2.setVisibility(View.INVISIBLE);
             coverImg.setVisibility(View.INVISIBLE);
+
         }else if(imageIndex==1){
             relative1.setVisibility(View.INVISIBLE);
             relative2.setVisibility(View.INVISIBLE);
