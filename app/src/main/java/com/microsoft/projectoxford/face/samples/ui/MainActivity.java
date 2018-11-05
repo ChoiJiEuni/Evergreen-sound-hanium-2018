@@ -528,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
+                      /*  tts.speak("촬영이 시작됩니다. 정면을 응시하여 주세요.",TextToSpeech.QUEUE_FLUSH, null);
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if(intent.resolveActivity(getPackageManager()) != null) {
                             // Save the photo taken to a temporary file.
@@ -550,10 +550,12 @@ public class MainActivity extends AppCompatActivity {
                                 setInfo(e.getMessage());
                             }
 
-                        }
+                        }*/
+                      Toast.makeText(getApplicationContext(),"기본 앨범이 존재하지 않으면 촬영을 진행할 수 없습니다.",Toast.LENGTH_SHORT);
                         //부정 버튼을 클릭했을 때, 실행할 동작
                     }
                 });
+        builder.setCancelable(false);
         builder.show();
     }
 
