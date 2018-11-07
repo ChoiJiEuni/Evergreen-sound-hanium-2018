@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -46,13 +48,18 @@ public class RecordActivity extends AppCompatActivity {
     MediaRecorder recorder;
     File file;
     TextView recordBtn, recordStopBtn, playBtn, playStopBtn, SaveBtn;
+    //종소리
+    SoundPool soundPool;
+    int sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        super.setTitle("녹음 화면");
+        super.setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0 );
+        sound = soundPool.load(this, R.raw.bell, 1);
         Dialog();
 
         File dir =new File( Environment.getExternalStorageDirectory().getAbsolutePath()+"/evergreen/audio");
@@ -247,12 +254,17 @@ public class RecordActivity extends AppCompatActivity {
         SaveBtn.setEnabled(isEnabled);
     }
 
+    //종소리
+    public void playSound(){
+        soundPool.play( sound, 1, 1, 0, 0, 2);
+    }
+
     public void Dialog()
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String insertLocation="";
         String message="";
-        message = "녹음을 하시겠습니까? \n'네'를 누르면 녹음이 바로 진행됩니다.";
+        message = "녹음을 하시겠습니까? \n'네'를 누르면 녹음이 바로 진행됩니다.\n녹음을 진행하실시 종소리가 울린 1초후에 녹음을 진행해주세요!";
 
         builder.setMessage(message)
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -268,8 +280,8 @@ public class RecordActivity extends AppCompatActivity {
                         recorder.setOutputFile(RECORDED_FILE);
 
                         try {
-                            Toast.makeText(getApplicationContext(), "띵!", Toast.LENGTH_LONG).show();
-
+                            playSound();
+                            Thread.sleep(100);
                             recorder.prepare();
                             recorder.start();
                         } catch (Exception ex) {
