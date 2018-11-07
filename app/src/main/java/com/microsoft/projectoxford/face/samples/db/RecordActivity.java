@@ -268,7 +268,7 @@ public class RecordActivity extends AppCompatActivity {
                         recorder.setOutputFile(RECORDED_FILE);
 
                         try {
-                            Toast.makeText(getApplicationContext(), "녹음을 시작합니다.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "띵!", Toast.LENGTH_LONG).show();
 
                             recorder.prepare();
                             recorder.start();
