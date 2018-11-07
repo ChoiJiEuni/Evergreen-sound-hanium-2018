@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="25dp"
+    android:gravity="center"
+    tools:context="com.microsoft.projectoxford.face.samples.ui.InfoShowActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:text="[사진열람 설명]"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="\n사진열람에서는 펼쳐보기와 검색하기를 통해 촬영했던 사진들을 열람할 수 있습니다."/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="이 앨범은 촬영된 사진이 잘찍힌 사진인지 알려줍니다!"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="\n펼쳐보기는 말 그대로 모든 사진들을 최신순으로 열람할 수 있습니다."/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="검색하기는 날짜, 촬영장소, 인물로 총 3가지 조건을 사용하여 검색된 이미지만 열람할 수 있습니다."/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="\n입력방법은 음성입력과 자판입력을 지원하고있습니다.\n"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="어서 찍었던 사진들을 열람해보세요!!"/>
+    <TextView
+        android:onClick="OnButtonClickedToShow"
+        android:text="사진열람"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="20dp"
+        android:gravity="center"
+        android:layout_marginVertical="30dp"
+        style="@style/ButtonStyle"/>
+
+</LinearLayout>

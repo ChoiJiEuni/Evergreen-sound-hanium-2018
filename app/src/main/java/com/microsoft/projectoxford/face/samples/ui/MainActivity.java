@@ -257,6 +257,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void OnButtonClickedManual(View view) {
+            Intent intent = new Intent(this,ManualActivity.class);
+            startActivity(intent);
+    }
+
     // 사용자 그룹을 포함하는 ListView의 어댑터입니다.
     private class PersonGroupListAdapter extends BaseAdapter {
         List<String> personGroupIdList;

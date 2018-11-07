@@ -111,7 +111,11 @@
         <activity android:name=".db.searchActivity" />
         <activity android:name=".db.SearchResultctivity" />
         <activity android:name=".db.renameLoc_Activity" />
-        <activity android:name=".ui.LearningMainActivity"></activity>
+        <activity android:name=".ui.LearningMainActivity" />
+        <activity android:name=".ui.ManualActivity" />
+        <activity android:name=".ui.InfoAddPersonActivity" />
+        <activity android:name=".ui.InfoImageActivity" />
+        <activity android:name=".ui.InfoShowActivity"></activity>
     </application>
 
 </manifest>

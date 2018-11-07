@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="25dp"
+    tools:context="com.microsoft.projectoxford.face.samples.ui.InfoAddPersonActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:text="[인물 등록 설명]"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="\n촬영시 등록이 되어있는 인물만 인식이 가능하니, 촬영할 인물들에 대해서 최대한 등록을 진행해주세요."/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="\n입력방법은 음성입력과 자판입력을 지원하고있습니다."/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:text="\n 어서 인물을 등록해보세요!!\n"/>
+
+    <TextView
+        android:text="인물등록 바로가기"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="20dp"
+        android:gravity="center"
+        android:layout_marginVertical="15dp"
+        android:onClick="onButtonToAddPerson"
+        style="@style/ButtonStyle"/>
+
+
+</LinearLayout>
