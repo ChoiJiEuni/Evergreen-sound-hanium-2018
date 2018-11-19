@@ -29,7 +29,7 @@ public class searchActivity extends AppCompatActivity {
 
 
 
-        Toast.makeText(getApplicationContext(),"검색버튼을 눌러 조건을 지정한 후 \n가장 아래에 있는 검색 필터 적용 버튼을 눌러주세요.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"검색하고 싶은 조건을 선택해주세요.",Toast.LENGTH_LONG).show();
         /*// TTS를 생성하고 OnInitListener로 초기화 한다.
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
