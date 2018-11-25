@@ -85,6 +85,9 @@ import com.microsoft.projectoxford.face.samples.helper.StorageHelper;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.AddFaceToPersonActivity;
 import com.microsoft.projectoxford.face.samples.persongroupmanagement.PersonGroupListActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -129,6 +132,8 @@ public class IdentificationActivity extends AppCompatActivity {
     private View convertView;
     private float average=0; // 행복도 평균값 => 383번째줄 identify(분석)버튼 누르면 행복도 평균값 계산
     float sum = 0;
+
+    private String strPhotoCondition; // 잘 나온 사진인지
 
     //*/ DB
     Uri imageUri = null;
@@ -1443,7 +1448,119 @@ public class IdentificationActivity extends AppCompatActivity {
             }
 
         }
-    } // insert_picture_info() end.
+    } // insert_picture_info() end.// 소영: 잘 찍힌 사진인지 분석
+    class getPhotoCondition extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(IdentificationActivity.this,
+                    "분석 중입니다", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null) {
+                strPhotoCondition = "Error";
+
+            } else {
+                strPhotoCondition = result;
+
+                String TAG_JSON="evergreen";
+
+                try {
+                    JSONObject jsonObject = new JSONObject(strPhotoCondition);
+                    strPhotoCondition = jsonObject.getString(TAG_JSON);
+                    Log.d("kwon", strPhotoCondition);
+                    Toast.makeText(getApplicationContext(), strPhotoCondition, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Log.d(TAG, "showResult : ", e);
+                }
+
+            }
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String img_path=(String)params[4];
+            String face = (String)params[5];
+            String happiness = (String)params[6];
+            String blur = (String)params[7];
+            String count = (String)params[8];
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&img_path=" + img_path
+                    +"&face=" + face
+                    +"&happiness=" + happiness
+                    +"&Blur=" + blur
+                    +"&num_of_people=" + count;
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // getPhotoCondition() end.
+
+
 
     class insert_recognition_tb extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
