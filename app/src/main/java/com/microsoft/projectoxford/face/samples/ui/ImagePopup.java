@@ -74,6 +74,8 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
     private static String TAG = "kwon";
     private String mJsonString;
 
+    private String strPhotoCondition;
+
     private String RECORDED_FILE;//재생될 녹음 파일명
     // private URI mImageCaptureUri;
     ImageView iv;
@@ -94,18 +96,29 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
 
         /** 사용자 정보 및 이미지 정보 가져오기*/
         infoMessage = "";
+        strPhotoCondition = "";
         SharedPreferences sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
         if(!(sharedPreferences.getString("ID","").equals(""))){
             // 사용자 정보 멤버변수에 저장
             userName = sharedPreferences.getString("ID","");
             databaseName = userName+"_db";
             userPass = "1111";
+            getPhotoCondition work = new getPhotoCondition();
+            work.execute("http://"+IP+"/isGood.php", userName, userPass, databaseName, imgPath);
             GetData task = new GetData();
             task.execute("http://"+IP+"/showImageInfo.php", imgPath, userName, userPass, databaseName);
-}
+            infoMessage += strPhotoCondition;
+
+            Log.d("kwon", "this " + infoMessage);
+            Log.d("kwon", "this" + strPhotoCondition);
+
+        }
+
+        Log.d("kwon", "this " + infoMessage);
+        Log.d("kwon", "this" + strPhotoCondition);
 
     /** 완성된 이미지 보여주기  */
-    BitmapFactory.Options bfo = new BitmapFactory.Options();
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
         bfo.inSampleSize = 2;
                 iv = (ImageView)findViewById(R.id.imageView);
                 bm = BitmapFactory.decodeFile(imgPath, bfo);
@@ -133,7 +146,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
 
         /*정보 읽어주기*/
 
-                }
+    }
 @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -281,6 +294,7 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
         }
 
 
+        // 소영: 이미지 정보 가져오기 쿼리
         @Override
         protected void onPostExecute(String imgInfo) {
             super.onPostExecute(imgInfo);
@@ -414,16 +428,16 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
                 }
 
                 Log.d(TAG, infoMessage);
-                //채윤 이미지에 설명추가
-                iv.setContentDescription(infoMessage);
-                Toast.makeText(getApplicationContext(), infoMessage, Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             Log.d(TAG, "showResult : ", e);
         }
-
+        iv.setContentDescription(infoMessage);
+        Toast.makeText(getApplicationContext(), infoMessage, Toast.LENGTH_LONG).show();
     }
+
+
 
 
     public void shareImageFacebook(){
@@ -455,6 +469,111 @@ ImagePopup extends AppCompatActivity implements OnClickListener{
        shareIntent.setPackage("com.instagram.android");
        startActivity(shareIntent);
     }
+
+    // 소영: 잘 찍힌 사진인지 분석
+    class getPhotoCondition extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(ImagePopup.this,
+                    "분석 중입니다", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result == null) {
+                strPhotoCondition = "Error";
+
+            } else {
+                strPhotoCondition = result;
+
+                String TAG_JSON="evergreen";
+
+                try {
+                    JSONObject jsonObject = new JSONObject(strPhotoCondition);
+                    strPhotoCondition = jsonObject.getString(TAG_JSON);
+                    Log.d("kwon", strPhotoCondition);
+                    Toast.makeText(getApplicationContext(), strPhotoCondition, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Log.d(TAG, "showResult : ", e);
+                }
+
+            }
+
+            progressDialog.dismiss();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String userName = (String)params[1];
+            String userPass = (String)params[2];
+            String databaseName = (String)params[3];
+            String img_path=(String)params[4];
+
+            String postParameters = "&userName=" + userName
+                    +"&userPass=" + userPass
+                    +"&databaseName=" + databaseName
+                    +"&img_path=" + img_path;
+
+            try {
+                // php 가져오기.
+                URL url = new URL(serverURL+"");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+                bufferedReader.close();
+
+                return sb.toString().trim();
+
+
+            } catch (Exception e) {
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    } // getPhotoCondition() end.
 
     //*/ 권: DB에서 이미지 삭제
     class DeletePicture extends AsyncTask<String, Void, String> {
