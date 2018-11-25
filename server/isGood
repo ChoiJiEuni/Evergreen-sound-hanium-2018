@@ -1,0 +1,61 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$link=mysqli_connect("127.0.0.1","B_tester","1111", "B_db" );
+if (!$link)
+{
+    echo "MySQL 접속 에러 : ";
+    echo mysqli_connect_error();
+    exit();
+}
+
+mysqli_set_charset($link,"utf8");
+
+// 사진 정보 쿼리
+$imgPath = $_POST['img_path']);
+$queryData = "SELECT * FROM good_photo_conditions_tb WHERE img_path LIKE 'imgPath'";
+$resultData=mysqli_query($link, $queryData);
+
+if ($resultData) {
+  $row_count = mysqli_num_rows($resultData);
+  if($row_count == 0) {
+    echo "존재하지 않는 사진입니다.";
+  } else {
+    $face = $row["face"];
+    $happiness = $row["happiness"];
+    $blur = $row["Blur"];
+
+    echo $face;
+    echo $happiness;
+    echo $blur;
+  }
+}
+
+?>
+
+
+
+
+
+<?php
+
+$android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+
+if (!$android){ // html 테스트용 코드
+?>
+
+<html>
+   <body>
+
+      <form action="<?php $_PHP_SELF ?>" method="POST">
+         사진경로: <input type = "text" name = "img_path" />
+         <input type = "submit" />
+      </form>
+
+   </body>
+</html>
+
+<?php
+}
+ ?>
